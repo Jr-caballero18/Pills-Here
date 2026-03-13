@@ -157,3 +157,9 @@ body {
     text-align: center;
   }
 }
+
+.global-error {
+  margin: 10px 0 0 0;
+  text-align: center;
+  width: 100%;
+}

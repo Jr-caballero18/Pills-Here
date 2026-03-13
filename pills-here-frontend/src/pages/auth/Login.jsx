@@ -4,6 +4,7 @@ import InputField from "../../components/common/InputField";
 import Button from "../../components/common/Button";
 import "../../styles/auth.css";
 import logo from "../../assets/images/logo.png";
+import { loginUsuario } from "../../services/authService";
 
 function Login() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [errores, setErrores] = useState({});
+  const [mensajeError, setMensajeError] = useState("");
 
   const validarFormulario = () => {
     const nuevosErrores = {};
@@ -30,16 +32,34 @@ function Login() {
     return nuevosErrores;
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     const nuevosErrores = validarFormulario();
     setErrores(nuevosErrores);
+    setMensajeError("");
 
     if (Object.keys(nuevosErrores).length > 0) return;
 
-    console.log("Correo:", correo);
-    console.log("Contraseña:", contrasena);
+    try {
+      const respuesta = await loginUsuario({ correo, contrasena });
+
+      if (!respuesta.exito) {
+        setMensajeError(respuesta.mensaje);
+        return;
+      }
+
+      if (respuesta.rol === "MEDICO") {
+        navigate("/inicio-medico");
+      } else if (respuesta.rol === "PACIENTE") {
+        navigate("/inicio-paciente");
+      } else {
+        setMensajeError("Rol no reconocido");
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setMensajeError("No se pudo conectar con el servidor");
+    }
   };
 
   return (
@@ -65,6 +85,8 @@ function Login() {
             onChange={(e) => setContrasena(e.target.value)}
             error={errores.contrasena}
           />
+
+          {mensajeError && <p className="error-text global-error">{mensajeError}</p>}
 
           <Button text="Iniciar sesion" type="submit" />
         </form>
