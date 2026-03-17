@@ -1,3 +1,4 @@
+/*Login*/
 * {
   box-sizing: border-box;
 }
@@ -79,8 +80,8 @@ body {
   padding: 6px 10px;
   font-size: 16px;
   outline: none;
-  color: #000; /* letra negra */
-  caret-color: #000; /* cursor negro */
+  color: #000; 
+  caret-color: #000;
 }
 
 .input-group input::placeholder {
@@ -162,4 +163,193 @@ body {
   margin: 10px 0 0 0;
   text-align: center;
   width: 100%;
+}
+
+/*Registro*/
+.register-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-box {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 54px;
+  height: 54px;
+  border: none;
+  border-radius: 50%;
+  background-color: #8fb9a3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.back-button-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.register-top {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-top.only-selector {
+  min-height: 100vh;
+  justify-content: center;
+}
+
+.register-top.with-form {
+  padding-top: 70px;
+  justify-content: flex-start;
+}
+
+.role-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+.role-label {
+  font-weight: bold;
+}
+
+.role-option {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-family: "Times New Roman", serif;
+  font-weight: bold;
+  cursor: pointer;
+  color: #000;
+  padding: 0;
+}
+
+.active-role {
+  text-decoration: underline;
+}
+
+.role-separator {
+  font-weight: bold;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  padding-bottom: 40px;
+}
+
+.register-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  align-items: center;
+  column-gap: 18px;
+  margin-bottom: 14px;
+}
+
+.register-row label {
+  text-align: right;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+}
+
+.register-row input,
+.register-row select {
+  width: 100%;
+  height: 30px;
+  border: none;
+  background-color: #d9d9d9;
+  padding: 4px 10px;
+  font-size: 16px;
+  color: #000;
+  outline: none;
+}
+
+.register-row input::placeholder {
+  color: #777;
+}
+
+.create-account-button {
+  margin-top: 34px;
+  background-color: #123b6d;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.create-account-button:hover {
+  background-color: #0f325b;
+}
+
+@media (max-width: 768px) {
+  .register-box {
+    padding: 80px 20px 30px;
+  }
+
+  .register-logo {
+    width: 140px;
+  }
+
+  .role-selector {
+    font-size: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .role-option {
+    font-size: 18px;
+  }
+
+  .register-row {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+  }
+
+  .register-row label {
+    text-align: left;
+    font-size: 18px;
+  }
+
+  .back-button {
+    top: 15px;
+    left: 15px;
+    width: 48px;
+    height: 48px;
+  }
 }
