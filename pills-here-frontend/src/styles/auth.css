@@ -66,7 +66,7 @@ body {
 }
 
 .input-group label {
-  text-align: right;
+  text-align: left;
   font-size: 22px;
   font-weight: bold;
   color: #000;
@@ -260,7 +260,7 @@ body {
 
 .register-form {
   width: 100%;
-  max-width: 620px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -271,14 +271,14 @@ body {
 .register-row {
   width: 100%;
   display: grid;
-  grid-template-columns: 230px 1fr;
+  grid-template-columns: 190px 390px;
   align-items: center;
-  column-gap: 18px;
+  column-gap: 14px;
   margin-bottom: 14px;
 }
 
 .register-row label {
-  text-align: right;
+  text-align: left;
   font-size: 20px;
   font-weight: bold;
   color: #000;
@@ -286,7 +286,7 @@ body {
 
 .register-row input,
 .register-row select {
-  width: 100%;
+  width: 390px;
   height: 30px;
   border: none;
   background-color: #d9d9d9;
@@ -355,7 +355,7 @@ body {
 }
 
 .register-input-wrapper {
-  width: 100%;
+  width: 390px;
   display: flex;
   flex-direction: column;
 }
