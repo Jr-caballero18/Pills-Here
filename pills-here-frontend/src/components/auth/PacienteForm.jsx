@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { registerPaciente } from "../../services/authService";
 
 function PacienteForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellidoPaterno: "",
@@ -14,8 +18,13 @@ function PacienteForm() {
   });
 
   const [errores, setErrores] = useState({});
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [mensajeError, setMensajeError] = useState("");
+  const [codigoPaciente, setCodigoPaciente] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
 
     setFormData((prev) => ({
@@ -58,15 +67,59 @@ function PacienteForm() {
     return nuevosErrores;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setMensajeExito("");
+    setMensajeError("");
+    setCodigoPaciente("");
 
     const nuevosErrores = validarFormulario();
     setErrores(nuevosErrores);
 
     if (Object.keys(nuevosErrores).length > 0) return;
+  
+     try {
+      setCargando(true);
 
-    console.log("Datos paciente:", formData);
+      const respuesta = await registerPaciente(formData);
+
+      if (respuesta.exito) {
+        setMensajeExito(respuesta.mensaje);
+        setCodigoPaciente(respuesta.codigoPaciente);
+        setMensajeError("");
+        
+        localStorage.setItem("codigoPaciente", respuesta.codigoPaciente);
+
+        setFormData({
+          nombre: "",
+          apellidoPaterno: "",
+          apellidoMaterno: "",
+          fechaNacimiento: "",
+          sexo: "",
+          tipoSangre: "",
+          alergias: "",
+          correo: "",
+          contrasena: "",
+        });
+
+        setTimeout(() => {
+          navigate("/inicio-paciente");
+        }, 2500);
+      } else {
+        setMensajeError(respuesta.mensaje);
+        setMensajeExito("");
+      }
+    } catch (error) {
+      console.error("Error al registrar paciente:", error);
+      setMensajeError("No se pudo registrar el paciente");
+      setMensajeExito("");
+      setCodigoPaciente("");
+    } finally {
+      setCargando(false);
+    }
+  
+
   };
 
   return (

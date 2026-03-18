@@ -12,4 +12,9 @@ export const registerMedico = async (datosMedico) => {
   return response.data;
 };
 
+export const registerPaciente = async (datosPaciente) => {
+  const response = await axios.post(`${API_URL}/register-paciente`, datosPaciente);
+  return response.data;
+};
+
 
