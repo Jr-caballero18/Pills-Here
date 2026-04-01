@@ -1,0 +1,401 @@
+.inicio-medico-page {
+  min-height: 100vh;
+  display: flex;
+  background-color: #ffffff;
+  font-family: "Roboto", serif;
+}
+
+.sidebar-medico {
+  width: 104px;
+  min-width: 104px;
+  max-width: 104px;
+  background-color: #173f6c;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.logo-container {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #173f6c;
+  border-bottom: 1px solid #0d2d4c;
+  overflow: hidden;
+}
+
+.logo-img {
+  width: 72px !important;
+  height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
+  object-fit: contain;
+  display: block;
+  border-radius: 50%;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  width: 100%;
+  height: 101px;
+  background-color: #173f6c;
+  color: #ffffff;
+  border: none;
+  border-bottom: 1px solid #0d2d4c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.1;
+  font-family: 'Roboto Serif', serif;
+}
+
+.nav-item.active {
+  background-color: #214f82;
+}
+
+.nav-icon {
+  width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.contenido-medico {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 22px 24px 18px 24px;
+}
+
+.encabezado-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.encabezado-superior h1 {
+  margin: 18px 0 0 0;
+  font-size: 29px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.acciones-superiores {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 2px;
+}
+
+.btn-notificacion {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-notificacion img {
+  width: 24px !important;
+  height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.btn-perfil {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #5e88ea;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn-perfil span {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.bloque-gris {
+  background-color: #d9d9d9;
+  border: 1px solid #888888;
+  border-radius: 3px;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.bloque-titulo {
+  font-size: 22px;
+  color: #111111;
+  padding: 14px 0 10px 32px;
+  margin: 0;
+}
+
+.resumen-cards {
+  display: flex;
+  gap: 30px;
+  padding: 8px 22px 14px 22px;
+}
+
+.resumen-card {
+  flex: 1;
+  min-height: 94px;
+  border: 2px solid #2f2f2f;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 18px;
+}
+
+.resumen-card.naranja {
+  background-color: #ff8500;
+}
+
+.resumen-card.amarillo {
+  background-color: #eef227;
+}
+
+.resumen-card.verde {
+  background-color: #83d33c;
+}
+
+.card-icon-img {
+  width: 54px !important;
+  height: 54px !important;
+  max-width: 54px !important;
+  max-height: 54px !important;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.card-texto h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color: #000000;
+}
+
+.card-texto p {
+  margin: 4px 0 0 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.1;
+}
+
+.consultado-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px 0 18px;
+}
+
+.consultado-header .bloque-titulo {
+  padding: 0 0 0 14px;
+}
+
+.search-pill {
+  width: 190px;
+  height: 24px;
+  border: 1px solid #8d8d8d;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.search-pill input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.search-pill span {
+  font-size: 14px;
+  color: #8a8a8a;
+  line-height: 1;
+}
+
+.tabla-wrapper {
+  margin: 12px 14px 14px 14px;
+  border: 1px solid #7f7f7f;
+  background-color: transparent;
+}
+
+.tabla-head,
+.tabla-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 130px;
+  align-items: center;
+  padding: 10px 14px;
+}
+
+.tabla-head {
+  font-size: 17px;
+  color: #3a3a3a;
+  border-bottom: 1px solid #7f7f7f;
+}
+
+.tabla-row {
+  font-size: 16px;
+  color: #2c2c2c;
+  border-bottom: 1px solid #8f8f8f;
+}
+
+.tabla-row:last-child {
+  border-bottom: none;
+}
+
+.historial-col {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-ver {
+  width: 50px;
+  height: 24px;
+  background-color: #78aee4;
+  border: 1px solid #48657d;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-ver img {
+  width: 21px !important;
+  height: 21px !important;
+  max-width: 21px !important;
+  max-height: 21px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.logo-container img,
+.nav-icon,
+.btn-notificacion img,
+.card-icon-img,
+.btn-ver img {
+  width: auto;
+}
+
+.logo-img {
+  width: 72px !important;
+  height: 72px !important;
+}
+
+.nav-icon {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+.btn-notificacion img {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.card-icon-img {
+  width: 54px !important;
+  height: 54px !important;
+}
+
+.btn-ver img {
+  width: 21px !important;
+  height: 21px !important;
+}
+
+@media (max-width: 1100px) {
+  .resumen-cards {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 800px) {
+  .inicio-medico-page {
+    flex-direction: column;
+  }
+
+  .sidebar-medico {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .nav-item {
+    min-width: 120px;
+  }
+
+  .encabezado-superior {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tabla-head,
+  .tabla-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .historial-col {
+    justify-content: flex-start;
+  }
+}
+
+.btn-ayuda {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1000;
+}
+
+.btn-ayuda img {
+  width: 22px !important;
+  height: 22px !important;
+  object-fit: contain;
+}

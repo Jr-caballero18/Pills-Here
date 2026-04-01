@@ -42,6 +42,9 @@ function MedicoForm() {
       nuevosErrores.apellidoPaterno = "El apellido paterno es obligatorio";
     }
 
+    if (!formData.apellidoMaterno.trim()) {
+      nuevosErrores.apellidoMaterno = "El apellido materno es obligatorio";
+    }
     if (!formData.fechaNacimiento) {
       nuevosErrores.fechaNacimiento = "La fecha de nacimiento es obligatoria";
     }
@@ -160,7 +163,9 @@ function MedicoForm() {
             value={formData.apellidoMaterno}
             onChange={handleChange}
           />
-
+         {errores.apellidoMaterno && (
+            <span className="field-error">{errores.apellidoMaterno}</span>
+          )}
         </div>
       </div>
 

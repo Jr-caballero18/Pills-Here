@@ -44,12 +44,20 @@ function PacienteForm() {
       nuevosErrores.apellidoPaterno = "El apellido paterno es obligatorio";
     }
 
+     if (!formData.apellidoMaterno.trim()) {
+      nuevosErrores.apellidoMaterno = "El apellido materno es obligatorio";
+    }
+
     if (!formData.fechaNacimiento) {
       nuevosErrores.fechaNacimiento = "La fecha de nacimiento es obligatoria";
     }
 
     if (!formData.sexo) {
       nuevosErrores.sexo = "El sexo es obligatorio";
+    }
+
+    if (!formData.tipoSangre) {
+      nuevosErrores.tipoSangre = "El tipo de sangre es obligatorio";
     }
 
     if (!formData.correo.trim()) {
@@ -161,6 +169,9 @@ function PacienteForm() {
             value={formData.apellidoMaterno}
             onChange={handleChange}
           />
+          {errores.apellidoMaterno && (
+            <span className="field-error">{errores.apellidoMaterno}</span>
+          )}
         </div>
       </div>
 
@@ -214,6 +225,9 @@ function PacienteForm() {
             <option value="AB+">AB+</option>
             <option value="AB-">AB-</option>
           </select>
+          {errores.tipoSangre && (
+            <span className="field-error">{errores.tipoSangre}</span>
+          )}
         </div>
       </div>
 
@@ -256,6 +270,7 @@ function PacienteForm() {
           )}
         </div>
       </div>
+          {mensajeError && <p className="register-error">{mensajeError}</p>}
 
       <button className="create-account-button" type="submit">
         Crear cuenta

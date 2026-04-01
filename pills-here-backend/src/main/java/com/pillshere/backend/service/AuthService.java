@@ -94,6 +94,7 @@ public class AuthService {
 
         return codigo;
     }
+    
 
     public RegisterPacienteResponseDTO registrarPaciente(RegisterPacienteRequestDTO request) {
 
