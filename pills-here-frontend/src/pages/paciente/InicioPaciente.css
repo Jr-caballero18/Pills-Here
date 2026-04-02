@@ -1,0 +1,346 @@
+.inicio-paciente-page {
+  min-height: 100vh;
+  background-color: #f2f2f2;
+  font-family: "Roboto Serif", serif;
+  position: relative;
+}
+
+.paciente-header {
+  height: 95px;
+  background-color: #173f6c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px 0 14px;
+  box-sizing: border-box;
+}
+
+.paciente-header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.paciente-logo {
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-header-left h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.paciente-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.paciente-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.paciente-icon-btn img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
+}
+
+.paciente-profile-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paciente-profile-btn img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  min-width: 56px;
+  min-height: 56px;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-main {
+  display: grid;
+  grid-template-columns: 1.45fr 0.9fr;
+  gap: 34px;
+  padding: 30px 82px 20px 82px;
+  box-sizing: border-box;
+}
+
+.paciente-accesos {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.paciente-card {
+  min-height: 100px;
+  background-color: #f5f5f5;
+  border: 1px solid #6f6f6f;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 22px;
+  box-sizing: border-box;
+}
+
+.paciente-card-icon {
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.paciente-card-icon img {
+  width: 42px !important;
+  height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-card-content h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.paciente-card-content a {
+  color: #6e89ff;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.paciente-card-content a::before {
+  content: "> ";
+}
+
+.paciente-card-content a:hover {
+  text-decoration: underline;
+}
+
+.paciente-estadistica-panel {
+  background-color: #f5f5f5;
+  border: 1px solid #6f6f6f;
+  border-radius: 4px;
+  overflow: hidden;
+  align-self: start;
+}
+
+.estadistica-titulo {
+  height: 38px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #6f6f6f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.estadistica-titulo img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.estadistica-titulo h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #222222;
+}
+
+.estadistica-contenido {
+  padding: 14px 16px 16px 16px;
+}
+
+.estadistica-placeholder {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.grafica-placeholder {
+  width: 235px;
+  height: 235px;
+  border-radius: 50%;
+  border: 3px solid #1f1f1f;
+  background: radial-gradient(circle at center, #ffffff 0 34%, transparent 35%),
+    conic-gradient(
+      #d8d8d8 0% 33.33%,
+      #efefef 33.33% 66.66%,
+      #cfcfcf 66.66% 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grafica-centro {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #707070;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.estadistica-info {
+  border-top: 1px solid #6f6f6f;
+  border-bottom: 1px solid #6f6f6f;
+  padding: 18px 8px;
+  margin: 0 4px 14px 4px;
+}
+
+.estadistica-info p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #2b2b2b;
+  line-height: 1.35;
+}
+
+.estadistica-info p:last-child {
+  margin-bottom: 0;
+}
+
+.estadistica-footer {
+  text-align: center;
+  font-size: 16px;
+  color: #111111;
+}
+
+.btn-ayuda-paciente {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-ayuda-paciente img {
+  width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  object-fit: contain;
+  display: block;
+}
+
+
+.paciente-logo {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.paciente-icon-btn img {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.paciente-profile-btn img {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.paciente-card-icon img {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.estadistica-titulo img {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.btn-ayuda-paciente img {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+@media (max-width: 1100px) {
+  .paciente-main {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .paciente-estadistica-panel {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 700px) {
+  .paciente-header {
+    height: auto;
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .paciente-header-left h1 {
+    font-size: 22px;
+  }
+
+  .paciente-main {
+    padding: 18px;
+  }
+
+  .paciente-card {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .paciente-card-content h2 {
+    font-size: 20px;
+  }
+
+  .grafica-placeholder {
+    width: 200px;
+    height: 200px;
+  }
+}
