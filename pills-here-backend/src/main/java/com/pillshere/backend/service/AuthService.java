@@ -31,22 +31,79 @@ public class AuthService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-    public LoginResponseDTO iniciarSesion(LoginRequestDTO request) {
+  public LoginResponseDTO iniciarSesion(LoginRequestDTO request) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(request.getCorreo());
 
         if (usuarioOpt.isEmpty()) {
-            return new LoginResponseDTO(false, "Usuario no encontrado", null);
+            return new LoginResponseDTO(null, null, null, "Usuario no encontrado", false);
         }
 
         Usuario usuario = usuarioOpt.get();
 
         if (!usuario.getContrasena().equals(request.getContrasena())) {
-            return new LoginResponseDTO(false, "Contraseña incorrecta", null);
+            return new LoginResponseDTO(null, null, null, "Contraseña incorrecta", false);
         }
 
-        return new LoginResponseDTO(true, "Inicio de sesión exitoso", usuario.getRol());
+        String rol = usuario.getRol();
+        String nombre = obtenerNombreSegunRol(usuario);
+
+        return new LoginResponseDTO(
+            usuario.getIdUsuario(),
+            nombre,
+            rol,
+            "Inicio de sesión exitoso",
+            true
+        );
     }
 
+    private String obtenerNombreSegunRol(Usuario usuario) {
+        if ("MEDICO".equalsIgnoreCase(usuario.getRol())) {
+            Optional<Medico> medicoOpt = medicoRepository.findByUsuario(usuario);
+            if (medicoOpt.isPresent()) {
+                Medico medico = medicoOpt.get();
+                
+                 return construirNombreCompleto(
+                    medico.getNombre(),
+                    medico.getApellidoPaterno(),
+                    medico.getApellidoMaterno()
+                );
+            }
+        }
+
+        if ("PACIENTE".equalsIgnoreCase(usuario.getRol())) {
+            Optional<Paciente> pacienteOpt = pacienteRepository.findByUsuario(usuario);
+            if (pacienteOpt.isPresent()) {
+                Paciente paciente = pacienteOpt.get();
+                return construirNombreCompleto(
+                    paciente.getNombre(),
+                    paciente.getApellidoPaterno(),
+                    paciente.getApellidoMaterno()
+                );
+            }
+        }
+
+        return "Usuario";
+    }
+    
+    private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
+        StringBuilder nombreCompleto = new StringBuilder();
+
+        if (nombre != null && !nombre.isBlank()) {
+            nombreCompleto.append(nombre.trim());
+        }
+
+        if (apellidoPaterno != null && !apellidoPaterno.isBlank()) {
+            nombreCompleto.append(" ").append(apellidoPaterno.trim());
+        }
+
+        if (apellidoMaterno != null && !apellidoMaterno.isBlank()) {
+            nombreCompleto.append(" ").append(apellidoMaterno.trim());
+        }
+
+        return nombreCompleto.toString().trim();
+    }
+    
+    
     public RegisterResponseDTO registrarMedico(RegisterMedicoRequestDTO request) {
 
         if (usuarioRepository.findByCorreo(request.getCorreo()).isPresent()) {

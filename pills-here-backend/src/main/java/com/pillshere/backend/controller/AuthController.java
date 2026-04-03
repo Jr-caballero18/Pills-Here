@@ -8,6 +8,7 @@ import com.pillshere.backend.dto.RegisterPacienteResponseDTO;
 import com.pillshere.backend.dto.RegisterResponseDTO;
 import com.pillshere.backend.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +20,14 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public LoginResponseDTO login(@RequestBody LoginRequestDTO request) {
-        return authService.iniciarSesion(request);
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        LoginResponseDTO response = authService.iniciarSesion(request);
+
+        if (!response.isSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register-medico")

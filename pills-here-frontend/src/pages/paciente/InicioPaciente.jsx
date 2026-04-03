@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./InicioPaciente.css";
 
 import logo from "../../assets/images/logo.png";
@@ -10,8 +11,26 @@ import iconCalendario from "../../assets/images/icon-calendario.png";
 import iconEstadisticas from "../../assets/images/icon-estadisticas.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
 
+import { obtenerDashboardPaciente } from "../../services/pacienteService";
+
 function InicioPaciente() {
-  const nombreUsuario = localStorage.getItem("nombre") || "Manuel Torres";
+  const [nombreUsuario, setNombreUsuario] = useState("");
+
+  useEffect(() => {
+    const cargarDashboard = async () => {
+      try {
+        const idUsuario = localStorage.getItem("idUsuario");
+        if (!idUsuario) return;
+
+        const data = await obtenerDashboardPaciente(idUsuario);
+        setNombreUsuario(data.nombre || "");
+      } catch (error) {
+        console.error("Error al cargar dashboard paciente:", error);
+      }
+    };
+
+    cargarDashboard();
+  }, []);
 
   return (
     <div className="inicio-paciente-page">

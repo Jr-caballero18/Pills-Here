@@ -44,10 +44,16 @@ function Login() {
     try {
       const respuesta = await loginUsuario({ correo, contrasena });
 
-      if (!respuesta.exito) {
-        setMensajeError(respuesta.mensaje);
+      const loginExitoso = respuesta.success ?? respuesta.exito;
+
+     if (!loginExitoso) {
+        setMensajeError(respuesta.mensaje || "No se pudo iniciar sesión");
         return;
       }
+
+      localStorage.setItem("idUsuario", respuesta.idUsuario);
+      localStorage.setItem("rol", respuesta.rol);
+      localStorage.setItem("nombre", respuesta.nombre);
 
       if (respuesta.rol === "MEDICO") {
         navigate("/inicio-medico");
@@ -58,7 +64,7 @@ function Login() {
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      setMensajeError("No se pudo conectar con el servidor");
+      setMensajeError(error.response?.data?.mensaje || "No se pudo conectar con el servidor");
     }
   };
 

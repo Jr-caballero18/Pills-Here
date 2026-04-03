@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import "./InicioMedico.css";
 
 import logo from "../../assets/images/logo.png";
@@ -11,19 +11,36 @@ import iconTratamientosActivos from "../../assets/images/icon-tratamientos.png";
 import iconTratamientosCompletados from "../../assets/images/icon-check.png";
 import iconVer from "../../assets/images/icon-ver.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
-function InicioMedico() {
-  const nombreUsuario = localStorage.getItem("nombre") || "Dr. Jorge Gonzalez";
 
-  const pacientesRecientes = useMemo(
-    () => [
-      { id: 1, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-      { id: 2, nombre: "Manuel Torres", edadSexo: "44 años, Masculino" },
-      { id: 3, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-      { id: 4, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-      { id: 5, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-    ],
-    []
-  );
+import { obtenerDashboardMedico } from "../../services/medicoService";
+
+function InicioMedico() {
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [totalPacientes, setTotalPacientes] = useState(0);
+  const [tratamientosActivos, setTratamientosActivos] = useState(0);
+  const [tratamientosCompletados, setTratamientosCompletados] = useState(0);
+  const [pacientesRecientes, setPacientesRecientes] = useState([]);
+
+  useEffect(() => {
+    const cargarDashboard = async () => {
+      try {
+        const idUsuario = localStorage.getItem("idUsuario");
+        if (!idUsuario) return;
+
+        const data = await obtenerDashboardMedico(idUsuario);
+
+        setNombreUsuario(data.nombre || "");
+        setTotalPacientes(data.totalPacientes || 0);
+        setTratamientosActivos(data.tratamientosActivos || 0);
+        setTratamientosCompletados(data.tratamientosCompletados || 0);
+        setPacientesRecientes(data.pacientesRecientes || []);
+      } catch (error) {
+        console.error("Error al cargar dashboard médico:", error);
+      }
+    };
+
+    cargarDashboard();
+  }, []);
 
   return (
     <div className="inicio-medico-page">
@@ -52,7 +69,7 @@ function InicioMedico() {
 
       <main className="contenido-medico">
         <div className="encabezado-superior">
-          <h1>Bienvenido {nombreUsuario}</h1>
+          <h1>Bienvenido Dr. {nombreUsuario}</h1>
 
           <div className="acciones-superiores">
             <button className="btn-notificacion" type="button" aria-label="Notificaciones">
@@ -72,7 +89,7 @@ function InicioMedico() {
             <article className="resumen-card naranja">
               <img src={iconPacientesCard} alt="Pacientes" className="card-icon-img" />
               <div className="card-texto">
-                <h3>12</h3>
+                <h3>{totalPacientes}</h3>
                 <p>Pacientes</p>
               </div>
             </article>
@@ -84,7 +101,7 @@ function InicioMedico() {
                 className="card-icon-img"
               />
               <div className="card-texto">
-                <h3>8</h3>
+                <h3>{tratamientosActivos}</h3>
                 <p>Tratamientos Activos</p>
               </div>
             </article>
@@ -96,7 +113,7 @@ function InicioMedico() {
                 className="card-icon-img"
               />
               <div className="card-texto">
-                <h3>4</h3>
+                <h3>{tratamientosCompletados}</h3>
                 <p>Tratamientos Completados</p>
               </div>
             </article>
@@ -120,22 +137,30 @@ function InicioMedico() {
               <span>Historial</span>
             </div>
 
-            {pacientesRecientes.map((paciente) => (
-              <div key={paciente.id} className="tabla-row">
-                <span>{paciente.nombre}</span>
-                <span>{paciente.edadSexo}</span>
-                <span className="historial-col">
-                  <button className="btn-ver" type="button">
-                    <img src={iconVer} alt="Ver historial" />
-                  </button>
-                </span>
+            {pacientesRecientes.length === 0 ? (
+              <div className="tabla-row sin-datos">
+                <span>No hay pacientes consultados recientemente.</span>
+                <span></span>
+                <span></span>
               </div>
-            ))}
+            ) : (
+              pacientesRecientes.map((paciente, index) => (
+                <div key={index} className="tabla-row">
+                  <span>{paciente.nombre}</span>
+                  <span>{paciente.edadSexo}</span>
+                  <span className="historial-col">
+                    <button className="btn-ver" type="button">
+                      <img src={iconVer} alt="Ver historial" />
+                    </button>
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </section>
       </main>
 
-      <button className="btn-ayuda">
+      <button className="btn-ayuda" type="button">
         <img src={iconAyuda} alt="Ayuda" />
       </button>
     </div>
