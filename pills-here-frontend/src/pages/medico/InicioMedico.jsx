@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./InicioMedico.css";
-
+import { useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientesMenu from "../../assets/images/icon-pacientess.png";
@@ -21,26 +21,29 @@ function InicioMedico() {
   const [tratamientosCompletados, setTratamientosCompletados] = useState(0);
   const [pacientesRecientes, setPacientesRecientes] = useState([]);
 
-  useEffect(() => {
-    const cargarDashboard = async () => {
-      try {
-        const idUsuario = localStorage.getItem("idUsuario");
-        if (!idUsuario) return;
+  const navigate = useNavigate();
+  const location = useLocation();
 
-        const data = await obtenerDashboardMedico(idUsuario);
+ useEffect(() => {
+  const cargarDashboard = async () => {
+    try {
+      const idUsuario = localStorage.getItem("idUsuario");
+      if (!idUsuario) return;
 
-        setNombreUsuario(data.nombre || "");
-        setTotalPacientes(data.totalPacientes || 0);
-        setTratamientosActivos(data.tratamientosActivos || 0);
-        setTratamientosCompletados(data.tratamientosCompletados || 0);
-        setPacientesRecientes(data.pacientesRecientes || []);
-      } catch (error) {
-        console.error("Error al cargar dashboard médico:", error);
-      }
-    };
+      const data = await obtenerDashboardMedico(idUsuario);
 
-    cargarDashboard();
-  }, []);
+      setNombreUsuario(data.nombre || "");
+      setTotalPacientes(data.totalPacientes || 0);
+      setTratamientosActivos(data.tratamientosActivos || 0);
+      setTratamientosCompletados(data.tratamientosCompletados || 0);
+      setPacientesRecientes(data.pacientesRecientes || []);
+    } catch (error) {
+      console.error("Error al cargar dashboard médico:", error);
+    }
+  };
+
+  cargarDashboard();
+}, [location.key]);
 
   return (
     <div className="inicio-medico-page">
@@ -50,17 +53,17 @@ function InicioMedico() {
         </div>
 
         <nav className="sidebar-nav">
-          <button className="nav-item active" type="button">
+          <button className="nav-item active" type="button" onClick={() => navigate("/inicio-medico")}>
             <img src={iconHome} alt="Inicio" className="nav-icon" />
             <span>Inicio</span>
           </button>
 
-          <button className="nav-item" type="button">
+          <button className="nav-item" type="button" onClick={() => navigate("/lista-pacientes")}>
             <img src={iconPacientesMenu} alt="Pacientes" className="nav-icon" />
             <span>Pacientes</span>
           </button>
 
-          <button className="nav-item" type="button">
+          <button className="nav-item" type="button" onClick={() => navigate("/nuevo-paciente")}>
             <img src={iconAgregarPaciente} alt="Nuevo Paciente" className="nav-icon" />
             <span>Nuevo Paciente</span>
           </button>
@@ -146,10 +149,22 @@ function InicioMedico() {
             ) : (
               pacientesRecientes.map((paciente, index) => (
                 <div key={index} className="tabla-row">
-                  <span>{paciente.nombre}</span>
+                  <button
+                    className="tabla-nombre-btn"
+                    type="button"
+                    onClick={() => navigate(`/detalle-paciente/${paciente.idPaciente}`)}
+                  >
+                    {paciente.nombre}
+                  </button>
+
                   <span>{paciente.edadSexo}</span>
+
                   <span className="historial-col">
-                    <button className="btn-ver" type="button">
+                    <button
+                      className="btn-ver"
+                      type="button"
+                      onClick={() => navigate(`/detalle-paciente/${paciente.idPaciente}`)}
+                    >
                       <img src={iconVer} alt="Ver historial" />
                     </button>
                   </span>

@@ -1,4 +1,6 @@
 import "./ListaPacientes.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
@@ -8,15 +10,38 @@ import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconVer from "../../assets/images/icon-ver.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
+import {
+  obtenerPacientesDelMedico,
+  registrarConsultaPaciente
+} from "../../services/medicoPacienteService";
 
 function ListaPacientes() {
-  const pacientes = [
-    { id: 1, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-    { id: 2, nombre: "Manuel Torres", edadSexo: "44 años, Masculino" },
-    { id: 3, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-    { id: 4, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-    { id: 5, nombre: "Karla Martínez Duarte", edadSexo: "48 años, Femenino" },
-  ];
+  const [pacientes, setPacientes] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const cargarPacientes = async () => {
+      try {
+        const idUsuario = localStorage.getItem("idUsuario");
+        const data = await obtenerPacientesDelMedico(idUsuario);
+        setPacientes(data);
+      } catch (error) {
+        console.error("Error al cargar pacientes:", error);
+      }
+    };
+
+    cargarPacientes();
+  }, []);
+
+  const irADetallePaciente = async (idPaciente) => {
+    try {
+      const idUsuario = localStorage.getItem("idUsuario");
+      await registrarConsultaPaciente(idUsuario, idPaciente);
+      navigate(`/detalle-paciente/${idPaciente}`);
+    } catch (error) {
+      console.error("Error al registrar consulta:", error);
+    }
+  };
 
   return (
     <div className="lista-pacientes-page">
@@ -26,28 +51,24 @@ function ListaPacientes() {
         </div>
 
         <nav className="lista-sidebar-nav">
-          <button className="lista-nav-item" type="button">
+          <button className="lista-nav-item" type="button" onClick={() => navigate("/inicio-medico")}>
             <img src={iconHome} alt="Inicio" className="lista-nav-icon" />
             <span>Inicio</span>
           </button>
 
-          <button className="lista-nav-item active" type="button">
+          <button className="lista-nav-item active" type="button" onClick={() => navigate("/lista-pacientes")}>
             <img src={iconPacientes} alt="Pacientes" className="lista-nav-icon" />
             <span>Pacientes</span>
           </button>
 
-          <button className="lista-nav-item" type="button">
-            <img
-              src={iconAgregarPaciente}
-              alt="Nuevo Paciente"
-              className="lista-nav-icon"
-            />
+          <button className="lista-nav-item" type="button" onClick={() => navigate("/nuevo-paciente")}>
+            <img src={iconAgregarPaciente} alt="Nuevo Paciente" className="lista-nav-icon" />
             <span>Nuevo Paciente</span>
           </button>
         </nav>
 
         <div className="lista-sidebar-bottom">
-          <button className="lista-back-btn" type="button">
+          <button className="lista-back-btn" type="button" onClick={() => navigate("/inicio-medico")}>
             <img src={iconRegreso} alt="Regresar" />
           </button>
         </div>
@@ -86,11 +107,23 @@ function ListaPacientes() {
             </div>
 
             {pacientes.map((paciente) => (
-              <div key={paciente.id} className="lista-tabla-row">
-                <span>{paciente.nombre}</span>
+              <div key={paciente.idPaciente} className="lista-tabla-row">
+                <button
+                  className="lista-nombre-btn"
+                  type="button"
+                  onClick={() => irADetallePaciente(paciente.idPaciente)}
+                >
+                  {paciente.nombre}
+                </button>
+
                 <span>{paciente.edadSexo}</span>
+
                 <span className="lista-historial-col">
-                  <button className="lista-btn-ver" type="button">
+                  <button
+                    className="lista-btn-ver"
+                    type="button"
+                    onClick={() => irADetallePaciente(paciente.idPaciente)}
+                  >
                     <img src={iconVer} alt="Ver historial" />
                   </button>
                 </span>

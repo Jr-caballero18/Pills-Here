@@ -1,5 +1,7 @@
 import "./DetallePaciente.css";
-
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { obtenerDetallePaciente } from "../../services/medicoPacienteService";
 import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
@@ -9,6 +11,30 @@ import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 
 function DetallePaciente() {
+  const navigate = useNavigate();
+  const { idPaciente } = useParams();
+
+  const [paciente, setPaciente] = useState(null);
+
+  useEffect(() => {
+    const cargarDetalle = async () => {
+      try {
+        const data = await obtenerDetallePaciente(idPaciente);
+        setPaciente(data);
+      } catch (error) {
+        console.error("Error al obtener detalle del paciente:", error);
+      }
+    };
+
+    cargarDetalle();
+  }, [idPaciente]);
+
+  if (!paciente) {
+    return <p>Cargando paciente...</p>;
+  }
+
+
+
   return (
     <div className="detalle-paciente-page">
       <aside className="detalle-sidebar">
@@ -17,24 +43,24 @@ function DetallePaciente() {
         </div>
 
         <nav className="detalle-sidebar-nav">
-          <button className="detalle-nav-item" type="button">
+          <button className="detalle-nav-item" type="button" onClick={() => navigate("/inicio-medico")}>
             <img src={iconHome} alt="Inicio" className="detalle-nav-icon" />
             <span>Inicio</span>
           </button>
 
-          <button className="detalle-nav-item" type="button">
+          <button className="detalle-nav-item active" type="button" onClick={() => navigate("/lista-pacientes")}>
             <img src={iconPacientes} alt="Pacientes" className="detalle-nav-icon" />
             <span>Pacientes</span>
           </button>
 
-          <button className="detalle-nav-item active" type="button">
+          <button className="detalle-nav-item" type="button" onClick={() => navigate("/nuevo-paciente")}>
             <img src={iconAgregarPaciente} alt="Nuevo Paciente" className="detalle-nav-icon" />
             <span>Nuevo Paciente</span>
           </button>
         </nav>
 
         <div className="detalle-sidebar-bottom">
-          <button className="detalle-back-btn" type="button">
+          <button className="detalle-back-btn" type="button" onClick={() => navigate("/inicio-medico")}>
             <img src={iconRegreso} alt="Regresar" />
           </button>
         </div>
@@ -42,7 +68,7 @@ function DetallePaciente() {
 
       <main className="detalle-paciente-content">
         <div className="detalle-paciente-header">
-          <h1>Paciente: Cristina Hernandez</h1>
+          <h1>Paciente: {paciente.nombreCompleto}</h1>
 
           <div className="detalle-header-icons">
             <button className="detalle-btn-notificacion" type="button" aria-label="Notificaciones">
@@ -61,10 +87,10 @@ function DetallePaciente() {
           </div>
 
           <div className="detalle-info-box">
-            <p>Cristina Hernandez Figueroa</p>
-            <p>Edad: 38</p>
-            <p>Sexo: Femenino</p>
-            <p>Tipo de sangre: O-</p>
+            <p>{paciente.nombreCompleto}</p>
+            <p>Edad: {paciente.edad}</p>
+            <p>Sexo: {paciente.sexo}</p>
+            <p>Tipo de sangre: {paciente.tipoSangre || "No especificado"}</p>
           </div>
 
           <p className="detalle-sin-tratamiento">No hay tratamiento existente</p>

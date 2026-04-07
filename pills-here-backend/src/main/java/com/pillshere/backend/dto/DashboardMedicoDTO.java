@@ -8,13 +8,13 @@ public class DashboardMedicoDTO {
     private int totalPacientes;
     private int tratamientosActivos;
     private int tratamientosCompletados;
-    private List<String> pacientesRecientes;
+    private List<PacienteMedicoDTO> pacientesRecientes;
 
     public DashboardMedicoDTO() {
     }
 
     public DashboardMedicoDTO(String nombre, int totalPacientes, int tratamientosActivos,
-                              int tratamientosCompletados, List<String> pacientesRecientes) {
+                              int tratamientosCompletados, List<PacienteMedicoDTO> pacientesRecientes) {
         this.nombre = nombre;
         this.totalPacientes = totalPacientes;
         this.tratamientosActivos = tratamientosActivos;
@@ -54,11 +54,11 @@ public class DashboardMedicoDTO {
         this.tratamientosCompletados = tratamientosCompletados;
     }
 
-    public List<String> getPacientesRecientes() {
+    public List<PacienteMedicoDTO> getPacientesRecientes() {
         return pacientesRecientes;
     }
 
-    public void setPacientesRecientes(List<String> pacientesRecientes) {
+    public void setPacientesRecientes(List<PacienteMedicoDTO> pacientesRecientes) {
         this.pacientesRecientes = pacientesRecientes;
     }
 }

@@ -305,3 +305,19 @@
   width: 22px !important;
   height: 22px !important;
 }
+
+.lista-nombre-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
+  color: #2c2c2c;
+  cursor: pointer;
+}
+
+.lista-nombre-btn:hover {
+  text-decoration: underline;
+}

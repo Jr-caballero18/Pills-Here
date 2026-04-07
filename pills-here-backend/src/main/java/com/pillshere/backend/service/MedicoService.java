@@ -1,12 +1,18 @@
 package com.pillshere.backend.service;
 
 import com.pillshere.backend.dto.DashboardMedicoDTO;
+import com.pillshere.backend.dto.PacienteMedicoDTO;
 import com.pillshere.backend.model.Medico;
+import com.pillshere.backend.model.Paciente;
 import com.pillshere.backend.model.Usuario;
+import com.pillshere.backend.repository.MedicoPacienteRepository;
 import com.pillshere.backend.repository.MedicoRepository;
 import com.pillshere.backend.repository.UsuarioRepository;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +24,10 @@ public class MedicoService {
 
     @Autowired
     private MedicoRepository medicoRepository;
+    
+    @Autowired
+    private MedicoPacienteRepository medicoPacienteRepository;
+
 
     public DashboardMedicoDTO obtenerDashboardMedico(Integer idUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
@@ -46,15 +56,39 @@ public class MedicoService {
             medico.getApellidoMaterno()
         );
 
+        int totalPacientes = (int) medicoPacienteRepository.countByMedico(medico);
+
+        List<PacienteMedicoDTO> pacientesRecientes = medicoPacienteRepository
+            .findTop5ByMedicoAndFechaUltimaConsultaIsNotNullOrderByFechaUltimaConsultaDesc(medico)
+            .stream()
+            .map(relacion -> convertirPacienteResumen(relacion.getPaciente()))
+            .collect(Collectors.toList());
+        
         return new DashboardMedicoDTO(
             nombreCompleto,
+            totalPacientes,
             0,
             0,
-            0,
-            new ArrayList<>()
+            pacientesRecientes
         );
     }
 
+    private PacienteMedicoDTO convertirPacienteResumen(Paciente paciente) {
+        String nombreCompleto = construirNombreCompleto(
+            paciente.getNombre(),
+            paciente.getApellidoPaterno(),
+            paciente.getApellidoMaterno()
+        );
+
+        int edad = Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears();
+        String edadSexo = edad + " años, " + paciente.getSexo();
+
+        return new PacienteMedicoDTO(
+            paciente.getIdPaciente(),
+            nombreCompleto,
+            edadSexo
+        );
+    }
     private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
         StringBuilder nombreCompleto = new StringBuilder();
 
