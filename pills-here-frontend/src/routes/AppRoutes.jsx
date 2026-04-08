@@ -6,6 +6,7 @@ import InicioPaciente from "../pages/paciente/InicioPaciente";
 import NuevoPaciente from "../pages/medico/NuevoPaciente";
 import DetallePaciente from "../pages/medico/DetallePaciente";
 import ListaPacientes from "../pages/medico/ListaPacientes";
+import HistorialClinico from "../pages/medico/HistorialClinico";
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -17,6 +18,8 @@ function AppRoutes() {
                 <Route path="/nuevo-paciente" element={<NuevoPaciente />} />
                 <Route path="/detalle-paciente/:idPaciente" element={<DetallePaciente />} />
                 <Route path="/lista-pacientes" element={<ListaPacientes />} />
+                <Route path="/historial-clinico" element={<HistorialClinico />} />
+
             </Routes>
         </BrowserRouter>
     );
