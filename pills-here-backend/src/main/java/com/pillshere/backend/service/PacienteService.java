@@ -1,11 +1,17 @@
 package com.pillshere.backend.service;
 
 import com.pillshere.backend.dto.DashboardPacienteDTO;
+import com.pillshere.backend.dto.HistorialClinicoItemDTO;
+import com.pillshere.backend.dto.PacienteHistorialResponseDTO;
+import com.pillshere.backend.model.HistorialClinico;
 import com.pillshere.backend.model.Paciente;
 import com.pillshere.backend.model.Usuario;
+import com.pillshere.backend.repository.HistorialClinicoRepository;
 import com.pillshere.backend.repository.PacienteRepository;
 import com.pillshere.backend.repository.UsuarioRepository;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +23,9 @@ public class PacienteService {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private HistorialClinicoRepository historialClinicoRepository;
 
     public DashboardPacienteDTO obtenerDashboardPaciente(Integer idUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
@@ -40,13 +49,53 @@ public class PacienteService {
         Paciente paciente = pacienteOpt.get();
 
         String nombreCompleto = construirNombreCompleto(
-            paciente.getNombre(),
-            paciente.getApellidoPaterno(),
-            paciente.getApellidoMaterno()
+                paciente.getNombre(),
+                paciente.getApellidoPaterno(),
+                paciente.getApellidoMaterno()
         );
 
         return new DashboardPacienteDTO(nombreCompleto);
     }
+
+    public PacienteHistorialResponseDTO obtenerHistorialPaciente(Integer idPaciente) {
+        Optional<Paciente> pacienteOpt = pacienteRepository.findById(idPaciente);
+
+        if (pacienteOpt.isEmpty()) {
+            return null;
+        }
+
+        Paciente paciente = pacienteOpt.get();
+
+        List<HistorialClinico> historialClinico = historialClinicoRepository.findByPacienteOrderByFechaDesc(paciente);
+
+        List<HistorialClinicoItemDTO> historial = historialClinico.stream()
+                .map(item -> new HistorialClinicoItemDTO(
+                item.getIdHistorial(),
+                item.getFecha(),
+                item.getDescripcion(),
+                item.getObservaciones()
+        ))
+                .collect(Collectors.toList());
+
+        String nombreCompleto = construirNombreCompleto(
+                paciente.getNombre(),
+                paciente.getApellidoPaterno(),
+                paciente.getApellidoMaterno()
+        );
+
+        return new PacienteHistorialResponseDTO(
+                paciente.getIdPaciente(),
+                paciente.getCodigoPaciente(),
+                nombreCompleto,
+                paciente.getFechaNacimiento(),
+                paciente.getSexo(),
+                paciente.getTipoSangre(),
+                paciente.getAlergias(),
+                historial
+        );
+    
+    }
+    
 
     private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
         StringBuilder nombreCompleto = new StringBuilder();

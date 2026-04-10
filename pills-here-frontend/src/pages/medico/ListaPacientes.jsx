@@ -122,7 +122,7 @@ function ListaPacientes() {
                   <button
                     className="lista-btn-ver"
                     type="button"
-                    onClick={() => irADetallePaciente(paciente.idPaciente)}
+                    onClick={() => navigate(`/historial-clinico/${paciente.idPaciente}`)}
                   >
                     <img src={iconVer} alt="Ver historial" />
                   </button>

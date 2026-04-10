@@ -18,7 +18,7 @@ function AppRoutes() {
                 <Route path="/nuevo-paciente" element={<NuevoPaciente />} />
                 <Route path="/detalle-paciente/:idPaciente" element={<DetallePaciente />} />
                 <Route path="/lista-pacientes" element={<ListaPacientes />} />
-                <Route path="/historial-clinico" element={<HistorialClinico />} />
+                <Route path="/historial-clinico/:idPaciente" element={<HistorialClinico />} />
 
             </Routes>
         </BrowserRouter>

@@ -1,6 +1,7 @@
 package com.pillshere.backend.controller;
 
 import com.pillshere.backend.dto.DashboardPacienteDTO;
+import com.pillshere.backend.dto.PacienteHistorialResponseDTO;
 import com.pillshere.backend.service.PacienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,4 +25,16 @@ public class PacienteController {
 
         return ResponseEntity.ok(dashboard);
     }
+    
+    @GetMapping("/historial/{idPaciente}")
+    public ResponseEntity<PacienteHistorialResponseDTO> obtenerHistorialPaciente(@PathVariable Integer idPaciente) {
+        PacienteHistorialResponseDTO historial = pacienteService.obtenerHistorialPaciente(idPaciente);
+
+        if (historial == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(historial);
+    }
+    
 }

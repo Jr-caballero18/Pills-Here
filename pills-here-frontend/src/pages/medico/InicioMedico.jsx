@@ -163,7 +163,7 @@ function InicioMedico() {
                     <button
                       className="btn-ver"
                       type="button"
-                      onClick={() => navigate(`/detalle-paciente/${paciente.idPaciente}`)}
+                      onClick={() => navigate(`/historial-clinico/${paciente.idPaciente}`)}
                     >
                       <img src={iconVer} alt="Ver historial" />
                     </button>

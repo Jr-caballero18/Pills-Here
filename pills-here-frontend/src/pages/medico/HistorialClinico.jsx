@@ -1,6 +1,7 @@
 import "./HistorialClinico.css";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { obtenerHistorialPaciente } from "../../services/pacienteService";
 import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
@@ -12,39 +13,47 @@ import iconUsuario from "../../assets/images/icon-perfilP.png";
 
 function HistorialClinico() {
     const navigate = useNavigate();
+    const { idPaciente } = useParams();
 
-    const historial = [
-        {
-            fecha: "12 de marzo, 2025",
-            diagnostico: "Hipertensión Arterial",
-            medico: "Dr. Jorge Gonzalez",
-            estado: "Activo",
-        },
-        {
-            fecha: "12 de marzo, 2025",
-            diagnostico: "Hipertensión Arterial",
-            medico: "Dr. Jorge Gonzalez",
-            estado: "Activo",
-        },
-        {
-            fecha: "12 de marzo, 2025",
-            diagnostico: "Hipertensión Arterial",
-            medico: "Dr. Jorge Gonzalez",
-            estado: "Finalizado",
-        },
-        {
-            fecha: "12 de marzo, 2025",
-            diagnostico: "Hipertensión Arterial",
-            medico: "Dr. Jorge Gonzalez",
-            estado: "Finalizado",
-        },
-        {
-            fecha: "12 de marzo, 2025",
-            diagnostico: "Hipertensión Arterial",
-            medico: "Dr. Jorge Gonzalez",
-            estado: "Finalizado",
-        },
-    ];
+    const [paciente, setPaciente] = useState(null);
+    const [historial, setHistorial] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const cargarHistorial = async () => {
+            try {
+                setCargando(true);
+                setError("");
+
+                const data = await obtenerHistorialPaciente(idPaciente);
+
+                setPaciente(data);
+                setHistorial(data.historial || []);
+            } catch (err) {
+                console.error("Error al cargar historial del paciente:", err);
+                setError("No se pudo cargar la información del paciente.");
+            } finally {
+                setCargando(false);
+            }
+        };
+
+        if (idPaciente) {
+            cargarHistorial();
+        }
+    }, [idPaciente]);
+
+    if (cargando) {
+        return <div className="historial-loading">Cargando historial...</div>;
+    }
+
+    if (error) {
+        return <div className="historial-error">{error}</div>;
+    }
+
+    if (!paciente) {
+        return <div className="historial-error">No se encontró el paciente.</div>;
+    }
 
     return (
         <div className="inicio-medico-page">
@@ -84,7 +93,7 @@ function HistorialClinico() {
 
             <main className="contenido-medico">
                 <div className="encabezado-superior">
-                    <h1>Historial Clínico de: Manuel Torres</h1>
+                    <h1>Historial Clínico de: {paciente.nombreCompleto}</h1>
 
                     <div className="acciones-superiores">
                         <button className="btn-notificacion">
@@ -101,10 +110,13 @@ function HistorialClinico() {
                     <img src={iconUsuario} alt="Usuario" className="historial-avatar" />
 
                     <div className="historial-datos">
-                        <p><strong>Manuel Torres</strong> ID:#34598</p>
-                        <p>Edad: 48 años.</p>
-                        <p>Sexo: Masculino</p>
-                        <p>Fecha de nacimiento: 05-08-1964</p>
+                        <p><strong>Nombre:</strong> {paciente.nombreCompleto}</p>
+                        <p><strong>Código:</strong> {paciente.codigoPaciente}</p>
+                        <p><strong>Fecha de nacimiento:</strong> {paciente.fechaNacimiento}</p>
+                        <p><strong>Sexo:</strong> {paciente.sexo}</p>
+                        <p><strong>Tipo de sangre:</strong> {paciente.tipoSangre || "No especificado"}</p>
+                        <p><strong>Alergias:</strong> {paciente.alergias || "Ninguna"}</p>
+
                     </div>
                 </section>
 
