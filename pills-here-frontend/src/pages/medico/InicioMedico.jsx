@@ -11,6 +11,7 @@ import iconTratamientosActivos from "../../assets/images/icon-tratamientos.png";
 import iconTratamientosCompletados from "../../assets/images/icon-check.png";
 import iconVer from "../../assets/images/icon-ver.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
+import iconPerfil from "../../assets/images/icon-perfilP.png";
 
 import { obtenerDashboardMedico } from "../../services/medicoService";
 
@@ -80,7 +81,7 @@ function InicioMedico() {
             </button>
 
             <button className="btn-perfil" type="button" aria-label="Perfil">
-              <span>👤</span>
+              <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
         </div>

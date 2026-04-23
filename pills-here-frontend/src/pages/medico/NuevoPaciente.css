@@ -6,7 +6,7 @@
 }
 
 .nuevo-sidebar {
-   width: 104px;
+  width: 104px;
   min-width: 104px;
   max-width: 104px;
   background-color: #173f6c;
@@ -16,20 +16,23 @@
 }
 
 .nuevo-sidebar-logo {
-  height: 94px;
+  height: 96px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #0f2c49;
+  background-color: #173f6c;
+  border-bottom: 1px solid #0d2d4c;
+  overflow: hidden;
 }
 
 .nuevo-logo-img {
-  width: 46px !important;
-  height: 46px !important;
-  max-width: 46px !important;
-  max-height: 46px !important;
+  width: 72px !important;
+  height: 72px !important;
+  max-width: 72px !important;
+  max-height: 72px !important;
   object-fit: contain;
   display: block;
+  border-radius: 50%;
 }
 
 .nuevo-sidebar-nav {
@@ -38,21 +41,22 @@
 }
 
 .nuevo-nav-item {
-  min-height: 92px;
+  width: 100%;
+  height: 101px;
   background-color: #173f6c;
   color: #ffffff;
   border: none;
-  border-bottom: 1px solid #0f2c49;
+  border-bottom: 1px solid #0d2d4c;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 8px;
   font-family: "Roboto Serif", serif;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.1;
   cursor: pointer;
-  padding: 6px 4px;
+  padding: 8px 4px;
   text-align: center;
 }
 
@@ -61,10 +65,10 @@
 }
 
 .nuevo-nav-icon {
-  width: 26px !important;
-  height: 26px !important;
-  max-width: 26px !important;
-  max-height: 26px !important;
+  width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
   object-fit: contain;
   display: block;
 }
@@ -111,10 +115,11 @@
 }
 
 .nuevo-paciente-header h1 {
-  margin: 16px 0 0 6px;
-  font-size: 28px;
+  margin: 18px 0 0 0;
+  font-size: 29px;
   font-weight: 700;
   color: #111111;
+  font-family: "Roboto Serif", serif;
 }
 
 .nuevo-header-icons {
@@ -125,8 +130,8 @@
 }
 
 .nuevo-btn-notificacion {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border: none;
   background: transparent;
   padding: 0;
@@ -137,29 +142,31 @@
 }
 
 .nuevo-btn-notificacion img {
-  width: 18px !important;
-  height: 18px !important;
-  max-width: 18px !important;
-  max-height: 18px !important;
+  width: 40px !important;
+  height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
   object-fit: contain;
   display: block;
 }
 
 .nuevo-btn-perfil {
+  width: 105px;
+  height: 50px;
   border: none;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
+  background-color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  padding: 0;
 }
 
 .nuevo-btn-perfil img {
-  width: 40px !important;
-  height: 40px !important;
-  max-width: 40px !important;
-  max-height: 40px !important;
+  width: 55px !important;
+  height: 55px !important;
+  max-width: 55px !important;
+  max-height: 55px !important;
   object-fit: contain;
   display: block;
 }
@@ -209,16 +216,14 @@
   cursor: pointer;
 }
 
-
-
 .nuevo-logo-img {
-  width: 46px !important;
-  height: 46px !important;
+  width: 72px !important;
+  height: 72px !important;
 }
 
 .nuevo-nav-icon {
-  width: 26px !important;
-  height: 26px !important;
+  width: 34px !important;
+  height: 34px !important;
 }
 
 .nuevo-back-btn img {
@@ -227,13 +232,13 @@
 }
 
 .nuevo-btn-notificacion img {
-  width: 18px !important;
-  height: 18px !important;
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .nuevo-btn-perfil img {
-  width: 40px !important;
-  height: 40px !important;
+  width: 55px !important;
+  height: 55px !important;
 }
 
 .nuevo-paciente-error {

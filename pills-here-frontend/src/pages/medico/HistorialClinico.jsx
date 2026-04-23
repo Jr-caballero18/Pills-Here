@@ -84,7 +84,7 @@ function HistorialClinico() {
                         src={iconRegreso}
                         alt="Regresar"
                         className="historial-back-icon"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/inicio-medico")}
                     />
                 </div>
             </aside>
@@ -113,10 +113,11 @@ function HistorialClinico() {
                         <p><strong>Nombre:</strong> {paciente.nombreCompleto}</p>
                         <p><strong>Código:</strong> {paciente.codigoPaciente}</p>
                         <p><strong>Fecha de nacimiento:</strong> {paciente.fechaNacimiento}</p>
+                    </div>
+                    <div className="historial-datos">
                         <p><strong>Sexo:</strong> {paciente.sexo}</p>
                         <p><strong>Tipo de sangre:</strong> {paciente.tipoSangre || "No especificado"}</p>
                         <p><strong>Alergias:</strong> {paciente.alergias || "Ninguna"}</p>
-
                     </div>
                 </section>
 

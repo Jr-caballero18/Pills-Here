@@ -163,7 +163,7 @@ function MedicoForm() {
             value={formData.apellidoMaterno}
             onChange={handleChange}
           />
-         {errores.apellidoMaterno && (
+          {errores.apellidoMaterno && (
             <span className="field-error">{errores.apellidoMaterno}</span>
           )}
         </div>
@@ -208,7 +208,16 @@ function MedicoForm() {
             type="text"
             name="cedulaProfesional"
             value={formData.cedulaProfesional}
-            onChange={handleChange}
+           onChange={(e) => {
+        const value = e.target.value.replace(/\D/g, "").slice(0, 8);
+        handleChange({
+          target: {
+            name: "cedulaProfesional",
+            value,
+          },
+        });
+      }}
+      maxLength={8}
           />
           {errores.cedulaProfesional && (
             <span className="field-error">{errores.cedulaProfesional}</span>
@@ -219,12 +228,22 @@ function MedicoForm() {
       <div className="register-row">
         <label>Especialidad:</label>
         <div className="register-input-wrapper">
-          <input
-            type="text"
+          <select
             name="especialidad"
             value={formData.especialidad}
             onChange={handleChange}
-          />
+          >
+            <option value=""></option>
+            <option value="Medicina General">Medico General</option>
+            <option value="Cardiología">Cardiología</option>
+            <option value="Pediatría">Pediatría</option>
+            <option value="Ginecología">Ginecología</option>
+            <option value="Dermatología">Dermatología</option>
+            <option value="Neurología">Neurología</option>
+            <option value="Traumatología">Traumatología</option>
+            <option value="Psiquiatría">Psiquiatría</option>
+          </select>
+
           {errores.especialidad && (
             <span className="field-error">{errores.especialidad}</span>
           )}
