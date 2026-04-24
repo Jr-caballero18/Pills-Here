@@ -95,7 +95,8 @@ function DetallePaciente() {
 
           <p className="detalle-sin-tratamiento">No hay tratamiento existente</p>
 
-          <button className="detalle-crear-btn" type="button" onClick={() => navigate("/crear-tratamiento")}>
+          <button className="detalle-crear-btn" type="button"  onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
+>
             Crear tratamiento
           </button>
         </section>

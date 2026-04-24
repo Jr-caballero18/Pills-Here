@@ -31,28 +31,64 @@ public class AuthService {
     @Autowired
     private PacienteRepository pacienteRepository;
 
-  public LoginResponseDTO iniciarSesion(LoginRequestDTO request) {
+    public LoginResponseDTO iniciarSesion(LoginRequestDTO request) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByCorreo(request.getCorreo());
 
         if (usuarioOpt.isEmpty()) {
-            return new LoginResponseDTO(null, null, null, "Usuario no encontrado", false);
+            return new LoginResponseDTO(null, null, null, null, null, "Usuario no encontrado", false);
         }
 
         Usuario usuario = usuarioOpt.get();
 
         if (!usuario.getContrasena().equals(request.getContrasena())) {
-            return new LoginResponseDTO(null, null, null, "Contraseña incorrecta", false);
+            return new LoginResponseDTO(null, null, null, null, null, "Contraseña incorrecta", false);
         }
 
         String rol = usuario.getRol();
-        String nombre = obtenerNombreSegunRol(usuario);
+        String nombre = "Usuario";
+        Integer idMedico = null;
+        Integer idPaciente = null;
+
+        if ("MEDICO".equalsIgnoreCase(rol)) {
+            Optional<Medico> medicoOpt = medicoRepository.findByUsuario(usuario);
+
+            if (medicoOpt.isPresent()) {
+                Medico medico = medicoOpt.get();
+
+                idMedico = medico.getIdMedico();
+
+                nombre = construirNombreCompleto(
+                        medico.getNombre(),
+                        medico.getApellidoPaterno(),
+                        medico.getApellidoMaterno()
+                );
+            }
+        }
+
+        if ("PACIENTE".equalsIgnoreCase(rol)) {
+            Optional<Paciente> pacienteOpt = pacienteRepository.findByUsuario(usuario);
+
+            if (pacienteOpt.isPresent()) {
+                Paciente paciente = pacienteOpt.get();
+
+                idPaciente = paciente.getIdPaciente();
+
+                nombre = construirNombreCompleto(
+                        paciente.getNombre(),
+                        paciente.getApellidoPaterno(),
+                        paciente.getApellidoMaterno()
+                );
+            }
+        }
 
         return new LoginResponseDTO(
-            usuario.getIdUsuario(),
-            nombre,
-            rol,
-            "Inicio de sesión exitoso",
-            true
+                usuario.getIdUsuario(),
+                idMedico,
+                idPaciente,
+                nombre,
+                rol,
+                "Inicio de sesión exitoso",
+                true
         );
     }
 
@@ -61,11 +97,11 @@ public class AuthService {
             Optional<Medico> medicoOpt = medicoRepository.findByUsuario(usuario);
             if (medicoOpt.isPresent()) {
                 Medico medico = medicoOpt.get();
-                
-                 return construirNombreCompleto(
-                    medico.getNombre(),
-                    medico.getApellidoPaterno(),
-                    medico.getApellidoMaterno()
+
+                return construirNombreCompleto(
+                        medico.getNombre(),
+                        medico.getApellidoPaterno(),
+                        medico.getApellidoMaterno()
                 );
             }
         }
@@ -75,16 +111,16 @@ public class AuthService {
             if (pacienteOpt.isPresent()) {
                 Paciente paciente = pacienteOpt.get();
                 return construirNombreCompleto(
-                    paciente.getNombre(),
-                    paciente.getApellidoPaterno(),
-                    paciente.getApellidoMaterno()
+                        paciente.getNombre(),
+                        paciente.getApellidoPaterno(),
+                        paciente.getApellidoMaterno()
                 );
             }
         }
 
         return "Usuario";
     }
-    
+
     private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
         StringBuilder nombreCompleto = new StringBuilder();
 
@@ -102,8 +138,7 @@ public class AuthService {
 
         return nombreCompleto.toString().trim();
     }
-    
-    
+
     public RegisterResponseDTO registrarMedico(RegisterMedicoRequestDTO request) {
 
         if (usuarioRepository.findByCorreo(request.getCorreo()).isPresent()) {
@@ -151,7 +186,6 @@ public class AuthService {
 
         return codigo;
     }
-    
 
     public RegisterPacienteResponseDTO registrarPaciente(RegisterPacienteRequestDTO request) {
 

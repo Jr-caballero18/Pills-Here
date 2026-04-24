@@ -46,14 +46,24 @@ function Login() {
 
       const loginExitoso = respuesta.success ?? respuesta.exito;
 
-     if (!loginExitoso) {
+      if (!loginExitoso) {
         setMensajeError(respuesta.mensaje || "No se pudo iniciar sesión");
         return;
       }
 
+
       localStorage.setItem("idUsuario", respuesta.idUsuario);
       localStorage.setItem("rol", respuesta.rol);
       localStorage.setItem("nombre", respuesta.nombre);
+
+      if (respuesta.idMedico) {
+        localStorage.setItem("idMedico", respuesta.idMedico);
+      }
+
+      if (respuesta.idPaciente) {
+        localStorage.setItem("idPaciente", respuesta.idPaciente);
+      }
+
 
       if (respuesta.rol === "MEDICO") {
         navigate("/inicio-medico");

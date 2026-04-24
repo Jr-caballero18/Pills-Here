@@ -1,18 +1,22 @@
 package com.pillshere.backend.dto;
 
-
 public class LoginResponseDTO {
 
     private Integer idUsuario;
+    private Integer idMedico;
+    private Integer idPaciente;
     private String nombre;
     private String rol;
     private String mensaje;
     private boolean success;
+
     public LoginResponseDTO() {
     }
 
-    public LoginResponseDTO(Integer idUsuario, String nombre, String rol, String mensaje, boolean success) {
+    public LoginResponseDTO(Integer idUsuario,Integer idMedico,Integer idPaciente, String nombre, String rol, String mensaje, boolean success) {
         this.idUsuario = idUsuario;
+        this.idMedico = idMedico;
+        this.idPaciente = idPaciente;
         this.nombre = nombre;
         this.rol = rol;
         this.mensaje = mensaje;
@@ -26,6 +30,23 @@ public class LoginResponseDTO {
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
+    
+     public Integer getIdMedico() {
+        return idMedico;
+    }
+
+    public void setIdMedico(Integer idMedico) {
+        this.idMedico = idMedico;
+    }
+    
+    public Integer getIdPaciente() {
+        return idPaciente;
+    }
+
+    public void setIdPaciente(Integer idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
 
     public String getNombre() {
         return nombre;
@@ -50,7 +71,7 @@ public class LoginResponseDTO {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-    
+
     public boolean isSuccess() {
         return success;
     }

@@ -1,6 +1,8 @@
 import "./CrearTratamiento.css";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { obtenerDetallePaciente } from "../../services/medicoPacienteService";
+import { buscarMedicamentos, crearTratamiento } from "../../services/tratamientoService";
 
 import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
@@ -13,73 +15,55 @@ import iconBorrar from "../../assets/images/borrar-icon.png";
 
 function CrearTratamiento() {
   const navigate = useNavigate();
+  const { idPaciente } = useParams();
+  const nombreMedico = localStorage.getItem("nombre");
 
-  const medicamentosDisponibles = [
-    {
-      id: 1,
-      nombre: "Paracetamol",
-      presentacion: "Tableta",
-      via: "Oral",
-    },
-    {
-      id: 2,
-      nombre: "Pantoprazol",
-      presentacion: "Tableta",
-      via: "Oral",
-    },
-    {
-      id: 3,
-      nombre: "Prednisona",
-      presentacion: "Tableta",
-      via: "Oral",
-    },
-    {
-      id: 4,
-      nombre: "Pregabalina",
-      presentacion: "Cápsula",
-      via: "Oral",
-    },
-    {
-      id: 5,
-      nombre: "Prometazina",
-      presentacion: "Jarabe",
-      via: "Oral",
-    },
-  ];
+  const [paciente, setPaciente] = useState(null);
+  const [diagnostico, setDiagnostico] = useState("");
+  const [recomendaciones, setRecomendaciones] = useState("");
 
   const [busqueda, setBusqueda] = useState("");
+  const [sugerencias, setSugerencias] = useState([]);
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
 
-  const [medicamentos, setMedicamentos] = useState([
-    {
-      id: 101,
-      nombre: "Fluticasona",
-      dosis: "1 cada 6 horas",
-      presentacion: "De patente",
-      via: "Tomada",
-    },
-    {
-      id: 102,
-      nombre: "Budesonida",
-      dosis: "1-2 Inhalaciones cada 4-6 horas",
-      presentacion: "De patente",
-      via: "Inhalador",
-    },
-  ]);
+  const [medicamentos, setMedicamentos] = useState([]);
 
-  const sugerenciasFiltradas = medicamentosDisponibles.filter((medicamento) =>
-    medicamento.nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  useEffect(() => {
+    const cargarPaciente = async () => {
+      try {
+        const data = await obtenerDetallePaciente(idPaciente);
+        setPaciente(data);
+      } catch (error) {
+        console.error("Error al obtener paciente:", error);
+      }
+    };
 
-  const manejarCambioBusqueda = (e) => {
-    const valor = e.target.value;
-    setBusqueda(valor);
-    setMostrarSugerencias(valor.trim().length > 0);
-  };
+    cargarPaciente();
+  }, [idPaciente]);
 
-  const seleccionarMedicamento = (medicamentoSeleccionado) => {
+  useEffect(() => {
+    const buscar = async () => {
+      if (busqueda.trim() === "") {
+        setSugerencias([]);
+        setMostrarSugerencias(false);
+        return;
+      }
+
+      try {
+        const data = await buscarMedicamentos(busqueda);
+        setSugerencias(data);
+        setMostrarSugerencias(true);
+      } catch (error) {
+        console.error("Error al buscar medicamentos:", error);
+      }
+    };
+
+    buscar();
+  }, [busqueda]);
+
+  const seleccionarMedicamento = (medicamento) => {
     const yaExiste = medicamentos.some(
-      (medicamento) => medicamento.nombre === medicamentoSeleccionado.nombre
+      (item) => item.idMedicamento === medicamento.idMedicamento
     );
 
     if (yaExiste) {
@@ -89,11 +73,11 @@ function CrearTratamiento() {
     }
 
     const nuevoMedicamento = {
-      id: medicamentoSeleccionado.id,
-      nombre: medicamentoSeleccionado.nombre,
+      idMedicamento: medicamento.idMedicamento,
+      nombre: medicamento.nombre,
       dosis: "",
-      presentacion: medicamentoSeleccionado.presentacion,
-      via: medicamentoSeleccionado.via,
+      presentacion: medicamento.presentacion,
+      via: medicamento.viaAdministracion,
     };
 
     setMedicamentos([...medicamentos, nuevoMedicamento]);
@@ -101,16 +85,44 @@ function CrearTratamiento() {
     setMostrarSugerencias(false);
   };
 
-  const eliminarMedicamento = (index) => {
-    const nuevos = medicamentos.filter((_, i) => i !== index);
-    setMedicamentos(nuevos);
-  };
-
   const actualizarDosis = (index, nuevaDosis) => {
     const nuevosMedicamentos = [...medicamentos];
     nuevosMedicamentos[index].dosis = nuevaDosis;
     setMedicamentos(nuevosMedicamentos);
   };
+
+  const eliminarMedicamento = (index) => {
+    const nuevosMedicamentos = medicamentos.filter((_, i) => i !== index);
+    setMedicamentos(nuevosMedicamentos);
+  };
+
+  const guardarTratamiento = async () => {
+    try {
+      const idMedico = localStorage.getItem("idMedico");
+
+      const tratamiento = {
+        idPaciente: Number(idPaciente),
+        idMedico: Number(idMedico),
+        diagnostico,
+        recomendaciones,
+        medicamentos: medicamentos.map((medicamento) => ({
+          idMedicamento: medicamento.idMedicamento,
+          dosis: medicamento.dosis,
+        })),
+      };
+
+      await crearTratamiento(tratamiento);
+      alert("Tratamiento creado correctamente");
+      navigate(`/detalle-paciente/${idPaciente}`);
+    } catch (error) {
+      console.error("Error al crear tratamiento:", error);
+      alert("Error al crear tratamiento");
+    }
+  };
+
+  if (!paciente) {
+    return <p>Cargando paciente...</p>;
+  }
 
   return (
     <div className="crear-tratamiento-page">
@@ -165,7 +177,7 @@ function CrearTratamiento() {
 
       <main className="crear-tratamiento-content">
         <div className="crear-tratamiento-header">
-          <h1>Crear tratamiento de: Cristina Hernandez</h1>
+          <h1>Crear tratamiento de: {paciente.nombreCompleto}</h1>
 
           <div className="crear-tratamiento-header-icons">
             <button className="crear-tratamiento-btn-notificacion" type="button">
@@ -185,14 +197,14 @@ function CrearTratamiento() {
 
           <div className="crear-tratamiento-datos">
             <div className="crear-tratamiento-datos-columna">
-              <p>Karla Martinez Duarte.</p>
-              <p>Edad: 48 años.</p>
-              <p>Sexo: Femenino.</p>
+              <p>{paciente.nombreCompleto}</p>
+              <p>Edad: {paciente.edad}</p>
+              <p>Sexo: {paciente.sexo}</p>
             </div>
 
             <div className="crear-tratamiento-datos-columna">
-              <p>Medico: Dr. Jorge Gonzalez.</p>
-              <p>Fecha de inicio: 18 de Diciembre, 2025.</p>
+              <p>Medico: Dr. {nombreMedico}</p>
+              <p>Fecha de inicio: {new Date().toLocaleDateString()}</p>
             </div>
           </div>
         </section>
@@ -201,7 +213,11 @@ function CrearTratamiento() {
 
         <section className="crear-tratamiento-diagnostico">
           <label>Diagnostico:</label>
-          <input type="text" />
+          <input
+            type="text"
+            value={diagnostico}
+            onChange={(e) => setDiagnostico(e.target.value)}
+          />
         </section>
 
         <section className="crear-tratamiento-medicamentos-box">
@@ -212,17 +228,18 @@ function CrearTratamiento() {
               <div className="crear-tratamiento-buscador">
                 <input
                   type="text"
+                  name="busquedaMedicamento"
                   value={busqueda}
-                  onChange={manejarCambioBusqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
                 />
                 <span className="crear-tratamiento-icono-busqueda">⌕</span>
               </div>
 
-              {mostrarSugerencias && sugerenciasFiltradas.length > 0 && (
+              {mostrarSugerencias && sugerencias.length > 0 && (
                 <ul className="crear-tratamiento-sugerencias">
-                  {sugerenciasFiltradas.map((medicamento) => (
+                  {sugerencias.map((medicamento) => (
                     <li
-                      key={medicamento.id}
+                      key={medicamento.idMedicamento}
                       onClick={() => seleccionarMedicamento(medicamento)}
                     >
                       {medicamento.nombre}
@@ -247,7 +264,7 @@ function CrearTratamiento() {
 
               <tbody>
                 {medicamentos.map((medicamento, index) => (
-                  <tr key={`${medicamento.id}-${index}`}>
+                  <tr key={`${medicamento.idMedicamento}-${index}`}>
                     <td>{medicamento.nombre}</td>
 
                     <td>
@@ -290,10 +307,13 @@ function CrearTratamiento() {
           <textarea
             className="crear-tratamiento-textarea"
             placeholder="Agregar recomendaciones."
+            value={recomendaciones}
+            onChange={(e) => setRecomendaciones(e.target.value)}
+
           ></textarea>
 
           <div className="crear-tratamiento-btn-agregar-wrapper">
-            <button className="crear-tratamiento-btn-crear" type="button">
+            <button className="crear-tratamiento-btn-crear" type="button"onClick={guardarTratamiento}>
               Crear
             </button>
           </div>
