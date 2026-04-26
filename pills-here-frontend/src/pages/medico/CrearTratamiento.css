@@ -454,3 +454,51 @@
 .crear-tratamiento-sugerencias li:hover {
   background-color: #cfe3ff; 
 }
+
+.editar-tratamiento-estado-box {
+  width: 60%;
+  min-height: 34px;
+  background-color: #d9d9d9;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  margin: 20px auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.editar-tratamiento-resumen-box {
+  width: 64%;
+  background-color: #d9d9d9;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  margin: 0 auto 22px auto;
+  padding: 16px 42px;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
+  color: #222;
+}
+
+.editar-tratamiento-resumen-box p {
+  margin: 0 0 4px 0;
+}
+
+.editar-tratamiento-resumen-box ul {
+  margin: 0 0 18px 20px;
+  padding: 0;
+}
+
+.editar-tratamiento-recomendaciones-input {
+  width: 100%;
+  min-height: 52px;
+  border: none;
+  background-color: transparent;
+  resize: none;
+  outline: none;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
+  color: #222;
+}
