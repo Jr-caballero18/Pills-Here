@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DosisRepository extends JpaRepository<Dosis, Integer> {
         List<Dosis> findByTratamientoIdTratamiento(Integer idTratamiento);
+        void deleteByTratamientoIdTratamiento(Integer idTratamiento);
 }

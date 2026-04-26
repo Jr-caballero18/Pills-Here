@@ -502,3 +502,23 @@
   font-size: 16px;
   color: #222;
 }
+
+.editar-tratamiento-guardar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
+  margin-bottom: 24px;
+}
+
+.editar-tratamiento-guardar-btn {
+  width: 125px;
+  height: 38px;
+  border: none;
+  border-radius: 18px;
+  background-color: #173f6c;
+  color: #ffffff;
+  font-family: "Roboto Serif", serif;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}

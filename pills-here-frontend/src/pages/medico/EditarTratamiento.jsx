@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   obtenerDetalleTratamiento,
   buscarMedicamentos,
+  actualizarTratamiento
 } from "../../services/tratamientoService";
 
 import logo from "../../assets/images/logo.png";
@@ -105,6 +106,27 @@ function EditarTratamiento() {
   if (!tratamiento) {
     return <p>Cargando tratamiento...</p>;
   }
+  const guardarCambios = async () => {
+    try {
+
+      const tratamientoActualizado = {
+        diagnostico,
+        recomendaciones,
+        medicamentos: medicamentos.map((medicamento) => ({
+          idMedicamento: medicamento.idMedicamento,
+          dosis: medicamento.dosis,
+        })),
+      };
+
+      await actualizarTratamiento(idTratamiento, tratamientoActualizado);
+
+      alert("Tratamiento actualizado correctamente");
+      navigate(`/detalle-paciente/${tratamiento.paciente.idPaciente}`);
+    } catch (error) {
+      console.error("Error al actualizar tratamiento:", error);
+      alert("Error al actualizar tratamiento");
+    }
+  };
 
   return (
     <div className="crear-tratamiento-page">
@@ -296,6 +318,15 @@ function EditarTratamiento() {
             </div>
           </div>
         </section>
+        <div className="editar-tratamiento-guardar-wrapper">
+          <button
+            className="editar-tratamiento-guardar-btn"
+            type="button"
+            onClick={guardarCambios}
+          >
+            Guardar
+          </button>
+        </div>
       </main>
     </div>
   );

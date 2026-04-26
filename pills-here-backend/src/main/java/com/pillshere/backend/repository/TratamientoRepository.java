@@ -8,5 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TratamientoRepository extends JpaRepository<Tratamiento, Integer> {
     
-    Optional<Tratamiento> findFirstByPacienteIdPacienteOrderByFechaInicioDesc(Integer idPaciente);
+    Optional<Tratamiento> findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(
+            Integer idPaciente, 
+            String estado);
 }

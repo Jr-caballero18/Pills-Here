@@ -1,5 +1,6 @@
 package com.pillshere.backend.service;
 
+import com.pillshere.backend.dto.ActualizarTratamientoRequestDTO;
 import com.pillshere.backend.dto.CrearTratamientoRequestDTO;
 import com.pillshere.backend.dto.MedicamentoTratamientoDTO;
 import com.pillshere.backend.dto.TratamientoPacienteResponseDTO;
@@ -16,6 +17,7 @@ import com.pillshere.backend.repository.TratamientoRepository;
 import com.pillshere.backend.dto.DetalleTratamientoResponseDTO;
 import com.pillshere.backend.dto.MedicamentoTratamientoResponseDTO;
 import com.pillshere.backend.dto.PacienteTratamientoDTO;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -87,7 +89,7 @@ public class TratamientoService {
     
     public TratamientoPacienteResponseDTO obtenerTratamientoPorPaciente(Integer idPaciente) {
     Optional<Tratamiento> tratamientoOpt =
-            tratamientoRepository.findFirstByPacienteIdPacienteOrderByFechaInicioDesc(idPaciente);
+            tratamientoRepository.findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(idPaciente, "ACTIVO");
 
     if (tratamientoOpt.isEmpty()) {
         return null;
@@ -172,4 +174,42 @@ public class TratamientoService {
 
         return nombreCompleto.toString().trim();
     }
+    
+    public void cancelarTratamiento(Integer idTratamiento) {
+    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+
+    tratamiento.setEstado("CANCELADO");
+
+    tratamientoRepository.save(tratamiento);
+}
+    
+    @Transactional
+public void actualizarTratamiento(Integer idTratamiento, ActualizarTratamientoRequestDTO request) {
+    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+
+    tratamiento.setDiagnostico(request.getDiagnostico());
+    tratamiento.setNombreTratamiento(request.getDiagnostico());
+    tratamiento.setNotasMedicas(request.getRecomendaciones());
+
+    tratamientoRepository.save(tratamiento);
+
+    dosisRepository.deleteByTratamientoIdTratamiento(idTratamiento);
+
+    for (MedicamentoTratamientoDTO medicamentoDTO : request.getMedicamentos()) {
+        Medicamento medicamento = medicamentoRepository.findById(medicamentoDTO.getIdMedicamento())
+                .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
+
+        Dosis dosis = new Dosis();
+        dosis.setTratamiento(tratamiento);
+        dosis.setMedicamento(medicamento);
+        dosis.setCantidad(medicamentoDTO.getDosis());
+        dosis.setFrecuencia("N/A");
+        dosis.setHoraProgramada(LocalTime.of(0, 0));
+        dosis.setDuracion(0);
+
+        dosisRepository.save(dosis);
+    }
+}
 }

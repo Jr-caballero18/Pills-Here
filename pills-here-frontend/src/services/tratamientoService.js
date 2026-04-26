@@ -29,3 +29,20 @@ export const obtenerDetalleTratamiento = async (idTratamiento) => {
   const response = await axios.get(`${API_URL}/tratamientos/${idTratamiento}`);
   return response.data;
 };
+
+export const actualizarTratamiento = async (idTratamiento, tratamiento) => {
+  const response = await axios.put(
+    `${API_URL}/tratamientos/${idTratamiento}`,
+    tratamiento
+  );
+
+  return response.data;
+};
+
+export const cancelarTratamiento = async (idTratamiento) => {
+  const response = await axios.put(
+    `${API_URL}/tratamientos/${idTratamiento}/cancelar`
+  );
+
+  return response.data;
+};

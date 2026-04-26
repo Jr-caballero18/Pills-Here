@@ -1,6 +1,7 @@
 
 package com.pillshere.backend.controller;
 
+import com.pillshere.backend.dto.ActualizarTratamientoRequestDTO;
 import com.pillshere.backend.dto.CrearTratamientoRequestDTO;
 import com.pillshere.backend.dto.DetalleTratamientoResponseDTO;
 import com.pillshere.backend.dto.TratamientoPacienteResponseDTO;
@@ -38,5 +39,21 @@ public ResponseEntity<TratamientoPacienteResponseDTO> obtenerTratamientoPorPacie
 @GetMapping("/{idTratamiento}")
 public ResponseEntity<DetalleTratamientoResponseDTO> obtenerDetalleTratamiento(@PathVariable Integer idTratamiento) {
     return ResponseEntity.ok(tratamientoService.obtenerDetalleTratamiento(idTratamiento));
+}
+
+@PutMapping("/{idTratamiento}/cancelar")
+public ResponseEntity<String> cancelarTratamiento(@PathVariable Integer idTratamiento) {
+    tratamientoService.cancelarTratamiento(idTratamiento);
+    return ResponseEntity.ok("Tratamiento cancelado correctamente");
+}
+
+
+@PutMapping("/{idTratamiento}")
+public ResponseEntity<String> actualizarTratamiento(
+        @PathVariable Integer idTratamiento,
+        @RequestBody ActualizarTratamientoRequestDTO request
+) {
+    tratamientoService.actualizarTratamiento(idTratamiento, request);
+    return ResponseEntity.ok("Tratamiento actualizado correctamente");
 }
 }

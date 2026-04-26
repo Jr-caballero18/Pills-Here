@@ -2,7 +2,7 @@ import "./DetallePaciente.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetallePaciente } from "../../services/medicoPacienteService";
-import { obtenerTratamientoPorPaciente } from "../../services/tratamientoService";
+import { obtenerTratamientoPorPaciente, cancelarTratamiento } from "../../services/tratamientoService";
 import iconEditar from "../../assets/images/editar-icon.png";
 import iconBorrar from "../../assets/images/borrar-icon.png";
 import logo from "../../assets/images/logo.png";
@@ -48,7 +48,21 @@ function DetallePaciente() {
     return <p>Cargando paciente...</p>;
   }
 
+  const cancelarTratamientoPaciente = async () => {
+    const confirmar = window.confirm("¿Seguro que deseas cancelar este tratamiento?");
 
+    if (!confirmar) return;
+
+    try {
+      await cancelarTratamiento(tratamiento.idTratamiento);
+
+      alert("Tratamiento cancelado correctamente");
+      setTratamiento(null);
+    } catch (error) {
+      console.error("Error al cancelar tratamiento:", error);
+      alert("Error al cancelar tratamiento");
+    }
+  };
 
   return (
     <div className="detalle-paciente-page">
@@ -109,47 +123,51 @@ function DetallePaciente() {
           </div>
 
           {tratamiento ? (
-  <>
-    <div className="detalle-tratamiento-box">
-      <span>Tratamiento</span>
+            <>
+              <div className="detalle-tratamiento-box">
+                <span>Tratamiento</span>
 
-      <div className="detalle-tratamiento-actions">
-        <button
-          className="detalle-tratamiento-icon-btn"
-          type="button"
-          onClick={() => navigate(`/editar-tratamiento/${tratamiento.idTratamiento}`)}
-        >
-          <img src={iconEditar} alt="Editar tratamiento" />
-        </button>
+                <div className="detalle-tratamiento-actions">
+                  <button
+                    className="detalle-tratamiento-icon-btn"
+                    type="button"
+                    onClick={() => navigate(`/editar-tratamiento/${tratamiento.idTratamiento}`)}
+                  >
+                    <img src={iconEditar} alt="Editar tratamiento" />
+                  </button>
 
-        <button className="detalle-tratamiento-icon-btn" type="button">
-          <img src={iconBorrar} alt="Eliminar tratamiento" />
-        </button>
-      </div>
-    </div>
+                  <button
+                    className="detalle-tratamiento-icon-btn"
+                    type="button"
+                    onClick={cancelarTratamientoPaciente}
+                  >
+                    <img src={iconBorrar} alt="Cancelar tratamiento" />
+                  </button>
+                </div>
+              </div>
 
-    <textarea
-      className="detalle-comentario-textarea"
-      placeholder="Agregar comentario."
-    ></textarea>
+              <textarea
+                className="detalle-comentario-textarea"
+                placeholder="Agregar comentario."
+              ></textarea>
 
-    <button className="detalle-agregar-btn" type="button">
-      Agregar
-    </button>
-  </>
-) : (
-  <>
-    <p className="detalle-sin-tratamiento">No hay tratamiento existente</p>
+              <button className="detalle-agregar-btn" type="button">
+                Agregar
+              </button>
+            </>
+          ) : (
+            <>
+              <p className="detalle-sin-tratamiento">No hay tratamiento existente</p>
 
-    <button
-      className="detalle-crear-btn"
-      type="button"
-      onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
-    >
-      Crear tratamiento
-    </button>
-  </>
-)}
+              <button
+                className="detalle-crear-btn"
+                type="button"
+                onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
+              >
+                Crear tratamiento
+              </button>
+            </>
+          )}
         </section>
       </main>
     </div>
