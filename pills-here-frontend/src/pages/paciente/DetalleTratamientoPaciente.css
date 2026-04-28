@@ -1,0 +1,377 @@
+.detalle-tratamiento-paciente-page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: "Roboto Serif", serif;
+}
+
+.detalle-tratamiento-paciente-header {
+  height: 90px;
+  background-color: #173f6c;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  color: #ffffff;
+}
+
+.detalle-tratamiento-paciente-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.detalle-tratamiento-paciente-header h1 {
+  margin-left: 28px;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.detalle-tratamiento-paciente-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.detalle-tratamiento-paciente-icons button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.detalle-tratamiento-paciente-icons img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.detalle-tratamiento-paciente-content {
+  padding: 36px 0 70px 0;
+}
+
+.detalle-tratamiento-info {
+  width: 760px;
+  margin: 0 auto 18px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.detalle-tratamiento-avatar-box img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+}
+
+.detalle-tratamiento-datos p {
+  margin: 0 0 7px 0;
+  font-size: 15px;
+}
+
+.detalle-tratamiento-estado {
+  width: 610px;
+  min-height: 28px;
+  background-color: #d9d9d9;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  margin: 14px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.detalle-tratamiento-resumen {
+  width: 640px;
+  background-color: #d9d9d9;
+  border: 1px solid #707070;
+  border-radius: 4px;
+  margin: 0 auto 20px auto;
+  padding: 14px 36px;
+  font-size: 13px;
+}
+
+.detalle-tratamiento-resumen p {
+  margin: 0 0 4px 0;
+}
+
+.detalle-tratamiento-resumen ul {
+  margin: 0 0 12px 20px;
+  padding: 0;
+}
+
+.detalle-tratamiento-recomendaciones {
+  white-space: pre-line;
+}
+
+.detalle-tratamiento-subtitulo {
+  width: 640px;
+  margin: 0 auto 12px auto;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.detalle-tratamiento-grafica {
+  width: 520px;
+  height: 170px;
+  margin: 0 auto 20px auto;
+  border-left: 1px solid #777;
+  border-bottom: 1px solid #777;
+  padding: 20px 20px 0 20px;
+}
+
+.grafica-barras {
+  height: 120px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+}
+
+.barra {
+  width: 26px;
+}
+
+.barra.verde {
+  background-color: #86c98b;
+}
+
+.barra.amarilla {
+  background-color: #f5df61;
+}
+
+.barra.roja {
+  background-color: #ec6464;
+}
+
+.grafica-dias {
+  display: flex;
+  justify-content: space-around;
+  font-size: 11px;
+  margin-top: 8px;
+}
+
+.detalle-tratamiento-registros {
+  width: 480px;
+  margin: 0 auto;
+  border: 1px solid #aaa;
+  padding: 16px;
+}
+
+.registro-card {
+  background-color: #d9d9d9;
+  border: 1px solid #777;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.registro-card:last-child {
+  margin-bottom: 0;
+}
+
+.registro-icono {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+
+.registro-card h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.registro-card p {
+  margin: 0;
+  font-size: 12px;
+}
+
+.registro-card small {
+  font-size: 10px;
+}
+
+.registro-card button {
+  background-color: #173f6c;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 6px 16px;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: "Roboto Serif", serif;
+}
+
+.registro-card button.tomada {
+  background-color: #8894a0;
+}
+
+.detalle-tratamiento-back {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.detalle-tratamiento-back img {
+  width: 50px;
+  height: auto;
+}
+
+.detalle-tratamiento-leyenda {
+  width: 520px;
+  margin: 0 auto 28px auto;
+  display: flex;
+  justify-content: center;
+  gap: 55px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.detalle-tratamiento-leyenda div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.detalle-tratamiento-leyenda img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.detalle-tratamiento-tabs {
+  width: 760px;
+  height: 44px;
+  margin: 0 auto -1px auto;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 42px;
+  box-sizing: border-box;
+}
+
+.detalle-tratamiento-tabs button {
+  width: 145px;
+  height: 44px;
+  border: 1px solid #222;
+  border-bottom: none;
+  background-color: #d9d9d9;
+  font-family: "Roboto Serif", serif;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detalle-tratamiento-tabs .tab-activa {
+  background-color: #ffffff;
+}
+
+.detalle-tratamiento-tabs span {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 17px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background-color: #75a9dc;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.detalle-tratamiento-registros {
+  width: 760px;
+  min-height: 470px;
+  margin: 0 auto;
+  border: 1px solid #222;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 44px 58px;
+  box-sizing: border-box;
+}
+
+.registro-card {
+  width: 100%;
+  height: 110px;
+  background-color: #d9d9d9;
+  border: 1px solid #222;
+  margin-bottom: 34px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.registro-card:last-child {
+  margin-bottom: 0;
+}
+
+.registro-titulo {
+  width: 100%;
+  height: 36px;
+  border-bottom: 2px solid #111;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 23px;
+  font-weight: 400;
+  box-sizing: border-box;
+}
+
+.registro-cuerpo {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 12px;
+  box-sizing: border-box;
+}
+
+.registro-hora {
+  width: 115px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.registro-hora img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+}
+
+.registro-dosis {
+  flex: 1;
+}
+
+.registro-dosis p {
+  margin: 0 0 6px 0;
+  font-size: 15px;
+}
+
+.registro-dosis small {
+  font-size: 12px;
+}
+
+.registro-card button {
+  width: 190px;
+  height: 36px;
+  border: none;
+  border-radius: 20px;
+  background-color: #173f6c;
+  color: #ffffff;
+  font-family: "Roboto Serif", serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.registro-card button.tomada {
+  width: 120px;
+  background-color: #8894a0;
+}

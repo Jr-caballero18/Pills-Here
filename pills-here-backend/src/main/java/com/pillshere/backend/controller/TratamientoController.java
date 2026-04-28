@@ -10,6 +10,8 @@ import com.pillshere.backend.dto.TratamientoPacienteResponseDTO;
 import com.pillshere.backend.service.TratamientoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tratamientos")
@@ -71,5 +73,12 @@ public ResponseEntity<String> agregarComentarioTratamiento(
 ) {
     tratamientoService.agregarComentarioTratamiento(idTratamiento, request.getComentario());
     return ResponseEntity.ok("Comentario agregado correctamente");
+}
+
+@GetMapping("/paciente-actuales/{idPaciente}")
+public ResponseEntity<List<TratamientoActualPacienteDTO>> obtenerTratamientosActivosPaciente(
+        @PathVariable Integer idPaciente
+) {
+    return ResponseEntity.ok(tratamientoService.obtenerTratamientosActivosPaciente(idPaciente));
 }
 }

@@ -12,6 +12,8 @@ public class DetalleTratamientoResponseDTO {
     private String notasMedicas;
     private PacienteTratamientoDTO paciente;
     private List<MedicamentoTratamientoResponseDTO> medicamentos;
+    private String nombreMedico;
+
 
     public Integer getIdTratamiento() {
         return idTratamiento;
@@ -68,4 +70,12 @@ public class DetalleTratamientoResponseDTO {
     public void setMedicamentos(List<MedicamentoTratamientoResponseDTO> medicamentos) {
         this.medicamentos = medicamentos;
     }
+    
+    public String getNombreMedico() {
+    return nombreMedico;
+}
+
+public void setNombreMedico(String nombreMedico) {
+    this.nombreMedico = nombreMedico;
+}
 }

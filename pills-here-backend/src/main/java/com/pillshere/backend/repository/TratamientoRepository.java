@@ -12,5 +12,11 @@ public interface TratamientoRepository extends JpaRepository<Tratamiento, Intege
     Optional<Tratamiento> findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(
             Integer idPaciente, 
             String estado);
+    
     List<Tratamiento> findByPacienteIdPacienteOrderByFechaInicioDesc(Integer idPaciente);
+    
+    List<Tratamiento> findByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(
+        Integer idPaciente,
+        String estado
+);
 }

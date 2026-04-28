@@ -55,3 +55,11 @@ export const agregarComentarioTratamiento = async (idTratamiento, comentario) =>
 
   return response.data;
 };
+
+export const obtenerTratamientosActivosPaciente = async (idPaciente) => {
+  const response = await axios.get(
+    `${API_URL}/tratamientos/paciente-actuales/${idPaciente}`
+  );
+
+  return response.data;
+};

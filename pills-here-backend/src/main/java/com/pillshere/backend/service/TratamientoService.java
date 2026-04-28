@@ -19,6 +19,7 @@ import com.pillshere.backend.dto.HistorialPacienteResponseDTO;
 import com.pillshere.backend.dto.HistorialTratamientoDTO;
 import com.pillshere.backend.dto.MedicamentoTratamientoResponseDTO;
 import com.pillshere.backend.dto.PacienteTratamientoDTO;
+import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
@@ -122,6 +123,15 @@ public class TratamientoService {
                 paciente.getApellidoMaterno()
         );
 
+        Medico medico = tratamiento.getMedico();
+
+        String nombreMedico = construirNombreCompleto(
+                medico.getNombre(),
+                medico.getApellidoPaterno(),
+                medico.getApellidoMaterno()
+        );
+
+
         Integer edad = null;
 
         if (paciente.getFechaNacimiento() != null) {
@@ -156,6 +166,8 @@ public class TratamientoService {
         response.setNotasMedicas(tratamiento.getNotasMedicas());
         response.setPaciente(pacienteDTO);
         response.setMedicamentos(medicamentosDTO);
+        response.setNombreMedico(nombreMedico);
+
 
         return response;
     }
@@ -260,19 +272,34 @@ public class TratamientoService {
 
         return response;
     }
-    
+
     public void agregarComentarioTratamiento(Integer idTratamiento, String comentario) {
-    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
-            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+                .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
 
-    String notasActuales = tratamiento.getNotasMedicas();
+        String notasActuales = tratamiento.getNotasMedicas();
 
-    if (notasActuales == null || notasActuales.isBlank()) {
-        tratamiento.setNotasMedicas(comentario);
-    } else {
-        tratamiento.setNotasMedicas(notasActuales + "\n" + comentario);
+        if (notasActuales == null || notasActuales.isBlank()) {
+            tratamiento.setNotasMedicas(comentario);
+        } else {
+            tratamiento.setNotasMedicas(notasActuales + "\n" + comentario);
+        }
+
+        tratamientoRepository.save(tratamiento);
     }
 
-    tratamientoRepository.save(tratamiento);
-}
+    public List<TratamientoActualPacienteDTO> obtenerTratamientosActivosPaciente(Integer idPaciente) {
+        List<Tratamiento> tratamientos = tratamientoRepository
+                .findByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(idPaciente, "ACTIVO");
+
+        return tratamientos.stream()
+                .map(tratamiento -> new TratamientoActualPacienteDTO(
+                tratamiento.getIdTratamiento(),
+                tratamiento.getNombreTratamiento(),
+                tratamiento.getDiagnostico(),
+                tratamiento.getEstado(),
+                tratamiento.getFechaInicio()
+        ))
+                .toList();
+    }
 }

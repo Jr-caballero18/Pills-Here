@@ -37,7 +37,7 @@ function InicioPaciente() {
       <header className="paciente-header">
         <div className="paciente-header-left">
           <img src={logo} alt="Logo Pills Here" className="paciente-logo" />
-          <h1>Bienvenido {nombreUsuario}</h1>
+          <h1>Bienvenido  {nombreUsuario}</h1>
         </div>
 
         <div className="paciente-header-right">
@@ -90,7 +90,7 @@ function InicioPaciente() {
 
             <div className="paciente-card-content">
               <h2>Tratamientos Actuales</h2>
-              <a href="/">Ver tratamientos actuales</a>
+              <a href="/tratamientos-paciente" >Ver tratamientos actuales </a>
             </div>
           </article>
 

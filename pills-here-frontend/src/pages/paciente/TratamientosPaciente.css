@@ -1,0 +1,131 @@
+.tratamientos-paciente-page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: "Roboto Serif", serif;
+}
+
+.tratamientos-paciente-header {
+  height: 90px;
+  background-color: #173f6c;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  color: #ffffff;
+}
+
+.tratamientos-paciente-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.tratamientos-paciente-header h1 {
+  margin-left: 28px;
+  font-size: 26px;
+}
+
+.tratamientos-paciente-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.tratamientos-paciente-icons button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tratamientos-paciente-icons img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+}
+
+.tratamientos-paciente-content {
+  padding: 42px 0 40px 120px;
+}
+
+.tratamientos-paciente-content h2 {
+  font-size: 28px;
+  margin-bottom: 32px;
+}
+
+.tratamientos-paciente-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.tratamiento-paciente-card {
+  width: 560px;
+  min-height: 105px;
+  border: 1px solid #707070;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 18px 22px;
+  box-sizing: border-box;
+}
+
+.tratamiento-paciente-icono img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.tratamiento-paciente-info {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.tratamiento-paciente-info h3 {
+  margin: 0 0 6px 0;
+  font-size: 21px;
+}
+
+.tratamiento-paciente-info p {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #444;
+}
+
+.tratamiento-paciente-estado {
+  background-color: #c8f2d2;
+  color: #0f5132;
+  border: 1px solid #4caf50;
+  border-radius: 20px;
+  padding: 3px 14px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tratamiento-paciente-ver-btn {
+  width: 120px;
+  height: 28px;
+  border: none;
+  border-radius: 15px;
+  background-color: #173f6c;
+  color: #ffffff;
+  font-family: "Roboto Serif", serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tratamientos-paciente-back {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.tratamientos-paciente-back img {
+  width: 50px;
+  height: auto;
+}
