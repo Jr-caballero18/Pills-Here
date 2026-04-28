@@ -2,6 +2,7 @@
 package com.pillshere.backend.repository;
 
 import com.pillshere.backend.model.Tratamiento;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +12,5 @@ public interface TratamientoRepository extends JpaRepository<Tratamiento, Intege
     Optional<Tratamiento> findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(
             Integer idPaciente, 
             String estado);
+    List<Tratamiento> findByPacienteIdPacienteOrderByFechaInicioDesc(Integer idPaciente);
 }

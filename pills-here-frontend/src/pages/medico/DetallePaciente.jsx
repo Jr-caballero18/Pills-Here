@@ -2,7 +2,7 @@ import "./DetallePaciente.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetallePaciente } from "../../services/medicoPacienteService";
-import { obtenerTratamientoPorPaciente, cancelarTratamiento } from "../../services/tratamientoService";
+import { obtenerTratamientoPorPaciente, cancelarTratamiento, agregarComentarioTratamiento } from "../../services/tratamientoService";
 import iconEditar from "../../assets/images/editar-icon.png";
 import iconBorrar from "../../assets/images/borrar-icon.png";
 import logo from "../../assets/images/logo.png";
@@ -19,6 +19,7 @@ function DetallePaciente() {
 
   const [paciente, setPaciente] = useState(null);
   const [tratamiento, setTratamiento] = useState(null);
+  const [comentario, setComentario] = useState("");
 
   useEffect(() => {
     const cargarDetalle = async () => {
@@ -63,6 +64,26 @@ function DetallePaciente() {
       alert("Error al cancelar tratamiento");
     }
   };
+
+ const guardarComentario = async () => {
+  if (!comentario.trim()) {
+    alert("Escribe un comentario");
+    return;
+  }
+
+  try {
+    await agregarComentarioTratamiento(tratamiento.idTratamiento, comentario);
+
+    const tratamientoActualizado = await obtenerTratamientoPorPaciente(idPaciente);
+    setTratamiento(tratamientoActualizado);
+
+    alert("Comentario agregado correctamente");
+    setComentario("");
+  } catch (error) {
+    console.error("Error al agregar comentario:", error);
+    alert("Error al agregar comentario");
+  }
+};
 
   return (
     <div className="detalle-paciente-page">
@@ -149,9 +170,11 @@ function DetallePaciente() {
               <textarea
                 className="detalle-comentario-textarea"
                 placeholder="Agregar comentario."
+                value={comentario}
+                onChange={(e) => setComentario(e.target.value)}
               ></textarea>
 
-              <button className="detalle-agregar-btn" type="button">
+              <button className="detalle-agregar-btn" type="button"   onClick={guardarComentario}>
                 Agregar
               </button>
             </>

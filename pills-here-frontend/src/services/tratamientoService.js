@@ -46,3 +46,12 @@ export const cancelarTratamiento = async (idTratamiento) => {
 
   return response.data;
 };
+
+export const agregarComentarioTratamiento = async (idTratamiento, comentario) => {
+  const response = await axios.put(
+    `${API_URL}/tratamientos/${idTratamiento}/comentario`,
+    { comentario }
+  );
+
+  return response.data;
+};

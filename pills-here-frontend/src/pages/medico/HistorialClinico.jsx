@@ -137,7 +137,7 @@ function HistorialClinico() {
                             <span>{item.medico}</span>
                             <span>
                                 <span
-                                    className={`estado-badge ${item.estado === "Activo"
+                                    className={`estado-badge ${item.estado?.toUpperCase() === "ACTIVO"
                                         ? "estado-activo"
                                         : "estado-finalizado"
                                         }`}

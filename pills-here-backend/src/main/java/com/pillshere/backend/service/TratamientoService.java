@@ -15,6 +15,8 @@ import com.pillshere.backend.repository.MedicoRepository;
 import com.pillshere.backend.repository.PacienteRepository;
 import com.pillshere.backend.repository.TratamientoRepository;
 import com.pillshere.backend.dto.DetalleTratamientoResponseDTO;
+import com.pillshere.backend.dto.HistorialPacienteResponseDTO;
+import com.pillshere.backend.dto.HistorialTratamientoDTO;
 import com.pillshere.backend.dto.MedicamentoTratamientoResponseDTO;
 import com.pillshere.backend.dto.PacienteTratamientoDTO;
 import jakarta.transaction.Transactional;
@@ -26,6 +28,7 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.Optional;
+
 @Service
 public class TratamientoService {
 
@@ -81,82 +84,82 @@ public class TratamientoService {
             dosis.setMedicamento(medicamento);
             dosis.setCantidad(medicamentoDTO.getDosis());
             dosis.setFrecuencia("N/A");
-            dosis.setHoraProgramada(LocalTime.of(0,0));
+            dosis.setHoraProgramada(LocalTime.of(0, 0));
             dosis.setDuracion(0);
             dosisRepository.save(dosis);
         }
     }
-    
+
     public TratamientoPacienteResponseDTO obtenerTratamientoPorPaciente(Integer idPaciente) {
-    Optional<Tratamiento> tratamientoOpt =
-            tratamientoRepository.findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(idPaciente, "ACTIVO");
+        Optional<Tratamiento> tratamientoOpt
+                = tratamientoRepository.findFirstByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(idPaciente, "ACTIVO");
 
-    if (tratamientoOpt.isEmpty()) {
-        return null;
+        if (tratamientoOpt.isEmpty()) {
+            return null;
+        }
+
+        Tratamiento tratamiento = tratamientoOpt.get();
+
+        return new TratamientoPacienteResponseDTO(
+                tratamiento.getIdTratamiento(),
+                tratamiento.getNombreTratamiento(),
+                tratamiento.getDiagnostico(),
+                tratamiento.getEstado(),
+                tratamiento.getFechaInicio(),
+                tratamiento.getNotasMedicas()
+        );
     }
 
-    Tratamiento tratamiento = tratamientoOpt.get();
-
-    return new TratamientoPacienteResponseDTO(
-            tratamiento.getIdTratamiento(),
-            tratamiento.getNombreTratamiento(),
-            tratamiento.getDiagnostico(),
-            tratamiento.getEstado(),
-            tratamiento.getFechaInicio(),
-            tratamiento.getNotasMedicas()
-    );
-}
-    
     public DetalleTratamientoResponseDTO obtenerDetalleTratamiento(Integer idTratamiento) {
-    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
-            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+                .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
 
-    Paciente paciente = tratamiento.getPaciente();
+        Paciente paciente = tratamiento.getPaciente();
 
-    String nombrePaciente = construirNombreCompleto(
-            paciente.getNombre(),
-            paciente.getApellidoPaterno(),
-            paciente.getApellidoMaterno()
-    );
+        String nombrePaciente = construirNombreCompleto(
+                paciente.getNombre(),
+                paciente.getApellidoPaterno(),
+                paciente.getApellidoMaterno()
+        );
 
-    Integer edad = null;
+        Integer edad = null;
 
-    if (paciente.getFechaNacimiento() != null) {
-        edad = Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears();
+        if (paciente.getFechaNacimiento() != null) {
+            edad = Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears();
+        }
+
+        PacienteTratamientoDTO pacienteDTO = new PacienteTratamientoDTO(
+                paciente.getIdPaciente(),
+                nombrePaciente,
+                edad,
+                paciente.getSexo()
+        );
+
+        List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);
+
+        List<MedicamentoTratamientoResponseDTO> medicamentosDTO = dosisList.stream()
+                .map(dosis -> new MedicamentoTratamientoResponseDTO(
+                dosis.getIdDosis(),
+                dosis.getMedicamento().getIdMedicamento(),
+                dosis.getMedicamento().getNombre(),
+                dosis.getCantidad(),
+                dosis.getMedicamento().getPresentacion(),
+                dosis.getMedicamento().getViaAdministracion()
+        ))
+                .collect(Collectors.toList());
+
+        DetalleTratamientoResponseDTO response = new DetalleTratamientoResponseDTO();
+        response.setIdTratamiento(tratamiento.getIdTratamiento());
+        response.setDiagnostico(tratamiento.getDiagnostico());
+        response.setEstado(tratamiento.getEstado());
+        response.setFechaInicio(tratamiento.getFechaInicio());
+        response.setNotasMedicas(tratamiento.getNotasMedicas());
+        response.setPaciente(pacienteDTO);
+        response.setMedicamentos(medicamentosDTO);
+
+        return response;
     }
 
-    PacienteTratamientoDTO pacienteDTO = new PacienteTratamientoDTO(
-            paciente.getIdPaciente(),
-            nombrePaciente,
-            edad,
-            paciente.getSexo()
-    );
-
-    List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);
-
-    List<MedicamentoTratamientoResponseDTO> medicamentosDTO = dosisList.stream()
-            .map(dosis -> new MedicamentoTratamientoResponseDTO(
-                    dosis.getIdDosis(),
-                    dosis.getMedicamento().getIdMedicamento(),
-                    dosis.getMedicamento().getNombre(),
-                    dosis.getCantidad(),
-                    dosis.getMedicamento().getPresentacion(),
-                    dosis.getMedicamento().getViaAdministracion()
-            ))
-            .collect(Collectors.toList());
-
-    DetalleTratamientoResponseDTO response = new DetalleTratamientoResponseDTO();
-    response.setIdTratamiento(tratamiento.getIdTratamiento());
-    response.setDiagnostico(tratamiento.getDiagnostico());
-    response.setEstado(tratamiento.getEstado());
-    response.setFechaInicio(tratamiento.getFechaInicio());
-    response.setNotasMedicas(tratamiento.getNotasMedicas());
-    response.setPaciente(pacienteDTO);
-    response.setMedicamentos(medicamentosDTO);
-
-    return response;
-}
-    
     private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
         StringBuilder nombreCompleto = new StringBuilder();
 
@@ -174,42 +177,102 @@ public class TratamientoService {
 
         return nombreCompleto.toString().trim();
     }
-    
+
     public void cancelarTratamiento(Integer idTratamiento) {
-    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
-            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+                .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
 
-    tratamiento.setEstado("CANCELADO");
+        tratamiento.setEstado("CANCELADO");
 
-    tratamientoRepository.save(tratamiento);
-}
-    
-    @Transactional
-public void actualizarTratamiento(Integer idTratamiento, ActualizarTratamientoRequestDTO request) {
-    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
-            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
-
-    tratamiento.setDiagnostico(request.getDiagnostico());
-    tratamiento.setNombreTratamiento(request.getDiagnostico());
-    tratamiento.setNotasMedicas(request.getRecomendaciones());
-
-    tratamientoRepository.save(tratamiento);
-
-    dosisRepository.deleteByTratamientoIdTratamiento(idTratamiento);
-
-    for (MedicamentoTratamientoDTO medicamentoDTO : request.getMedicamentos()) {
-        Medicamento medicamento = medicamentoRepository.findById(medicamentoDTO.getIdMedicamento())
-                .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
-
-        Dosis dosis = new Dosis();
-        dosis.setTratamiento(tratamiento);
-        dosis.setMedicamento(medicamento);
-        dosis.setCantidad(medicamentoDTO.getDosis());
-        dosis.setFrecuencia("N/A");
-        dosis.setHoraProgramada(LocalTime.of(0, 0));
-        dosis.setDuracion(0);
-
-        dosisRepository.save(dosis);
+        tratamientoRepository.save(tratamiento);
     }
+
+    @Transactional
+    public void actualizarTratamiento(Integer idTratamiento, ActualizarTratamientoRequestDTO request) {
+        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+                .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+
+        tratamiento.setDiagnostico(request.getDiagnostico());
+        tratamiento.setNombreTratamiento(request.getDiagnostico());
+        tratamiento.setNotasMedicas(request.getRecomendaciones());
+
+        tratamientoRepository.save(tratamiento);
+
+        dosisRepository.deleteByTratamientoIdTratamiento(idTratamiento);
+
+        for (MedicamentoTratamientoDTO medicamentoDTO : request.getMedicamentos()) {
+            Medicamento medicamento = medicamentoRepository.findById(medicamentoDTO.getIdMedicamento())
+                    .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
+
+            Dosis dosis = new Dosis();
+            dosis.setTratamiento(tratamiento);
+            dosis.setMedicamento(medicamento);
+            dosis.setCantidad(medicamentoDTO.getDosis());
+            dosis.setFrecuencia("N/A");
+            dosis.setHoraProgramada(LocalTime.of(0, 0));
+            dosis.setDuracion(0);
+
+            dosisRepository.save(dosis);
+        }
+    }
+
+    public HistorialPacienteResponseDTO obtenerHistorialPaciente(Integer idPaciente) {
+        Paciente paciente = pacienteRepository.findById(idPaciente)
+                .orElseThrow(() -> new RuntimeException("Paciente no encontrado"));
+
+        List<Tratamiento> tratamientos = tratamientoRepository
+                .findByPacienteIdPacienteOrderByFechaInicioDesc(idPaciente);
+
+        HistorialPacienteResponseDTO response = new HistorialPacienteResponseDTO();
+
+        response.setIdPaciente(paciente.getIdPaciente());
+        response.setNombreCompleto(construirNombreCompleto(
+                paciente.getNombre(),
+                paciente.getApellidoPaterno(),
+                paciente.getApellidoMaterno()
+        ));
+        response.setCodigoPaciente(paciente.getCodigoPaciente());
+        response.setFechaNacimiento(paciente.getFechaNacimiento());
+        response.setSexo(paciente.getSexo());
+        response.setTipoSangre(paciente.getTipoSangre());
+        response.setAlergias(paciente.getAlergias());
+
+        List<HistorialTratamientoDTO> historial = tratamientos.stream()
+                .map(tratamiento -> {
+                    Medico medico = tratamiento.getMedico();
+
+                    String nombreMedico = construirNombreCompleto(
+                            medico.getNombre(),
+                            medico.getApellidoPaterno(),
+                            medico.getApellidoMaterno()
+                    );
+
+                    return new HistorialTratamientoDTO(
+                            tratamiento.getFechaInicio(),
+                            tratamiento.getDiagnostico(),
+                            "Dr. " + nombreMedico,
+                            tratamiento.getEstado()
+                    );
+                })
+                .toList();
+
+        response.setHistorial(historial);
+
+        return response;
+    }
+    
+    public void agregarComentarioTratamiento(Integer idTratamiento, String comentario) {
+    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+
+    String notasActuales = tratamiento.getNotasMedicas();
+
+    if (notasActuales == null || notasActuales.isBlank()) {
+        tratamiento.setNotasMedicas(comentario);
+    } else {
+        tratamiento.setNotasMedicas(notasActuales + "\n" + comentario);
+    }
+
+    tratamientoRepository.save(tratamiento);
 }
 }

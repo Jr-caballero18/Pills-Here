@@ -2,8 +2,10 @@
 package com.pillshere.backend.controller;
 
 import com.pillshere.backend.dto.ActualizarTratamientoRequestDTO;
+import com.pillshere.backend.dto.ComentarioTratamientoRequestDTO;
 import com.pillshere.backend.dto.CrearTratamientoRequestDTO;
 import com.pillshere.backend.dto.DetalleTratamientoResponseDTO;
+import com.pillshere.backend.dto.HistorialPacienteResponseDTO;
 import com.pillshere.backend.dto.TratamientoPacienteResponseDTO;
 import com.pillshere.backend.service.TratamientoService;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +57,19 @@ public ResponseEntity<String> actualizarTratamiento(
 ) {
     tratamientoService.actualizarTratamiento(idTratamiento, request);
     return ResponseEntity.ok("Tratamiento actualizado correctamente");
+}
+
+@GetMapping("/historial/paciente/{idPaciente}")
+public ResponseEntity<HistorialPacienteResponseDTO> obtenerHistorialPaciente(@PathVariable Integer idPaciente) {
+    return ResponseEntity.ok(tratamientoService.obtenerHistorialPaciente(idPaciente));
+}
+
+@PutMapping("/{idTratamiento}/comentario")
+public ResponseEntity<String> agregarComentarioTratamiento(
+        @PathVariable Integer idTratamiento,
+        @RequestBody ComentarioTratamientoRequestDTO request
+) {
+    tratamientoService.agregarComentarioTratamiento(idTratamiento, request.getComentario());
+    return ResponseEntity.ok("Comentario agregado correctamente");
 }
 }

@@ -8,6 +8,9 @@ export const obtenerDashboardPaciente = async (idUsuario) => {
 };
 
 export const obtenerHistorialPaciente = async (idPaciente) => {
-  const response = await axios.get(`${API_URL}/historial/${idPaciente}`);
+  const response = await axios.get(
+    `http://localhost:8083/tratamientos/historial/paciente/${idPaciente}`
+  );
+
   return response.data;
 };
