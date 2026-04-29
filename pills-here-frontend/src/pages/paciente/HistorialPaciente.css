@@ -1,0 +1,167 @@
+.historial-paciente-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: "Roboto Serif", serif;
+}
+
+.historial-paciente-header {
+  width: 100%;
+  height: 95px;
+  background-color: #173f6c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px 0 14px;
+  box-sizing: border-box;
+}
+
+.historial-paciente-logo {
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.historial-paciente-header h1 {
+  margin: 0 0 0 18px;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+  flex: 1;
+  text-align: left;
+}
+
+.historial-paciente-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.historial-paciente-icons button:first-child {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.historial-paciente-icons button:first-child img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+}
+
+.historial-paciente-icons button:last-child {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.historial-paciente-icons button:last-child img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.historial-paciente-content {
+  padding: 40px 80px;
+}
+
+.historial-paciente-info {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+  margin-bottom: 40px;
+}
+
+.historial-paciente-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+}
+
+.historial-paciente-datos p {
+  margin: 8px 0;
+  font-size: 17px;
+}
+
+.historial-paciente-tabla {
+  width: 100%;
+  background-color: #d9d9d9;
+  border: 1px solid #777;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.historial-paciente-head {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  background-color: #cfcfcf;
+  border-bottom: 1px solid #777;
+  font-weight: bold;
+  padding: 12px 18px;
+}
+
+.historial-paciente-row {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  padding: 14px 18px;
+  border-bottom: 1px solid #aaa;
+}
+
+.historial-paciente-row:last-child {
+  border-bottom: none;
+}
+
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid;
+}
+
+.estado-activo {
+  background-color: #c8f2d2;
+  color: #0f5132;
+  border-color: #4caf50;
+}
+
+.estado-finalizado {
+  background-color: #f8c8c8;
+  color: #842029;
+  border-color: #dc3545;
+}
+
+.historial-paciente-back {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.historial-paciente-back img {
+  width: 45px;
+  height: auto;
+}

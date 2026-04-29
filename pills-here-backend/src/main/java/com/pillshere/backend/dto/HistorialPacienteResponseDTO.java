@@ -6,6 +6,7 @@ import java.util.List;
 public class HistorialPacienteResponseDTO {
     private Integer idPaciente;
     private String nombreCompleto;
+    private Integer edad;
     private String codigoPaciente;
     private LocalDate fechaNacimiento;
     private String sexo;
@@ -76,4 +77,12 @@ public class HistorialPacienteResponseDTO {
     public void setHistorial(List<HistorialTratamientoDTO> historial) {
         this.historial = historial;
     }
+    
+    public Integer getEdad() {
+    return edad;
+}
+
+public void setEdad(Integer edad) {
+    this.edad = edad;
+}
 }

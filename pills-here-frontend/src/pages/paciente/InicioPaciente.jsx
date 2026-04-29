@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./InicioPaciente.css";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
@@ -15,6 +16,7 @@ import { obtenerDashboardPaciente } from "../../services/pacienteService";
 
 function InicioPaciente() {
   const [nombreUsuario, setNombreUsuario] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const cargarDashboard = async () => {
@@ -53,6 +55,7 @@ function InicioPaciente() {
             className="paciente-profile-btn"
             type="button"
             aria-label="Perfil"
+              onClick={() => navigate("/perfil-paciente")}
           >
             <img src={iconPerfil} alt="Perfil" />
           </button>
@@ -79,7 +82,7 @@ function InicioPaciente() {
 
             <div className="paciente-card-content">
               <h2>Historial Clínico</h2>
-              <a href="/">Ver historial clínico</a>
+              <a href="/historial-paciente">Ver historial clínico</a>
             </div>
           </article>
 

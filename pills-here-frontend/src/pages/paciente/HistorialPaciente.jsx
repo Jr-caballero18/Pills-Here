@@ -1,0 +1,108 @@
+import "./HistorialPaciente.css";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { obtenerHistorialPaciente } from "../../services/pacienteService";
+
+import logo from "../../assets/images/logo.png";
+import iconNotificacion from "../../assets/images/icon-notificacion.png";
+import iconPerfil from "../../assets/images/icon-perfilP.png";
+import iconRegreso from "../../assets/images/flecha-regreso.png";
+import iconUsuario from "../../assets/images/icon-perfilP.png";
+
+function HistorialPaciente() {
+  const navigate = useNavigate();
+  const idPaciente = localStorage.getItem("idPaciente");
+
+  const [paciente, setPaciente] = useState(null);
+  const [historial, setHistorial] = useState([]);
+
+  useEffect(() => {
+    const cargarHistorial = async () => {
+      try {
+        const data = await obtenerHistorialPaciente(idPaciente);
+        setPaciente(data);
+        setHistorial(data.historial || []);
+      } catch (error) {
+        console.error("Error al cargar historial:", error);
+      }
+    };
+
+    cargarHistorial();
+  }, [idPaciente]);
+
+  if (!paciente) {
+    return <p>Cargando historial...</p>;
+  }
+
+  return (
+    <div className="historial-paciente-page">
+      <header className="historial-paciente-header">
+        <img src={logo} alt="Logo Pills Here" className="historial-paciente-logo" />
+
+        <h1>Historial Clinico</h1>
+
+        <div className="historial-paciente-icons">
+          <button type="button">
+            <img src={iconNotificacion} alt="Notificaciones" />
+          </button>
+
+          <button type="button">
+            <img src={iconPerfil} alt="Perfil" />
+          </button>
+        </div>
+      </header>
+
+      <main className="historial-paciente-content">
+        <section className="historial-paciente-info">
+          <img src={iconUsuario} alt="Paciente" className="historial-paciente-avatar" />
+
+          <div className="historial-paciente-datos">
+            <p>{paciente.nombreCompleto} ID:#{paciente.idPaciente}</p>
+            <p>Edad: {paciente.edad} años.</p>
+            <p>Sexo: {paciente.sexo}</p>
+            <p>Fecha de nacimiento: {paciente.fechaNacimiento}</p>
+            <p>.</p>
+          </div>
+        </section>
+
+        <section className="historial-paciente-tabla">
+          <div className="historial-paciente-head">
+            <span>Fecha</span>
+            <span>Diagnostico</span>
+            <span>Medico</span>
+            <span>Estado</span>
+          </div>
+
+          {historial.map((item, index) => (
+            <div className="historial-paciente-row" key={index}>
+              <span>{item.fecha}</span>
+              <span>{item.diagnostico}</span>
+              <span>{item.medico}</span>
+              <span>
+                <span
+                  className={`estado-badge ${
+                    item.estado?.toUpperCase() === "ACTIVO"
+                      ? "estado-activo"
+                      : "estado-finalizado"
+                  }`}
+                >
+                  ● {item.estado}
+                </span>
+              </span>
+            </div>
+          ))}
+        </section>
+
+        <button
+          className="historial-paciente-back"
+          type="button"
+          onClick={() => navigate("/inicio-paciente")}
+        >
+          <img src={iconRegreso} alt="Regresar" />
+        </button>
+      </main>
+    </div>
+  );
+}
+
+export default HistorialPaciente;

@@ -5,45 +5,77 @@
 }
 
 .detalle-tratamiento-paciente-header {
-  height: 90px;
+  height: 95px;
   background-color: #173f6c;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding: 0 28px;
+  padding: 0 22px 0 14px;
+  box-sizing: border-box;
   color: #ffffff;
 }
 
 .detalle-tratamiento-paciente-logo {
-  width: 70px;
-  height: 70px;
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
   object-fit: contain;
-  border-radius: 50%;
+  display: block;
 }
 
 .detalle-tratamiento-paciente-header h1 {
-  margin-left: 28px;
-  font-size: 25px;
+  margin: 0 0 0 18px;
+  color: #ffffff;
+  font-size: 26px;
   font-weight: 700;
+  flex: 1;
+  text-align: left;
 }
 
 .detalle-tratamiento-paciente-icons {
-  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 12px;
 }
 
-.detalle-tratamiento-paciente-icons button {
+.detalle-tratamiento-paciente-icons button:first-child {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.detalle-tratamiento-paciente-icons button:first-child img {
+  width: 20px !important;
+  height: 20px !important;
+  object-fit: contain;
+}
+
+.detalle-tratamiento-paciente-icons button:last-child {
   border: none;
   background: transparent;
-  cursor: pointer;
   padding: 0;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.detalle-tratamiento-paciente-icons img {
-  width: 45px;
-  height: 45px;
+.detalle-tratamiento-paciente-icons button:last-child img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
   object-fit: contain;
+  display: block;
 }
 
 .detalle-tratamiento-paciente-content {

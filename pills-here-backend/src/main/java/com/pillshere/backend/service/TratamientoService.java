@@ -131,7 +131,6 @@ public class TratamientoService {
                 medico.getApellidoMaterno()
         );
 
-
         Integer edad = null;
 
         if (paciente.getFechaNacimiento() != null) {
@@ -167,7 +166,6 @@ public class TratamientoService {
         response.setPaciente(pacienteDTO);
         response.setMedicamentos(medicamentosDTO);
         response.setNombreMedico(nombreMedico);
-
 
         return response;
     }
@@ -237,6 +235,13 @@ public class TratamientoService {
 
         HistorialPacienteResponseDTO response = new HistorialPacienteResponseDTO();
 
+        Integer edad = null;
+
+        if (paciente.getFechaNacimiento() != null) {
+            edad = Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears();
+        }
+
+        response.setEdad(edad);
         response.setIdPaciente(paciente.getIdPaciente());
         response.setNombreCompleto(construirNombreCompleto(
                 paciente.getNombre(),

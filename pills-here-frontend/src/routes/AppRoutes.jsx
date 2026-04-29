@@ -11,6 +11,9 @@ import CrearTratamiento from "../pages/medico/CrearTratamiento";;
 import EditarTratamiento from "../pages/medico/EditarTratamiento";
 import TratamientosPaciente from "../pages/paciente/TratamientosPaciente";
 import DetalleTratamientoPaciente from "../pages/paciente/DetalleTratamientoPaciente";
+import HistorialPaciente from "../pages/paciente/HistorialPaciente";
+import PerfilPaciente from "../pages/paciente/PerfilPaciente";
+
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -27,6 +30,8 @@ function AppRoutes() {
                 <Route path="/editar-tratamiento/:idTratamiento" element={<EditarTratamiento />} />
                 <Route path="/tratamientos-paciente" element={<TratamientosPaciente />} />
                 <Route path="/tratamiento-paciente/:idTratamiento" element={<DetalleTratamientoPaciente />} />
+                <Route path="/historial-paciente" element={<HistorialPaciente />} />
+                <Route path="/perfil-paciente" element={<PerfilPaciente />} />
             </Routes>
         </BrowserRouter>
     );
