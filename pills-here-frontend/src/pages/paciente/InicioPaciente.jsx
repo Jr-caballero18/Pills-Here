@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./InicioPaciente.css";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -11,12 +11,16 @@ import iconTratamientos from "../../assets/images/icon-tratamientosP.png";
 import iconCalendario from "../../assets/images/icon-calendario.png";
 import iconEstadisticas from "../../assets/images/icon-estadisticas.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
+import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 
 import { obtenerDashboardPaciente } from "../../services/pacienteService";
 
 function InicioPaciente() {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const navigate = useNavigate();
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const notificacionesRef = useRef(null);
 
   useEffect(() => {
     const cargarDashboard = async () => {
@@ -28,10 +32,45 @@ function InicioPaciente() {
         setNombreUsuario(data.nombre || "");
       } catch (error) {
         console.error("Error al cargar dashboard paciente:", error);
+
+        const nombreGuardado = localStorage.getItem("nombrePaciente");
+        if (nombreGuardado) {
+          setNombreUsuario(nombreGuardado);
+        }
+      }
+    };
+
+    const cargarNotificaciones = async () => {
+      try {
+        const idPaciente = localStorage.getItem("idPaciente");
+        if (!idPaciente) return;
+
+        const notificacionesData = await obtenerNotificacionesPaciente(idPaciente);
+        setNotificaciones(notificacionesData);
+      } catch (error) {
+        console.error("Error al cargar notificaciones:", error);
       }
     };
 
     cargarDashboard();
+    cargarNotificaciones();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificacionesRef.current &&
+        !notificacionesRef.current.contains(event.target)
+      ) {
+        setMostrarNotificaciones(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   return (
@@ -47,15 +86,47 @@ function InicioPaciente() {
             className="paciente-icon-btn"
             type="button"
             aria-label="Notificaciones"
+            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+
           >
             <img src={iconNotificacion} alt="Notificaciones" />
           </button>
+          {mostrarNotificaciones && (
+            <div className="paciente-notificaciones-panel" ref={notificacionesRef}>
+              <div className="notificaciones-flecha"></div>
+
+              <div className="notificaciones-header">
+                <img src={iconNotificacion} alt="Notificaciones" />
+              </div>
+
+              {notificaciones.length === 0 ? (
+                <div className="notificacion-item">
+                  <strong>No tienes notificaciones nuevas.</strong>
+                </div>
+              ) : (
+                notificaciones.map((notificacion) => (
+                  <div className="notificacion-item" key={notificacion.id}>
+                    <strong>
+                      Dr. {notificacion.nombreMedico} ha dejado un nuevo{" "}
+                      {notificacion.tipo === "COMENTARIO" ? "comentario" : "aviso"}.
+                    </strong>
+
+                    <p>{notificacion.contenido}</p>
+
+                    <button type="button">
+                      &gt; Ver {notificacion.tipo === "COMENTARIO" ? "comentario" : "aviso"}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
 
           <button
             className="paciente-profile-btn"
             type="button"
             aria-label="Perfil"
-              onClick={() => navigate("/perfil-paciente")}
+            onClick={() => navigate("/perfil-paciente")}
           >
             <img src={iconPerfil} alt="Perfil" />
           </button>
@@ -71,7 +142,7 @@ function InicioPaciente() {
 
             <div className="paciente-card-content">
               <h2>Notas del Médico</h2>
-              <a href="/">Ver notas recientes</a>
+              <a href="/notas-paciente">Ver notas recientes</a>
             </div>
           </article>
 

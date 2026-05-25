@@ -336,3 +336,71 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+.detalle-avisos-panel {
+  width: 340px;
+  min-height: 390px;
+  background-color: #d9d9d9;
+  border: 1px solid #8a8a8a;
+  border-radius: 4px;
+  padding: 32px 12px 24px;
+  box-sizing: border-box;
+
+  position: absolute;
+  top: 173px;
+  left: 590px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detalle-avisos-panel h2 {
+  margin: 0 0 40px 0;
+  font-family: "Roboto Serif", serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.detalle-aviso-input {
+  width: 305px;
+  height: 40px;
+  border: 1px solid #7d7d7d;
+  border-radius: 14px;
+  background-color: #ffffff;
+  padding: 0 15px;
+  box-sizing: border-box;
+  font-family: "Roboto Serif", serif;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 25px;
+}
+
+.detalle-aviso-textarea {
+  width: 305px;
+  height: 78px;
+  border: 1px solid #7d7d7d;
+  border-radius: 14px;
+  background-color: #ffffff;
+  padding: 18px 15px;
+  box-sizing: border-box;
+  font-family: "Roboto Serif", serif;
+  font-size: 13px;
+  resize: none;
+  outline: none;
+  margin-bottom: 32px;
+}
+
+.detalle-aviso-btn {
+  width: 85px;
+  height: 34px;
+  border: none;
+  border-radius: 12px;
+  background-color: #173f6c;
+  color: #ffffff;
+  font-family: "Roboto Serif", serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}

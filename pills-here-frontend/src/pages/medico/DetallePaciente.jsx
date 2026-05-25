@@ -12,7 +12,7 @@ import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
-
+import { crearAviso } from "../../services/avisoService";
 function DetallePaciente() {
   const navigate = useNavigate();
   const { idPaciente } = useParams();
@@ -20,6 +20,9 @@ function DetallePaciente() {
   const [paciente, setPaciente] = useState(null);
   const [tratamiento, setTratamiento] = useState(null);
   const [comentario, setComentario] = useState("");
+  const [tituloAviso, setTituloAviso] = useState("");
+  const [contenidoAviso, setContenidoAviso] = useState("");
+  const [observacionesAviso, setObservacionesAviso] = useState("");
 
   useEffect(() => {
     const cargarDetalle = async () => {
@@ -65,23 +68,50 @@ function DetallePaciente() {
     }
   };
 
- const guardarComentario = async () => {
-  if (!comentario.trim()) {
-    alert("Escribe un comentario");
+  const guardarComentario = async () => {
+    if (!comentario.trim()) {
+      alert("Escribe un comentario");
+      return;
+    }
+
+    try {
+      await agregarComentarioTratamiento(tratamiento.idTratamiento, comentario);
+
+      const tratamientoActualizado = await obtenerTratamientoPorPaciente(idPaciente);
+      setTratamiento(tratamientoActualizado);
+
+      alert("Comentario agregado correctamente");
+      setComentario("");
+    } catch (error) {
+      console.error("Error al agregar comentario:", error);
+      alert("Error al agregar comentario");
+    }
+  };
+
+  const guardarAviso = async () => {
+  if (!tituloAviso.trim() || !contenidoAviso.trim()) {
+    alert("Escribe el título y el aviso");
     return;
   }
 
   try {
-    await agregarComentarioTratamiento(tratamiento.idTratamiento, comentario);
+    const idMedico = localStorage.getItem("idMedico");
 
-    const tratamientoActualizado = await obtenerTratamientoPorPaciente(idPaciente);
-    setTratamiento(tratamientoActualizado);
+    await crearAviso({
+      idMedico: Number(idMedico),
+      idPaciente: Number(idPaciente),
+      titulo: tituloAviso,
+      contenido: contenidoAviso,
+      observaciones: observacionesAviso,
+    });
 
-    alert("Comentario agregado correctamente");
-    setComentario("");
+    alert("Aviso enviado correctamente");
+    setTituloAviso("");
+    setContenidoAviso("");
+    setObservacionesAviso("");
   } catch (error) {
-    console.error("Error al agregar comentario:", error);
-    alert("Error al agregar comentario");
+    console.error("Error al enviar aviso:", error);
+    alert("Error al enviar aviso");
   }
 };
 
@@ -174,7 +204,7 @@ function DetallePaciente() {
                 onChange={(e) => setComentario(e.target.value)}
               ></textarea>
 
-              <button className="detalle-agregar-btn" type="button"   onClick={guardarComentario}>
+              <button className="detalle-agregar-btn" type="button" onClick={guardarComentario}>
                 Agregar
               </button>
             </>
@@ -192,6 +222,37 @@ function DetallePaciente() {
             </>
           )}
         </section>
+
+        <section className="detalle-avisos-panel">
+          <h2>Avisos</h2>
+
+          <input
+            className="detalle-aviso-input"
+            type="text"
+            placeholder="Titulo."
+            value={tituloAviso}
+            onChange={(e) => setTituloAviso(e.target.value)}
+          />
+
+          <textarea
+            className="detalle-aviso-textarea"
+            placeholder="Agregar aviso."
+            value={contenidoAviso}
+            onChange={(e) => setContenidoAviso(e.target.value)}
+          ></textarea>
+
+          <textarea
+            className="detalle-aviso-textarea"
+            placeholder="Observaciones."
+            value={observacionesAviso}
+            onChange={(e) => setObservacionesAviso(e.target.value)}
+          ></textarea>
+
+          <button className="detalle-aviso-btn" type="button"  onClick={guardarAviso}>
+            Agregar
+          </button>
+        </section>
+
       </main>
     </div>
   );

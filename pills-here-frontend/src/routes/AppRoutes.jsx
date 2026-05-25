@@ -13,7 +13,7 @@ import TratamientosPaciente from "../pages/paciente/TratamientosPaciente";
 import DetalleTratamientoPaciente from "../pages/paciente/DetalleTratamientoPaciente";
 import HistorialPaciente from "../pages/paciente/HistorialPaciente";
 import PerfilPaciente from "../pages/paciente/PerfilPaciente";
-
+import NotasPaciente from "../pages/paciente/NotasPaciente";
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -32,6 +32,7 @@ function AppRoutes() {
                 <Route path="/tratamiento-paciente/:idTratamiento" element={<DetalleTratamientoPaciente />} />
                 <Route path="/historial-paciente" element={<HistorialPaciente />} />
                 <Route path="/perfil-paciente" element={<PerfilPaciente />} />
+                <Route path="/notas-paciente" element={<NotasPaciente />} />
             </Routes>
         </BrowserRouter>
     );

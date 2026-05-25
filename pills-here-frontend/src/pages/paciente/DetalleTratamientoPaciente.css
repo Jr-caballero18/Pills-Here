@@ -85,9 +85,10 @@
 .detalle-tratamiento-info {
   width: 760px;
   margin: 0 auto 18px auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: 90px 230px 1fr;
   align-items: center;
-  justify-content: space-between;
+  column-gap: 28px;
 }
 
 .detalle-tratamiento-avatar-box img {
