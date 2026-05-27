@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.pillshere.backend.dto.PerfilMedicoDTO;
 
 @Service
 public class MedicoService {
@@ -24,10 +25,9 @@ public class MedicoService {
 
     @Autowired
     private MedicoRepository medicoRepository;
-    
+
     @Autowired
     private MedicoPacienteRepository medicoPacienteRepository;
-
 
     public DashboardMedicoDTO obtenerDashboardMedico(Integer idUsuario) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(idUsuario);
@@ -51,44 +51,71 @@ public class MedicoService {
         Medico medico = medicoOpt.get();
 
         String nombreCompleto = construirNombreCompleto(
-            medico.getNombre(),
-            medico.getApellidoPaterno(),
-            medico.getApellidoMaterno()
+                medico.getNombre(),
+                medico.getApellidoPaterno(),
+                medico.getApellidoMaterno()
         );
 
         int totalPacientes = (int) medicoPacienteRepository.countByMedico(medico);
 
         List<PacienteMedicoDTO> pacientesRecientes = medicoPacienteRepository
-            .findTop5ByMedicoAndFechaUltimaConsultaIsNotNullOrderByFechaUltimaConsultaDesc(medico)
-            .stream()
-            .map(relacion -> convertirPacienteResumen(relacion.getPaciente()))
-            .collect(Collectors.toList());
-        
+                .findTop5ByMedicoAndFechaUltimaConsultaIsNotNullOrderByFechaUltimaConsultaDesc(medico)
+                .stream()
+                .map(relacion -> convertirPacienteResumen(relacion.getPaciente()))
+                .collect(Collectors.toList());
+
         return new DashboardMedicoDTO(
-            nombreCompleto,
-            totalPacientes,
-            0,
-            0,
-            pacientesRecientes
+                nombreCompleto,
+                totalPacientes,
+                0,
+                0,
+                pacientesRecientes
         );
     }
 
     private PacienteMedicoDTO convertirPacienteResumen(Paciente paciente) {
         String nombreCompleto = construirNombreCompleto(
-            paciente.getNombre(),
-            paciente.getApellidoPaterno(),
-            paciente.getApellidoMaterno()
+                paciente.getNombre(),
+                paciente.getApellidoPaterno(),
+                paciente.getApellidoMaterno()
         );
 
         int edad = Period.between(paciente.getFechaNacimiento(), LocalDate.now()).getYears();
         String edadSexo = edad + " años, " + paciente.getSexo();
 
         return new PacienteMedicoDTO(
-            paciente.getIdPaciente(),
-            nombreCompleto,
-            edadSexo
+                paciente.getIdPaciente(),
+                nombreCompleto,
+                edadSexo
         );
     }
+
+    public PerfilMedicoDTO obtenerPerfilMedico(Integer idMedico) {
+        Optional<Medico> medicoOpt = medicoRepository.findById(idMedico);
+
+        if (medicoOpt.isEmpty()) {
+            return null;
+        }
+
+        Medico medico = medicoOpt.get();
+
+        String nombreCompleto = construirNombreCompleto(
+                medico.getNombre(),
+                medico.getApellidoPaterno(),
+                medico.getApellidoMaterno()
+        );
+
+        return new PerfilMedicoDTO(
+                medico.getIdMedico(),
+                nombreCompleto,
+                medico.getUsuario().getCorreo(),
+                medico.getFechaNacimiento(),
+                medico.getEspecialidad(),
+                medico.getCedulaProfesional(),
+                medico.getConsultorio()
+        );
+    }
+
     private String construirNombreCompleto(String nombre, String apellidoPaterno, String apellidoMaterno) {
         StringBuilder nombreCompleto = new StringBuilder();
 

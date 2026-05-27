@@ -91,6 +91,7 @@ public class PacienteService {
                 paciente.getSexo(),
                 paciente.getTipoSangre(),
                 paciente.getAlergias(),
+                paciente.getUsuario().getCorreo(),
                 historial
         );
     

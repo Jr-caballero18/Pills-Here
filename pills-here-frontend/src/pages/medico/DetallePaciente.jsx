@@ -155,7 +155,8 @@ function DetallePaciente() {
               <img src={iconNotificacion} alt="Notificaciones" />
             </button>
 
-            <button className="detalle-btn-perfil" type="button" aria-label="Perfil">
+            <button className="detalle-btn-perfil" type="button" aria-label="Perfil"
+            onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>

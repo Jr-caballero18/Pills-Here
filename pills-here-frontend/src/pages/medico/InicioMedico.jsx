@@ -80,7 +80,8 @@ function InicioMedico() {
               <img src={iconNotificacion} alt="Notificaciones" />
             </button>
 
-            <button className="btn-perfil" type="button" aria-label="Perfil">
+            <button className="btn-perfil" type="button" aria-label="Perfil"
+            onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>

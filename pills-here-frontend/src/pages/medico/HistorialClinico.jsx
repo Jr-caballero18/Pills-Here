@@ -100,7 +100,8 @@ function HistorialClinico() {
                             <img src={iconNotificacion} alt="Notificaciones" />
                         </button>
 
-                        <button className="btn-perfil">
+                        <button className="btn-perfil"
+                        onClick={() => navigate("/perfil-medico")}>
                             <img src={iconPerfil} alt="Perfil" width="28" />
                         </button>
                     </div>

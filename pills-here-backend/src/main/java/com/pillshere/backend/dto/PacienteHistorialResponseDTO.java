@@ -12,14 +12,15 @@ public class PacienteHistorialResponseDTO {
     private String sexo;
     private String tipoSangre;
     private String alergias;
+    private String correo;
     private List<HistorialClinicoItemDTO> historial;
 
     public PacienteHistorialResponseDTO() {
     }
 
     public PacienteHistorialResponseDTO(Integer idPaciente, String codigoPaciente, String nombreCompleto,
-                                        LocalDate fechaNacimiento, String sexo, String tipoSangre,
-                                        String alergias, List<HistorialClinicoItemDTO> historial) {
+            LocalDate fechaNacimiento, String sexo, String tipoSangre,
+            String alergias, String correo, List<HistorialClinicoItemDTO> historial) {
         this.idPaciente = idPaciente;
         this.codigoPaciente = codigoPaciente;
         this.nombreCompleto = nombreCompleto;
@@ -27,6 +28,7 @@ public class PacienteHistorialResponseDTO {
         this.sexo = sexo;
         this.tipoSangre = tipoSangre;
         this.alergias = alergias;
+        this.correo = correo;
         this.historial = historial;
     }
 
@@ -92,5 +94,13 @@ public class PacienteHistorialResponseDTO {
 
     public void setHistorial(List<HistorialClinicoItemDTO> historial) {
         this.historial = historial;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 }

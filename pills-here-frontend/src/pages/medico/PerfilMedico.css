@@ -1,0 +1,108 @@
+.perfil-medico-page {
+  min-height: 100vh;
+  display: flex;
+  background-color: #ffffff;
+  font-family: "Roboto Serif", serif;
+}
+
+.perfil-medico-content {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 22px 24px 18px 24px;
+}
+
+.perfil-medico-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 70px;
+}
+
+.perfil-medico-header h1 {
+  margin: 18px 0 0 6px;
+  font-size: 29px;
+  font-weight: 700;
+  color: #111111;
+  font-family: "Roboto Serif", serif;
+}
+
+.perfil-medico-panel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 80px;
+}
+
+.perfil-medico-avatar img {
+  width: 190px !important;
+  height: 190px !important;
+  object-fit: contain;
+}
+
+.perfil-medico-info {
+  width: 440px;
+}
+
+.perfil-medico-info h2 {
+  margin: 0 0 20px 0;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.perfil-medico-especialidad {
+  font-size: 21px;
+  margin: 0 0 28px 0;
+}
+
+.perfil-medico-info h3 {
+  margin: 26px 0 18px 0;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.perfil-medico-contacto-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0;
+  font-size: 17px;
+}
+
+.perfil-medico-contacto-item img {
+  width: 24px !important;
+  height: 24px !important;
+  object-fit: contain;
+}
+
+.perfil-medico-consultorio {
+  font-size: 23px;
+}
+
+.perfil-medico-linea {
+  width: 100%;
+  height: 1px;
+  background-color: #777777;
+  margin: 36px 0 0 0;
+}
+
+.perfil-medico-sidebar-bottom {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 18px;
+}
+
+.perfil-medico-sidebar-bottom button {
+  width: 54px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.perfil-medico-sidebar-bottom img {
+  width: 54px !important;
+  height: 24px !important;
+  object-fit: contain;
+}

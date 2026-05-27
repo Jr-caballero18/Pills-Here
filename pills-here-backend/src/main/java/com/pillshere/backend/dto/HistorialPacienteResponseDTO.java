@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class HistorialPacienteResponseDTO {
+
     private Integer idPaciente;
     private String nombreCompleto;
     private Integer edad;
@@ -12,6 +13,7 @@ public class HistorialPacienteResponseDTO {
     private String sexo;
     private String tipoSangre;
     private String alergias;
+    private String correo;
     private List<HistorialTratamientoDTO> historial;
 
     public Integer getIdPaciente() {
@@ -77,12 +79,21 @@ public class HistorialPacienteResponseDTO {
     public void setHistorial(List<HistorialTratamientoDTO> historial) {
         this.historial = historial;
     }
-    
-    public Integer getEdad() {
-    return edad;
-}
 
-public void setEdad(Integer edad) {
-    this.edad = edad;
-}
+    public Integer getEdad() {
+        return edad;
+    }
+
+    public void setEdad(Integer edad) {
+        this.edad = edad;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
 }

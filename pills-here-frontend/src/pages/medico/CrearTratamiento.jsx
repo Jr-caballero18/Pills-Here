@@ -184,7 +184,8 @@ function CrearTratamiento() {
               <img src={iconNotificacion} alt="Notificaciones" />
             </button>
 
-            <button className="crear-tratamiento-btn-perfil" type="button">
+            <button className="crear-tratamiento-btn-perfil" type="button" 
+            onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>

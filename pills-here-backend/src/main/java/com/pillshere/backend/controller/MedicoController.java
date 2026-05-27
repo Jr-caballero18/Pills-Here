@@ -5,6 +5,7 @@ import com.pillshere.backend.service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.pillshere.backend.dto.PerfilMedicoDTO;
 
 @RestController
 @RequestMapping("/medico")
@@ -23,5 +24,16 @@ public class MedicoController {
         }
 
         return ResponseEntity.ok(dashboard);
+    }
+
+    @GetMapping("/perfil/{idMedico}")
+    public ResponseEntity<PerfilMedicoDTO> obtenerPerfilMedico(@PathVariable Integer idMedico) {
+        PerfilMedicoDTO perfil = medicoService.obtenerPerfilMedico(idMedico);
+
+        if (perfil == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(perfil);
     }
 }

@@ -253,6 +253,7 @@ public class TratamientoService {
         response.setSexo(paciente.getSexo());
         response.setTipoSangre(paciente.getTipoSangre());
         response.setAlergias(paciente.getAlergias());
+        response.setCorreo(paciente.getUsuario().getCorreo());
 
         List<HistorialTratamientoDTO> historial = tratamientos.stream()
                 .map(tratamiento -> {
