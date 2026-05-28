@@ -80,7 +80,7 @@ function PerfilMedico() {
             </button>
 
             <button className="btn-perfil" type="button" aria-label="Perfil"
-            onClick={() => navigate("/perfil-medico")}>
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
@@ -120,7 +120,18 @@ function PerfilMedico() {
             </div>
 
             <div className="perfil-medico-linea"></div>
+            <button
+            className="perfil-medico-cerrar-btn"
+            type="button"
+            onClick={() => {
+              localStorage.clear();
+              navigate("/");
+            }}
+          >
+            Cerrar sesion
+          </button>
           </div>
+          
         </section>
       </main>
     </div>

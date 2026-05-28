@@ -106,3 +106,18 @@
   height: 24px !important;
   object-fit: contain;
 }
+
+.perfil-medico-cerrar-btn {
+  float: right;
+  width: 130px;
+  height: 36px;
+  border: none;
+  border-radius: 18px;
+  background-color: #173f6c;
+  color: #ffffff;
+  font-family: "Roboto Serif", serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 22px;
+}
