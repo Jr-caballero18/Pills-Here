@@ -84,9 +84,10 @@ public class TratamientoService {
             dosis.setTratamiento(tratamientoGuardado);
             dosis.setMedicamento(medicamento);
             dosis.setCantidad(medicamentoDTO.getDosis());
-            dosis.setFrecuencia("N/A");
+            dosis.setFrecuencia("Cada " + medicamentoDTO.getIntervaloHoras() + " horas");
             dosis.setHoraProgramada(LocalTime.of(0, 0));
             dosis.setDuracion(0);
+            dosis.setIntervaloHoras(medicamentoDTO.getIntervaloHoras());
             dosisRepository.save(dosis);
         }
     }
@@ -152,6 +153,7 @@ public class TratamientoService {
                 dosis.getMedicamento().getIdMedicamento(),
                 dosis.getMedicamento().getNombre(),
                 dosis.getCantidad(),
+                dosis.getIntervaloHoras(),
                 dosis.getMedicamento().getPresentacion(),
                 dosis.getMedicamento().getViaAdministracion()
         ))
@@ -218,10 +220,10 @@ public class TratamientoService {
             dosis.setTratamiento(tratamiento);
             dosis.setMedicamento(medicamento);
             dosis.setCantidad(medicamentoDTO.getDosis());
-            dosis.setFrecuencia("N/A");
+            dosis.setFrecuencia("Cada " + medicamentoDTO.getIntervaloHoras() + " horas");
             dosis.setHoraProgramada(LocalTime.of(0, 0));
             dosis.setDuracion(0);
-
+            dosis.setIntervaloHoras(medicamentoDTO.getIntervaloHoras());
             dosisRepository.save(dosis);
         }
     }

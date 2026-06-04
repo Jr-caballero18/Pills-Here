@@ -76,6 +76,7 @@ function CrearTratamiento() {
       idMedicamento: medicamento.idMedicamento,
       nombre: medicamento.nombre,
       dosis: "",
+      intervaloHoras: "",
       presentacion: medicamento.presentacion,
       via: medicamento.viaAdministracion,
     };
@@ -88,6 +89,12 @@ function CrearTratamiento() {
   const actualizarDosis = (index, nuevaDosis) => {
     const nuevosMedicamentos = [...medicamentos];
     nuevosMedicamentos[index].dosis = nuevaDosis;
+    setMedicamentos(nuevosMedicamentos);
+  };
+
+  const actualizarIntervaloHoras = (index, nuevoIntervalo) => {
+    const nuevosMedicamentos = [...medicamentos];
+    nuevosMedicamentos[index].intervaloHoras = nuevoIntervalo;
     setMedicamentos(nuevosMedicamentos);
   };
 
@@ -108,6 +115,8 @@ function CrearTratamiento() {
         medicamentos: medicamentos.map((medicamento) => ({
           idMedicamento: medicamento.idMedicamento,
           dosis: medicamento.dosis,
+          intervaloHoras: Number(medicamento.intervaloHoras),
+
         })),
       };
 
@@ -184,8 +193,8 @@ function CrearTratamiento() {
               <img src={iconNotificacion} alt="Notificaciones" />
             </button>
 
-            <button className="crear-tratamiento-btn-perfil" type="button" 
-            onClick={() => navigate("/perfil-medico")}>
+            <button className="crear-tratamiento-btn-perfil" type="button"
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
@@ -257,6 +266,7 @@ function CrearTratamiento() {
                 <tr>
                   <th>Nombre</th>
                   <th>Dosis</th>
+                  <th>Horario</th>
                   <th>Presentación</th>
                   <th>Vía</th>
                   <th></th>
@@ -275,6 +285,16 @@ function CrearTratamiento() {
                         value={medicamento.dosis}
                         placeholder="Agregar dosis"
                         onChange={(e) => actualizarDosis(index, e.target.value)}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="number"
+                        className="crear-tratamiento-input-dosis"
+                        value={medicamento.intervaloHoras}
+                        placeholder="Horas"
+                        onChange={(e) => actualizarIntervaloHoras(index, e.target.value)}
                       />
                     </td>
 
@@ -314,7 +334,7 @@ function CrearTratamiento() {
           ></textarea>
 
           <div className="crear-tratamiento-btn-agregar-wrapper">
-            <button className="crear-tratamiento-btn-crear" type="button"onClick={guardarTratamiento}>
+            <button className="crear-tratamiento-btn-crear" type="button" onClick={guardarTratamiento}>
               Crear
             </button>
           </div>

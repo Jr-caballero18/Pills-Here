@@ -6,14 +6,17 @@ public class MedicamentoTratamientoResponseDTO {
     private Integer idMedicamento;
     private String nombre;
     private String dosis;
+    private Integer intervaloHoras;
     private String presentacion;
     private String via;
 
-    public MedicamentoTratamientoResponseDTO(Integer idDosis, Integer idMedicamento, String nombre, String dosis, String presentacion, String via) {
+    public MedicamentoTratamientoResponseDTO(Integer idDosis, Integer idMedicamento, String nombre, String dosis, Integer intervaloHoras,
+            String presentacion, String via) {
         this.idDosis = idDosis;
         this.idMedicamento = idMedicamento;
         this.nombre = nombre;
         this.dosis = dosis;
+        this.intervaloHoras = intervaloHoras;
         this.presentacion = presentacion;
         this.via = via;
     }
@@ -32,6 +35,10 @@ public class MedicamentoTratamientoResponseDTO {
 
     public String getDosis() {
         return dosis;
+    }
+
+    public Integer getIntervaloHoras() {
+        return intervaloHoras;
     }
 
     public String getPresentacion() {

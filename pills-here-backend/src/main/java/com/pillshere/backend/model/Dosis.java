@@ -1,4 +1,3 @@
-
 package com.pillshere.backend.model;
 
 import jakarta.persistence.*;
@@ -7,7 +6,8 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "dosis")
 public class Dosis {
-  @Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_dosis")
     private Integer idDosis;
@@ -31,6 +31,9 @@ public class Dosis {
 
     @Column(name = "duracion")
     private Integer duracion;
+
+    @Column(name = "intervalo_horas")
+    private Integer intervaloHoras;
 
     public Integer getIdDosis() {
         return idDosis;
@@ -86,5 +89,13 @@ public class Dosis {
 
     public void setDuracion(Integer duracion) {
         this.duracion = duracion;
-    }  
+    }
+
+    public Integer getIntervaloHoras() {
+        return intervaloHoras;
+    }
+
+    public void setIntervaloHoras(Integer intervaloHoras) {
+        this.intervaloHoras = intervaloHoras;
+    }
 }

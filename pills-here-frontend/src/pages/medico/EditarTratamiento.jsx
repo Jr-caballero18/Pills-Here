@@ -83,6 +83,7 @@ function EditarTratamiento() {
       idMedicamento: medicamento.idMedicamento,
       nombre: medicamento.nombre,
       dosis: "",
+      intervaloHoras: "",
       presentacion: medicamento.presentacion,
       via: medicamento.viaAdministracion,
     };
@@ -95,6 +96,12 @@ function EditarTratamiento() {
   const actualizarDosis = (index, nuevaDosis) => {
     const nuevosMedicamentos = [...medicamentos];
     nuevosMedicamentos[index].dosis = nuevaDosis;
+    setMedicamentos(nuevosMedicamentos);
+  };
+
+  const actualizarIntervaloHoras = (index, nuevoIntervalo) => {
+    const nuevosMedicamentos = [...medicamentos];
+    nuevosMedicamentos[index].intervaloHoras = nuevoIntervalo;
     setMedicamentos(nuevosMedicamentos);
   };
 
@@ -115,6 +122,8 @@ function EditarTratamiento() {
         medicamentos: medicamentos.map((medicamento) => ({
           idMedicamento: medicamento.idMedicamento,
           dosis: medicamento.dosis,
+          intervaloHoras: Number(medicamento.intervaloHoras),
+
         })),
       };
 
@@ -189,7 +198,7 @@ function EditarTratamiento() {
             </button>
 
             <button className="crear-tratamiento-btn-perfil" type="button"
-            onClick={() => navigate("/perfil-medico")}>
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
@@ -224,7 +233,7 @@ function EditarTratamiento() {
           <ul>
             {medicamentos.map((medicamento, index) => (
               <li key={`${medicamento.idMedicamento}-${index}`}>
-                {medicamento.nombre}. {medicamento.dosis}
+      {medicamento.nombre} {medicamento.dosis} cada {medicamento.intervaloHoras || ""} horas
               </li>
             ))}
           </ul>
@@ -273,6 +282,7 @@ function EditarTratamiento() {
                 <tr>
                   <th>Nombre</th>
                   <th>Dosis</th>
+                  <th>Horario</th>
                   <th>Presentación</th>
                   <th>Vía</th>
                   <th></th>
@@ -293,6 +303,19 @@ function EditarTratamiento() {
                         onChange={(e) => actualizarDosis(index, e.target.value)}
                       />
                     </td>
+
+                    <td>
+                      <input
+                        type="number"
+                        min="1"
+                        className="crear-tratamiento-input-dosis"
+                        value={medicamento.intervaloHoras || ""}
+                        placeholder="Horas"
+                        onChange={(e) => actualizarIntervaloHoras(index, e.target.value)}
+                      />
+                    </td>
+
+
 
                     <td>{medicamento.presentacion}</td>
                     <td>{medicamento.via}</td>
