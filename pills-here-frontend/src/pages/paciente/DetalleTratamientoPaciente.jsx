@@ -11,12 +11,18 @@ import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconTomada from "../../assets/images/icon-palomita.png";
 import iconPendiente from "../../assets/images/icon-pendiente.png";
 import iconNoTomada from "../../assets/images/icon-no-tomadas.png";
+import iconHorarios from "../../assets/images/icon-horarios.png";
+import iconHorarioSelect from "../../assets/images/icon-horario-select.png";
 
 function DetalleTratamientoPaciente() {
     const navigate = useNavigate();
     const { idTratamiento } = useParams();
 
     const [tratamiento, setTratamiento] = useState(null);
+    const [tratamientoIniciado, setTratamientoIniciado] = useState(false);
+    const [medicamentoAbierto, setMedicamentoAbierto] = useState(null);
+    const [tabActiva, setTabActiva] = useState("PENDIENTES");
+    const [horariosSeleccionados, setHorariosSeleccionados] = useState({});
 
     useEffect(() => {
         const cargarTratamiento = async () => {
@@ -34,6 +40,30 @@ function DetalleTratamientoPaciente() {
     if (!tratamiento) {
         return <p>Cargando tratamiento...</p>;
     }
+
+    const generarHorarios = (intervaloHoras) => {
+        const horasInicio = [5, 6, 7];
+
+        return horasInicio.map((horaInicio) => {
+            const horarios = [];
+            let hora = horaInicio;
+
+            for (let i = 0; i < 4; i++) {
+                horarios.push(
+                    new Date(2026, 0, 1, hora, 0).toLocaleTimeString("es-MX", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    })
+                );
+
+                hora += intervaloHoras;
+            }
+
+            return horarios;
+        });
+    };
+
 
     return (
         <div className="detalle-tratamiento-paciente-page">
@@ -53,7 +83,8 @@ function DetalleTratamientoPaciente() {
                 </div>
             </header>
 
-            <main className="detalle-tratamiento-paciente-content">
+            <main className="detalle-tratamiento-paciente-content" onClick={() => setMedicamentoAbierto(null)}
+            >
                 <section className="detalle-tratamiento-info">
                     <div className="detalle-tratamiento-avatar-box">
                         <img src={iconPerfil} alt="Paciente" />
@@ -131,75 +162,117 @@ function DetalleTratamientoPaciente() {
                     </div>
                 </div>
 
-                <div className="detalle-tratamiento-tabs">
-                    <button type="button" className="tab-activa">
-                        Pendientes <span>2</span>
-                    </button>
+                {!tratamientoIniciado ? (
+                    <section className="detalle-tratamiento-iniciar-box"
+                        onClick={() => setMedicamentoAbierto(null)}>
+                        {tratamiento.medicamentos.map((medicamento, index) => (
 
-                    <button type="button">
-                        Omitidas <span>0</span>
-                    </button>
+                            <div className="medicamento-iniciar-card" key={index} onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="medicamento-iniciar-titulo">
+                                    {medicamento.nombre}
+                                </div>
 
-                    <button type="button">
-                        Tomadas <span>1</span>
-                    </button>
-                </div>
+                                <div className="medicamento-iniciar-cuerpo">
+                                    <div>
+                                        <p>{medicamento.dosis}</p>
+                                        <small>
+                                            Diariamente cada {medicamento.intervaloHoras} horas
+                                        </small>
+                                    </div>
 
-                <section className="detalle-tratamiento-registros">
-                    <div className="registro-card">
-                        <div className="registro-titulo">Omeprazol</div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setMedicamentoAbierto(index)}
+                                    >
+                                        Iniciar Tratamiento
+                                    </button>
+                                </div>
 
-                        <div className="registro-cuerpo">
-                            <div className="registro-hora">
-                                <img src={iconPendiente} alt="Pendiente" />
-                                <span>7:31 PM</span>
+                                {medicamentoAbierto === index && (
+                                    <div className="horarios-popup">
+                                        {generarHorarios(medicamento.intervaloHoras).map(
+                                            (grupo, i) => (
+                                                <div className="horario-opcion" key={i}>
+                                                    <span>{grupo.join(" → ")}</span>
+
+                                                    <button
+                                                        type="button"
+                                                        className="btn-seleccionar-horario"
+                                                        onClick={() => {
+                                                            setHorariosSeleccionados({
+                                                                ...horariosSeleccionados,
+                                                                [medicamento.idDosis]: i,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <img src={iconHorarios} alt="Seleccionar horario" />
+                                                    </button>
+                                                    {horariosSeleccionados[medicamento.idDosis] === i && (
+                                                        <img
+                                                            src={iconHorarioSelect}
+                                                            alt="Horario seleccionado"
+                                                            className="icon-horario-select"
+                                                        />
+                                                    )}
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                )}
                             </div>
+                        ))}
+                        <div className="confirmar-horarios-wrapper">
+                            <button
+                                type="button"
+                                className="btn-confirmar-horarios"
+                                onClick={() => {
+                                    if (Object.keys(horariosSeleccionados).length !== tratamiento.medicamentos.length) {
+                                        alert("Selecciona un horario para todos los medicamentos");
+                                        return;
+                                    }
 
-                            <div className="registro-dosis">
-                                <p>1 toma</p>
-                                <small>Diaramente cada 6 horas</small>
-                            </div>
-
-                            <button type="button">Marcar como tomada</button>
+                                    setMedicamentoAbierto(null);
+                                    setTratamientoIniciado(true);
+                                }}
+                            >
+                                Confirmar
+                            </button>
                         </div>
-                    </div>
+                    </section>
+                ) : (
+                    <>
+                        <div className="detalle-tratamiento-tabs">
+                            <button
+                                type="button"
+                                className={tabActiva === "PENDIENTES" ? "tab-activa" : ""}
+                                onClick={() => setTabActiva("PENDIENTES")}
+                            >
+                                Pendientes <span>2</span>
+                            </button>
 
-                    <div className="registro-card">
-                        <div className="registro-titulo">Omeprazol</div>
+                            <button
+                                type="button"
+                                className={tabActiva === "OMITIDAS" ? "tab-activa" : ""}
+                                onClick={() => setTabActiva("OMITIDAS")}
+                            >
+                                Omitidas <span>0</span>
+                            </button>
 
-                        <div className="registro-cuerpo">
-                            <div className="registro-hora">
-                                <img src={iconPendiente} alt="Pendiente" />
-                                <span>7:31 PM</span>
-                            </div>
-
-                            <div className="registro-dosis">
-                                <p>1-2 tomas</p>
-                                <small>Diaramente cada 4 horas</small>
-                            </div>
-
-                            <button type="button">Marcar como tomada</button>
+                            <button
+                                type="button"
+                                className={tabActiva === "TOMADAS" ? "tab-activa" : ""}
+                                onClick={() => setTabActiva("TOMADAS")}
+                            >
+                                Tomadas <span>1</span>
+                            </button>
                         </div>
-                    </div>
 
-                    <div className="registro-card">
-                        <div className="registro-titulo">Mota</div>
-
-                        <div className="registro-cuerpo">
-                            <div className="registro-hora">
-                                <img src={iconTomada} alt="Tomada" />
-                                <span>7:31 PM</span>
-                            </div>
-
-                            <div className="registro-dosis">
-                                <p>25 Inhalaciones</p>
-                                <small>Diaramente cada hora</small>
-                            </div>
-
-                            <button type="button" className="tomada">Tomada</button>
-                        </div>
-                    </div>
-                </section>
+                        <section className="detalle-tratamiento-registros">
+                            { }
+                        </section>
+                    </>
+                )}
                 <button
                     className="detalle-tratamiento-back"
                     type="button"
