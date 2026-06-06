@@ -2,7 +2,7 @@ import "./DetalleTratamientoPaciente.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetalleTratamiento } from "../../services/tratamientoService";
-
+import { iniciarTratamientoPaciente } from "../../services/tratamientoService";
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
@@ -23,12 +23,31 @@ function DetalleTratamientoPaciente() {
     const [medicamentoAbierto, setMedicamentoAbierto] = useState(null);
     const [tabActiva, setTabActiva] = useState("PENDIENTES");
     const [horariosSeleccionados, setHorariosSeleccionados] = useState({});
+    const [registrosMedicacion, setRegistrosMedicacion] = useState([]);
 
     useEffect(() => {
         const cargarTratamiento = async () => {
             try {
                 const data = await obtenerDetalleTratamiento(idTratamiento);
                 setTratamiento(data);
+                const todosIniciados = data.medicamentos.every(
+                    (medicamento) => medicamento.tratamientoIniciado === true
+                );
+
+                setTratamientoIniciado(todosIniciados);
+
+                if (todosIniciados) {
+                    const registros = data.medicamentos.map((medicamento) => ({
+                        idDosis: medicamento.idDosis,
+                        nombre: medicamento.nombre,
+                        dosis: medicamento.dosis,
+                        intervaloHoras: medicamento.intervaloHoras,
+                        hora: medicamento.horaInicioPaciente,
+                        estado: "PENDIENTE",
+                    }));
+
+                    setRegistrosMedicacion(registros);
+                }
             } catch (error) {
                 console.error("Error al cargar tratamiento:", error);
             }
@@ -64,6 +83,105 @@ function DetalleTratamientoPaciente() {
         });
     };
 
+    const confirmarHorarios = async () => {
+        try {
+
+            if (
+                Object.keys(horariosSeleccionados).length !==
+                tratamiento.medicamentos.length
+            ) {
+                alert("Selecciona un horario para todos los medicamentos");
+                return;
+            }
+
+            const horarios = tratamiento.medicamentos.map((medicamento) => {
+
+                const indiceSeleccionado =
+                    horariosSeleccionados[medicamento.idDosis];
+
+                const grupoHorario =
+                    generarHorarios(medicamento.intervaloHoras)[indiceSeleccionado];
+
+                const primeraHora = grupoHorario[0];
+
+                const hora24 = convertirHoraA24(primeraHora);
+
+                return {
+                    idDosis: medicamento.idDosis,
+                    horaInicioPaciente: hora24,
+                };
+            });
+
+            await iniciarTratamientoPaciente(horarios);
+            const registros = tratamiento.medicamentos.map((medicamento) => {
+                const indiceSeleccionado = horariosSeleccionados[medicamento.idDosis];
+                const grupoHorario = generarHorarios(medicamento.intervaloHoras)[indiceSeleccionado];
+
+                return {
+                    idDosis: medicamento.idDosis,
+                    nombre: medicamento.nombre,
+                    dosis: medicamento.dosis,
+                    intervaloHoras: medicamento.intervaloHoras,
+                    hora: grupoHorario[0],
+                    estado: "PENDIENTE",
+                };
+            });
+
+            setRegistrosMedicacion(registros);
+            setMedicamentoAbierto(null);
+            setTratamientoIniciado(true);
+
+        } catch (error) {
+            console.error(error);
+            alert("Error al iniciar tratamiento");
+        }
+    };
+
+    const convertirHoraA24 = (horaTexto) => {
+
+        const [horaParte, periodo] =
+            horaTexto.replace(/\./g, "").split(" ");
+
+        let [hora, minutos] =
+            horaParte.split(":").map(Number);
+
+        if (periodo.toLowerCase() === "pm" && hora !== 12) {
+            hora += 12;
+        }
+
+        if (periodo.toLowerCase() === "am" && hora === 12) {
+            hora = 0;
+        }
+
+        return `${String(hora).padStart(2, "0")}:${String(minutos).padStart(2, "0")}:00`;
+    };
+
+    const obtenerPrimeraHoraSeleccionada = (medicamento) => {
+        const indiceHorario = horariosSeleccionados[medicamento.idDosis];
+
+        if (indiceHorario === undefined) {
+            return "";
+        }
+
+        const grupoHorarios = generarHorarios(medicamento.intervaloHoras)[indiceHorario];
+
+        return grupoHorarios[0];
+    };
+
+    const marcarComoTomada = (idDosis) => {
+        const nuevosRegistros = registrosMedicacion.map((registro) => {
+            if (registro.idDosis === idDosis) {
+                return {
+                    ...registro,
+                    estado: "TOMADA",
+                };
+            }
+
+            return registro;
+        });
+
+        setRegistrosMedicacion(nuevosRegistros);
+    };
 
     return (
         <div className="detalle-tratamiento-paciente-page">
@@ -226,15 +344,7 @@ function DetalleTratamientoPaciente() {
                             <button
                                 type="button"
                                 className="btn-confirmar-horarios"
-                                onClick={() => {
-                                    if (Object.keys(horariosSeleccionados).length !== tratamiento.medicamentos.length) {
-                                        alert("Selecciona un horario para todos los medicamentos");
-                                        return;
-                                    }
-
-                                    setMedicamentoAbierto(null);
-                                    setTratamientoIniciado(true);
-                                }}
+                                onClick={confirmarHorarios}
                             >
                                 Confirmar
                             </button>
@@ -248,7 +358,7 @@ function DetalleTratamientoPaciente() {
                                 className={tabActiva === "PENDIENTES" ? "tab-activa" : ""}
                                 onClick={() => setTabActiva("PENDIENTES")}
                             >
-                                Pendientes <span>2</span>
+                                Pendientes <span>{registrosMedicacion.filter(r => r.estado === "PENDIENTE").length}</span>
                             </button>
 
                             <button
@@ -256,7 +366,7 @@ function DetalleTratamientoPaciente() {
                                 className={tabActiva === "OMITIDAS" ? "tab-activa" : ""}
                                 onClick={() => setTabActiva("OMITIDAS")}
                             >
-                                Omitidas <span>0</span>
+                                Omitidas <span>{registrosMedicacion.filter(r => r.estado === "OMITIDA").length}</span>
                             </button>
 
                             <button
@@ -264,12 +374,56 @@ function DetalleTratamientoPaciente() {
                                 className={tabActiva === "TOMADAS" ? "tab-activa" : ""}
                                 onClick={() => setTabActiva("TOMADAS")}
                             >
-                                Tomadas <span>1</span>
+                                Tomadas <span>{registrosMedicacion.filter(r => r.estado === "TOMADA").length}</span>
                             </button>
                         </div>
 
                         <section className="detalle-tratamiento-registros">
-                            { }
+                            {registrosMedicacion
+                                .filter((registro) => registro.estado === tabActiva.slice(0, -1))
+                                .map((registro) => (
+                                    <div className="registro-card" key={registro.idDosis}>
+                                        <div className="registro-titulo">{registro.nombre}</div>
+                                        <div className="registro-cuerpo">
+                                            <div className="registro-hora">
+                                                <img
+                                                    src={
+                                                        registro.estado === "TOMADA"
+                                                            ? iconTomada
+                                                            : iconPendiente
+                                                    }
+                                                    alt={registro.estado}
+                                                />
+                                                <span>{registro.hora}</span>
+                                            </div>
+
+                                            <div className="registro-dosis">
+                                                <p>{registro.dosis}</p>
+                                                <small>
+                                                    Diariamente cada {registro.intervaloHoras} horas
+                                                </small>
+                                            </div>
+
+                                            {registro.estado === "TOMADA" ? (
+                                                <button
+                                                    type="button"
+                                                    className="tomada"
+                                                >
+                                                    Tomada
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        marcarComoTomada(registro.idDosis)
+                                                    }
+                                                >
+                                                    Marcar como tomada
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
                         </section>
                     </>
                 )}

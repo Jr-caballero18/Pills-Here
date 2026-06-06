@@ -63,3 +63,11 @@ export const obtenerTratamientosActivosPaciente = async (idPaciente) => {
 
   return response.data;
 };
+
+export const iniciarTratamientoPaciente = async (horarios) => {
+  const response = await axios.put(`${API_URL}/tratamientos/paciente/iniciar`, {
+    horarios,
+  });
+
+  return response.data;
+};

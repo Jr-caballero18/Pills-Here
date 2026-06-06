@@ -20,6 +20,8 @@ import com.pillshere.backend.dto.HistorialTratamientoDTO;
 import com.pillshere.backend.dto.MedicamentoTratamientoResponseDTO;
 import com.pillshere.backend.dto.PacienteTratamientoDTO;
 import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
+import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
+import com.pillshere.backend.dto.HorarioDosisPacienteDTO;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
@@ -88,6 +90,7 @@ public class TratamientoService {
             dosis.setHoraProgramada(LocalTime.of(0, 0));
             dosis.setDuracion(0);
             dosis.setIntervaloHoras(medicamentoDTO.getIntervaloHoras());
+            dosis.setTratamientoIniciado(false);
             dosisRepository.save(dosis);
         }
     }
@@ -155,7 +158,9 @@ public class TratamientoService {
                 dosis.getCantidad(),
                 dosis.getIntervaloHoras(),
                 dosis.getMedicamento().getPresentacion(),
-                dosis.getMedicamento().getViaAdministracion()
+                dosis.getMedicamento().getViaAdministracion(),
+                dosis.getHoraInicioPaciente() != null ? dosis.getHoraInicioPaciente().toString() : null,
+                dosis.getTratamientoIniciado()
         ))
                 .collect(Collectors.toList());
 
@@ -224,6 +229,7 @@ public class TratamientoService {
             dosis.setHoraProgramada(LocalTime.of(0, 0));
             dosis.setDuracion(0);
             dosis.setIntervaloHoras(medicamentoDTO.getIntervaloHoras());
+            dosis.setTratamientoIniciado(false);
             dosisRepository.save(dosis);
         }
     }
@@ -310,4 +316,19 @@ public class TratamientoService {
         ))
                 .toList();
     }
+
+    @Transactional
+    public void iniciarTratamientoPaciente(IniciarTratamientoPacienteRequestDTO request) {
+        for (HorarioDosisPacienteDTO horarioDTO : request.getHorarios()) {
+
+            Dosis dosis = dosisRepository.findById(horarioDTO.getIdDosis())
+                    .orElseThrow(() -> new RuntimeException("Dosis no encontrada"));
+
+            dosis.setHoraInicioPaciente(horarioDTO.getHoraInicioPaciente());
+            dosis.setTratamientoIniciado(true);
+
+            dosisRepository.save(dosis);
+        }
+    }
+
 }

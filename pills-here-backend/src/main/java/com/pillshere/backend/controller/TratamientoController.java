@@ -11,6 +11,7 @@ import com.pillshere.backend.service.TratamientoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
+import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
 import java.util.List;
 
 @RestController
@@ -81,4 +82,14 @@ public ResponseEntity<List<TratamientoActualPacienteDTO>> obtenerTratamientosAct
 ) {
     return ResponseEntity.ok(tratamientoService.obtenerTratamientosActivosPaciente(idPaciente));
 }
+
+@PutMapping("/paciente/iniciar")
+public ResponseEntity<String> iniciarTratamientoPaciente(
+        @RequestBody IniciarTratamientoPacienteRequestDTO request
+) {
+    tratamientoService.iniciarTratamientoPaciente(request);
+    return ResponseEntity.ok("Tratamiento iniciado correctamente");
+}
+
+
 }

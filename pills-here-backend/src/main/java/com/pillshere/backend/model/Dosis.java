@@ -35,6 +35,12 @@ public class Dosis {
     @Column(name = "intervalo_horas")
     private Integer intervaloHoras;
 
+    @Column(name = "hora_inicio_paciente")
+    private LocalTime horaInicioPaciente;
+
+    @Column(name = "tratamiento_iniciado")
+    private Boolean tratamientoIniciado;
+
     public Integer getIdDosis() {
         return idDosis;
     }
@@ -98,4 +104,21 @@ public class Dosis {
     public void setIntervaloHoras(Integer intervaloHoras) {
         this.intervaloHoras = intervaloHoras;
     }
+
+    public LocalTime getHoraInicioPaciente() {
+        return horaInicioPaciente;
+    }
+
+    public void setHoraInicioPaciente(LocalTime horaInicioPaciente) {
+        this.horaInicioPaciente = horaInicioPaciente;
+    }
+
+    public Boolean getTratamientoIniciado() {
+        return tratamientoIniciado;
+    }
+
+    public void setTratamientoIniciado(Boolean tratamientoIniciado) {
+        this.tratamientoIniciado = tratamientoIniciado;
+    }
+
 }

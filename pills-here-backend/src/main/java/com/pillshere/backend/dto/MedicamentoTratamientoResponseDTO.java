@@ -9,9 +9,13 @@ public class MedicamentoTratamientoResponseDTO {
     private Integer intervaloHoras;
     private String presentacion;
     private String via;
+    private String horaInicioPaciente;
+    private Boolean tratamientoIniciado;
 
     public MedicamentoTratamientoResponseDTO(Integer idDosis, Integer idMedicamento, String nombre, String dosis, Integer intervaloHoras,
-            String presentacion, String via) {
+            String presentacion, String via, String horaInicioPaciente,
+            Boolean tratamientoIniciado) {
+
         this.idDosis = idDosis;
         this.idMedicamento = idMedicamento;
         this.nombre = nombre;
@@ -19,6 +23,8 @@ public class MedicamentoTratamientoResponseDTO {
         this.intervaloHoras = intervaloHoras;
         this.presentacion = presentacion;
         this.via = via;
+        this.horaInicioPaciente = horaInicioPaciente;
+        this.tratamientoIniciado = tratamientoIniciado;
     }
 
     public Integer getIdDosis() {
@@ -47,5 +53,13 @@ public class MedicamentoTratamientoResponseDTO {
 
     public String getVia() {
         return via;
+    }
+
+    public String getHoraInicioPaciente() {
+        return horaInicioPaciente;
+    }
+
+    public Boolean getTratamientoIniciado() {
+        return tratamientoIniciado;
     }
 }
