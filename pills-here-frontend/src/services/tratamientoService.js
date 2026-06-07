@@ -71,3 +71,19 @@ export const iniciarTratamientoPaciente = async (horarios) => {
 
   return response.data;
 };
+
+export const marcarDosisComoTomada = async (idToma) => {
+  const response = await axios.put(
+    `${API_URL}/tratamientos/tomas/${idToma}/tomada`
+  );
+
+  return response.data;
+};
+
+export const obtenerTomasTratamiento = async (idTratamiento) => {
+  const response = await axios.get(
+    `${API_URL}/tratamientos/${idTratamiento}/medicacion`
+  );
+
+  return response.data;
+};

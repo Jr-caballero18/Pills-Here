@@ -22,6 +22,11 @@ import com.pillshere.backend.dto.PacienteTratamientoDTO;
 import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
 import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
 import com.pillshere.backend.dto.HorarioDosisPacienteDTO;
+import com.pillshere.backend.model.TomaMedicamento;
+import com.pillshere.backend.repository.TomaMedicamentoRepository;
+import com.pillshere.backend.dto.TomaMedicamentoResponseDTO;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
@@ -40,19 +45,22 @@ public class TratamientoService {
     private final PacienteRepository pacienteRepository;
     private final MedicoRepository medicoRepository;
     private final MedicamentoRepository medicamentoRepository;
+    private final TomaMedicamentoRepository tomaMedicamentoRepository;
 
     public TratamientoService(
             TratamientoRepository tratamientoRepository,
             DosisRepository dosisRepository,
             PacienteRepository pacienteRepository,
             MedicoRepository medicoRepository,
-            MedicamentoRepository medicamentoRepository
+            MedicamentoRepository medicamentoRepository,
+            TomaMedicamentoRepository tomaMedicamentoRepository
     ) {
         this.tratamientoRepository = tratamientoRepository;
         this.dosisRepository = dosisRepository;
         this.pacienteRepository = pacienteRepository;
         this.medicoRepository = medicoRepository;
         this.medicamentoRepository = medicamentoRepository;
+        this.tomaMedicamentoRepository = tomaMedicamentoRepository;
     }
 
     public void crearTratamiento(CrearTratamientoRequestDTO request) {
@@ -319,16 +327,87 @@ public class TratamientoService {
 
     @Transactional
     public void iniciarTratamientoPaciente(IniciarTratamientoPacienteRequestDTO request) {
+
+        System.out.println("===== INICIAR TRATAMIENTO =====");
+        System.out.println("Request recibido: " + request);
+
+        if (request.getHorarios() == null) {
+            System.out.println("HORARIOS ES NULL");
+            return;
+        }
+
+        System.out.println("Cantidad horarios: " + request.getHorarios().size());
+
         for (HorarioDosisPacienteDTO horarioDTO : request.getHorarios()) {
+
+            System.out.println(
+                    "Dosis: " + horarioDTO.getIdDosis()
+                    + " Hora: " + horarioDTO.getHoraInicioPaciente()
+            );
 
             Dosis dosis = dosisRepository.findById(horarioDTO.getIdDosis())
                     .orElseThrow(() -> new RuntimeException("Dosis no encontrada"));
 
             dosis.setHoraInicioPaciente(horarioDTO.getHoraInicioPaciente());
             dosis.setTratamientoIniciado(true);
-
             dosisRepository.save(dosis);
+
+            TomaMedicamento toma = new TomaMedicamento();
+            toma.setDosis(dosis);
+            LocalDateTime fechaProgramada = LocalDate.now().atTime(horarioDTO.getHoraInicioPaciente());
+
+            while (fechaProgramada.isBefore(LocalDateTime.now())) {
+                fechaProgramada = fechaProgramada.plusHours(dosis.getIntervaloHoras());
+            }
+
+            toma.setFechaHoraProgramada(fechaProgramada);
+            toma.setEstado("PENDIENTE");
+
+            tomaMedicamentoRepository.save(toma);
         }
     }
 
+    public List<TomaMedicamentoResponseDTO> obtenerTomasTratamiento(Integer idTratamiento) {
+        DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("hh:mm a");
+
+        List<TomaMedicamento> tomas = tomaMedicamentoRepository
+                .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
+
+        return tomas.stream()
+                .map(toma -> new TomaMedicamentoResponseDTO(
+                toma.getIdToma(),
+                toma.getDosis().getIdDosis(),
+                toma.getDosis().getMedicamento().getNombre(),
+                toma.getDosis().getCantidad(),
+                toma.getDosis().getIntervaloHoras(),
+                toma.getFechaHoraProgramada().format(formatoHora),
+                toma.getEstado()
+        ))
+                .toList();
+    }
+
+    @Transactional
+    public void marcarTomaComoTomada(Integer idToma) {
+        TomaMedicamento toma = tomaMedicamentoRepository.findById(idToma)
+                .orElseThrow(() -> new RuntimeException("Toma no encontrada"));
+
+        if ("TOMADA".equals(toma.getEstado())) {
+            return;
+        }
+
+        toma.setEstado("TOMADA");
+        toma.setFechaHoraTomada(LocalDateTime.now());
+        tomaMedicamentoRepository.save(toma);
+
+        Dosis dosis = toma.getDosis();
+
+        TomaMedicamento siguienteToma = new TomaMedicamento();
+        siguienteToma.setDosis(dosis);
+        siguienteToma.setFechaHoraProgramada(
+                toma.getFechaHoraProgramada().plusHours(dosis.getIntervaloHoras())
+        );
+        siguienteToma.setEstado("PENDIENTE");
+
+        tomaMedicamentoRepository.save(siguienteToma);
+    }
 }

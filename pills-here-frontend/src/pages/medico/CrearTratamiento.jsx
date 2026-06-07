@@ -106,7 +106,7 @@ function CrearTratamiento() {
   const guardarTratamiento = async () => {
     try {
       const idMedico = localStorage.getItem("idMedico");
-
+console.log("idMedico localStorage:", idMedico);
       const tratamiento = {
         idPaciente: Number(idPaciente),
         idMedico: Number(idMedico),
@@ -119,7 +119,7 @@ function CrearTratamiento() {
 
         })),
       };
-
+console.log("Tratamiento enviado:", tratamiento);
       await crearTratamiento(tratamiento);
       alert("Tratamiento creado correctamente");
       navigate(`/detalle-paciente/${idPaciente}`);

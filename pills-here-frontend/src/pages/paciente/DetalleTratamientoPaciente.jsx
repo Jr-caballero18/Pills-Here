@@ -2,7 +2,7 @@ import "./DetalleTratamientoPaciente.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetalleTratamiento } from "../../services/tratamientoService";
-import { iniciarTratamientoPaciente } from "../../services/tratamientoService";
+import { iniciarTratamientoPaciente, marcarDosisComoTomada, obtenerTomasTratamiento } from "../../services/tratamientoService";
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
@@ -30,23 +30,18 @@ function DetalleTratamientoPaciente() {
             try {
                 const data = await obtenerDetalleTratamiento(idTratamiento);
                 setTratamiento(data);
-                const todosIniciados = data.medicamentos.every(
-                    (medicamento) => medicamento.tratamientoIniciado === true
-                );
 
-                setTratamientoIniciado(todosIniciados);
+                const tomas = await obtenerTomasTratamiento(idTratamiento);
 
-                if (todosIniciados) {
-                    const registros = data.medicamentos.map((medicamento) => ({
-                        idDosis: medicamento.idDosis,
-                        nombre: medicamento.nombre,
-                        dosis: medicamento.dosis,
-                        intervaloHoras: medicamento.intervaloHoras,
-                        hora: medicamento.horaInicioPaciente,
-                        estado: "PENDIENTE",
-                    }));
+                if (tomas.length > 0) {
+                    setRegistrosMedicacion(tomas);
+                    setTratamientoIniciado(true);
+                } else {
+                    const todosIniciados = data.medicamentos.every(
+                        (medicamento) => medicamento.tratamientoIniciado === true
+                    );
 
-                    setRegistrosMedicacion(registros);
+                    setTratamientoIniciado(todosIniciados);
                 }
             } catch (error) {
                 console.error("Error al cargar tratamiento:", error);
@@ -112,22 +107,12 @@ function DetalleTratamientoPaciente() {
                 };
             });
 
+            console.log("Horarios enviados:", JSON.stringify(horarios, null, 2));
             await iniciarTratamientoPaciente(horarios);
-            const registros = tratamiento.medicamentos.map((medicamento) => {
-                const indiceSeleccionado = horariosSeleccionados[medicamento.idDosis];
-                const grupoHorario = generarHorarios(medicamento.intervaloHoras)[indiceSeleccionado];
 
-                return {
-                    idDosis: medicamento.idDosis,
-                    nombre: medicamento.nombre,
-                    dosis: medicamento.dosis,
-                    intervaloHoras: medicamento.intervaloHoras,
-                    hora: grupoHorario[0],
-                    estado: "PENDIENTE",
-                };
-            });
+            const tomas = await obtenerTomasTratamiento(idTratamiento);
 
-            setRegistrosMedicacion(registros);
+            setRegistrosMedicacion(tomas);
             setMedicamentoAbierto(null);
             setTratamientoIniciado(true);
 
@@ -156,32 +141,19 @@ function DetalleTratamientoPaciente() {
         return `${String(hora).padStart(2, "0")}:${String(minutos).padStart(2, "0")}:00`;
     };
 
-    const obtenerPrimeraHoraSeleccionada = (medicamento) => {
-        const indiceHorario = horariosSeleccionados[medicamento.idDosis];
+    const marcarComoTomada = async (idDosis) => {
+        try {
+            await marcarDosisComoTomada(idDosis);
 
-        if (indiceHorario === undefined) {
-            return "";
+            const tomasActualizadas = await obtenerTomasTratamiento(idTratamiento);
+
+            setRegistrosMedicacion(tomasActualizadas);
+        } catch (error) {
+            console.error("Error al marcar dosis como tomada:", error);
+            alert("Error al marcar dosis como tomada");
         }
-
-        const grupoHorarios = generarHorarios(medicamento.intervaloHoras)[indiceHorario];
-
-        return grupoHorarios[0];
     };
 
-    const marcarComoTomada = (idDosis) => {
-        const nuevosRegistros = registrosMedicacion.map((registro) => {
-            if (registro.idDosis === idDosis) {
-                return {
-                    ...registro,
-                    estado: "TOMADA",
-                };
-            }
-
-            return registro;
-        });
-
-        setRegistrosMedicacion(nuevosRegistros);
-    };
 
     return (
         <div className="detalle-tratamiento-paciente-page">
@@ -382,7 +354,7 @@ function DetalleTratamientoPaciente() {
                             {registrosMedicacion
                                 .filter((registro) => registro.estado === tabActiva.slice(0, -1))
                                 .map((registro) => (
-                                    <div className="registro-card" key={registro.idDosis}>
+                                    <div className="registro-card" key={registro.idToma}>
                                         <div className="registro-titulo">{registro.nombre}</div>
                                         <div className="registro-cuerpo">
                                             <div className="registro-hora">
@@ -415,7 +387,7 @@ function DetalleTratamientoPaciente() {
                                                 <button
                                                     type="button"
                                                     onClick={() =>
-                                                        marcarComoTomada(registro.idDosis)
+                                                        marcarComoTomada(registro.idToma)
                                                     }
                                                 >
                                                     Marcar como tomada

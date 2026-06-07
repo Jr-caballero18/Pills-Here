@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
 import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
+import com.pillshere.backend.dto.TomaMedicamentoResponseDTO;
 import java.util.List;
 
 @RestController
@@ -91,5 +92,19 @@ public ResponseEntity<String> iniciarTratamientoPaciente(
     return ResponseEntity.ok("Tratamiento iniciado correctamente");
 }
 
+@PutMapping("/tomas/{idToma}/tomada")
+public ResponseEntity<String> marcarTomaComoTomada(@PathVariable Integer idToma) {
+    tratamientoService.marcarTomaComoTomada(idToma);
+    return ResponseEntity.ok("Toma marcada como tomada");
+}
+
+@GetMapping("/{idTratamiento}/medicacion")
+public ResponseEntity<List<TomaMedicamentoResponseDTO>> obtenerTomasTratamiento(
+        @PathVariable Integer idTratamiento
+) {
+    return ResponseEntity.ok(
+            tratamientoService.obtenerTomasTratamiento(idTratamiento)
+    );
+}
 
 }
