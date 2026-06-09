@@ -37,11 +37,8 @@ function DetalleTratamientoPaciente() {
                     setRegistrosMedicacion(tomas);
                     setTratamientoIniciado(true);
                 } else {
-                    const todosIniciados = data.medicamentos.every(
-                        (medicamento) => medicamento.tratamientoIniciado === true
-                    );
-
-                    setTratamientoIniciado(todosIniciados);
+                    setRegistrosMedicacion([]);
+                    setTratamientoIniciado(false);
                 }
             } catch (error) {
                 console.error("Error al cargar tratamiento:", error);
@@ -202,7 +199,7 @@ function DetalleTratamientoPaciente() {
                     <ul>
                         {tratamiento.medicamentos.map((medicamento, index) => (
                             <li key={index}>
-                                {medicamento.nombre}. {medicamento.dosis}
+                                {medicamento.nombre}. {medicamento.dosis} cada {medicamento.intervaloHoras} horas
                             </li>
                         ))}
                     </ul>
@@ -362,7 +359,9 @@ function DetalleTratamientoPaciente() {
                                                     src={
                                                         registro.estado === "TOMADA"
                                                             ? iconTomada
-                                                            : iconPendiente
+                                                            : registro.estado === "OMITIDA"
+                                                                ? iconNoTomada
+                                                                : iconPendiente
                                                     }
                                                     alt={registro.estado}
                                                 />

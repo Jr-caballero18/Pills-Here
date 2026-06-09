@@ -368,6 +368,9 @@ public class TratamientoService {
     }
 
     public List<TomaMedicamentoResponseDTO> obtenerTomasTratamiento(Integer idTratamiento) {
+
+        actualizarTomasOmitidas(idTratamiento);
+
         DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("hh:mm a");
 
         List<TomaMedicamento> tomas = tomaMedicamentoRepository
@@ -410,4 +413,33 @@ public class TratamientoService {
 
         tomaMedicamentoRepository.save(siguienteToma);
     }
+
+    private void actualizarTomasOmitidas(Integer idTratamiento) {
+
+        List<TomaMedicamento> tomas = tomaMedicamentoRepository
+                .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
+
+        for (TomaMedicamento toma : tomas) {
+
+            if ("PENDIENTE".equals(toma.getEstado())
+                    && toma.getFechaHoraProgramada().plusMinutes(1).isBefore(LocalDateTime.now())) {
+
+                toma.setEstado("OMITIDA");
+                tomaMedicamentoRepository.save(toma);
+
+                Dosis dosis = toma.getDosis();
+
+                TomaMedicamento siguienteToma = new TomaMedicamento();
+                siguienteToma.setDosis(dosis);
+                siguienteToma.setFechaHoraProgramada(
+                        toma.getFechaHoraProgramada()
+                                .plusHours(dosis.getIntervaloHoras())
+                );
+                siguienteToma.setEstado("PENDIENTE");
+
+                tomaMedicamentoRepository.save(siguienteToma);
+            }
+        }
+    }
+
 }
