@@ -88,15 +88,24 @@ function PerfilPaciente() {
                 </div>
               ) : (
                 notificaciones.map((notificacion) => (
-                  <div className="notificacion-item" key={notificacion.id}>
+                  <div className="notificacion-item" key={`${notificacion.tipo}-${notificacion.id}`}>
                     <strong>
-                      Dr. {notificacion.nombreMedico} ha dejado un nuevo aviso.
+                      {notificacion.tipo === "MEDICAMENTO"
+                        ? notificacion.titulo
+                        : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
                     </strong>
 
                     <p>{notificacion.contenido}</p>
 
-                    <button type="button">
-                      &gt; Ver aviso
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (notificacion.tipo === "MEDICAMENTO") {
+                          navigate("/tratamientos-paciente");
+                        }
+                      }}
+                    >
+                      &gt; Ver {notificacion.tipo === "MEDICAMENTO" ? "tratamiento" : "aviso"}
                     </button>
                   </div>
                 ))

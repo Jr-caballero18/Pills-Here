@@ -15,4 +15,9 @@ public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento
     List<TomaMedicamento> findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(
             Integer idTratamiento
     );
+
+    List<TomaMedicamento> findByDosisTratamientoPacienteIdPacienteAndEstadoOrderByFechaHoraProgramadaAsc(
+            Integer idPaciente,
+            String estado
+    );
 }

@@ -1,7 +1,8 @@
 import "./TratamientosPaciente.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { obtenerTratamientosActivosPaciente } from "../../services/tratamientoService";
+import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
@@ -17,6 +18,10 @@ function TratamientosPaciente() {
 
   const [tratamientos, setTratamientos] = useState([]);
 
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const notificacionesRef = useRef(null);
+
   useEffect(() => {
     const cargarTratamientos = async () => {
       try {
@@ -27,8 +32,36 @@ function TratamientosPaciente() {
       }
     };
 
+    const cargarNotificaciones = async () => {
+      try {
+        if (!idPaciente) return;
+        const data = await obtenerNotificacionesPaciente(idPaciente);
+        setNotificaciones(data);
+      } catch (error) {
+        console.error("Error al cargar notificaciones:", error);
+      }
+    };
+
     cargarTratamientos();
+    cargarNotificaciones();
   }, [idPaciente]);
+
+  useEffect(() => {
+    const cerrarAlDarClickFuera = (e) => {
+      if (
+        notificacionesRef.current &&
+        !notificacionesRef.current.contains(e.target)
+      ) {
+        setMostrarNotificaciones(false);
+      }
+    };
+
+    document.addEventListener("mousedown", cerrarAlDarClickFuera);
+
+    return () => {
+      document.removeEventListener("mousedown", cerrarAlDarClickFuera);
+    };
+  }, []);
 
   return (
     <div className="tratamientos-paciente-page">
@@ -38,13 +71,65 @@ function TratamientosPaciente() {
         <h1>Bienvenido {nombrePaciente}</h1>
 
         <div className="tratamientos-paciente-icons">
-          <button type="button">
-            <img src={iconNotificacion} alt="Notificaciones" />
-          </button>
+
+          <div ref={notificacionesRef}>
+            <button
+              type="button"
+              onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+            >
+              <img src={iconNotificacion} alt="Notificaciones" />
+            </button>
+
+            {mostrarNotificaciones && (
+              <div className="paciente-notificaciones-panel">
+                <div className="notificaciones-flecha"></div>
+
+                <div className="notificaciones-header">
+                  <img src={iconNotificacion} alt="Notificaciones" />
+                </div>
+
+                {notificaciones.length === 0 ? (
+                  <div className="notificacion-item">
+                    <strong>No tienes notificaciones nuevas.</strong>
+                  </div>
+                ) : (
+                  notificaciones.map((notificacion) => (
+                    <div
+                      className="notificacion-item"
+                      key={`${notificacion.tipo}-${notificacion.id}`}
+                    >
+                      <strong>
+                        {notificacion.tipo === "MEDICAMENTO"
+                          ? notificacion.titulo
+                          : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
+                      </strong>
+
+                      <p>{notificacion.contenido}</p>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (notificacion.tipo === "MEDICAMENTO") {
+                            navigate("/tratamientos-paciente");
+                          }
+                        }}
+                      >
+                        &gt; Ver{" "}
+                        {notificacion.tipo === "MEDICAMENTO"
+                          ? "tratamiento"
+                          : "aviso"}
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
 
           <button type="button">
             <img src={iconPerfil} alt="Perfil" />
           </button>
+
         </div>
       </header>
 

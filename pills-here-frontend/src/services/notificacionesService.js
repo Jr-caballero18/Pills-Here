@@ -1,4 +1,3 @@
-// src/services/notificacionService.js
 
 const API_URL = "http://localhost:8083/notificaciones";
 

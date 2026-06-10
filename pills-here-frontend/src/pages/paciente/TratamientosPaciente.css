@@ -36,9 +36,14 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  position: relative;
 }
 
-.tratamientos-paciente-icons button:first-child {
+.tratamientos-paciente-icons > div {
+  position: relative;
+}
+
+.tratamientos-paciente-icons > div > button {
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -49,18 +54,17 @@
   justify-content: center;
   padding: 0;
   cursor: pointer;
-  flex-shrink: 0;
 }
 
-.tratamientos-paciente-icons button:first-child img {
-  width: 20px !important;
-  height: 20px !important;
-  max-width: 20px !important;
-  max-height: 20px !important;
+.tratamientos-paciente-icons > div > button img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
   object-fit: contain;
 }
 
-.tratamientos-paciente-icons button:last-child {
+.tratamientos-paciente-icons > button {
   border: none;
   background: transparent;
   padding: 0;
@@ -71,7 +75,7 @@
   justify-content: center;
 }
 
-.tratamientos-paciente-icons button:last-child img {
+.tratamientos-paciente-icons > button img {
   width: 56px !important;
   height: 56px !important;
   max-width: 56px !important;
@@ -164,4 +168,89 @@
 .tratamientos-paciente-back img {
   width: 50px;
   height: auto;
+}
+
+.tratamientos-paciente-icons {
+  position: relative;
+}
+
+.tratamientos-paciente-icons > div {
+  position: relative;
+}
+
+.paciente-notificaciones-panel {
+  position: absolute;
+  top: 58px;
+  right: -104px;
+  width: 430px;
+  min-height: 320px;
+  background-color: #d9d9d9;
+  border: 2px solid #111111;
+  z-index: 20;
+  box-sizing: border-box;
+}
+
+.tratamientos-paciente-icons {
+  position: relative;
+}
+
+.notificaciones-flecha {
+  position: absolute;
+  top: -22px;
+  right: 104px;
+  width: 0;
+  height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 22px solid #111111;
+}
+
+.notificaciones-header {
+  height: 36px;
+  border-bottom: 1px solid #111111;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+.notificaciones-header img {
+  width: 28px !important;
+  height: 28px !important;
+  object-fit: contain;
+}
+
+.notificacion-item {
+  min-height: 82px;
+  border-bottom: 1px solid #111111;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  font-family: "Roboto Serif", serif;
+}
+
+.notificacion-item strong {
+  display: block;
+  font-size: 15px;
+  color: #111111;
+  margin-bottom: 8px;
+}
+
+.notificacion-item p {
+  margin: 0 0 4px 14px;
+  font-size: 12px;
+  color: #111111;
+  max-width: 340px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notificacion-item button {
+  display: block;
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: #3b7cff;
+  font-family: "Roboto Serif", serif;
+  font-size: 12px;
+  cursor: pointer;
 }

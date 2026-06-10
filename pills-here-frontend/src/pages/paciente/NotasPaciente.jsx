@@ -29,7 +29,7 @@ function NotasPaciente() {
                 if (!idPaciente) return;
 
                 const data = await obtenerNotificacionesPaciente(idPaciente);
-                setAvisos(data);
+                setAvisos(data.filter((item) => item.tipo !== "MEDICAMENTO"));
                 setNotificaciones(data);
             } catch (error) {
                 console.error("Error al cargar avisos:", error);
@@ -83,9 +83,11 @@ function NotasPaciente() {
                                 </div>
                             ) : (
                                 notificaciones.map((notificacion) => (
-                                    <div className="notificacion-item" key={notificacion.id}>
+                                    <div className="notificacion-item" key={`${notificacion.tipo}-${notificacion.id}`}>
                                         <strong>
-                                            Dr. {notificacion.nombreMedico} ha dejado un nuevo aviso.
+                                            {notificacion.tipo === "MEDICAMENTO"
+                                                ? notificacion.titulo
+                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
                                         </strong>
 
                                         <p>{notificacion.contenido}</p>
@@ -93,11 +95,15 @@ function NotasPaciente() {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                setAvisoSeleccionado(notificacion);
-                                                setMostrarNotificaciones(false);
+                                                if (notificacion.tipo === "MEDICAMENTO") {
+                                                    navigate("/tratamientos-paciente");
+                                                } else {
+                                                    setAvisoSeleccionado(notificacion);
+                                                    setMostrarNotificaciones(false);
+                                                }
                                             }}
                                         >
-                                            &gt; Ver aviso
+                                            &gt; Ver {notificacion.tipo === "MEDICAMENTO" ? "tratamiento" : "aviso"}
                                         </button>
                                     </div>
                                 ))
