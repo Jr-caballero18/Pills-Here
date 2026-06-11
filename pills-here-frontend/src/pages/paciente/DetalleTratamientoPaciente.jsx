@@ -194,57 +194,60 @@ function DetalleTratamientoPaciente() {
 
                 <h1>Tratamiento de {tratamiento.nombreTratamiento || tratamiento.diagnostico}</h1>
 
-                <div className="detalle-tratamiento-paciente-icons">
-                    <div ref={notificacionesRef}>
-                        <button
-                            type="button"
-                            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-                        >
-                            <img src={iconNotificacion} alt="Notificaciones" />
-                        </button>
+                <div className="detalle-tratamiento-paciente-icons" ref={notificacionesRef}>
+                    <button
+                        className="detalle-tratamiento-paciente-btn-notificacion"
+                        type="button"
+                        onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+                    >
+                        <img src={iconNotificacion} alt="Notificaciones" />
+                    </button>
 
-                        {mostrarNotificaciones && (
-                            <div className="paciente-notificaciones-panel">
-                                <div className="notificaciones-flecha"></div>
+                    {mostrarNotificaciones && (
+                        <div className="paciente-notificaciones-panel">
+                            <div className="notificaciones-flecha"></div>
 
-                                <div className="notificaciones-header">
-                                    <img src={iconNotificacion} alt="Notificaciones" />
-                                </div>
-
-                                {notificaciones.length === 0 ? (
-                                    <div className="notificacion-item">
-                                        <strong>No tienes notificaciones nuevas.</strong>
-                                    </div>
-                                ) : (
-                                    notificaciones.map((notificacion) => (
-                                        <div
-                                            className="notificacion-item"
-                                            key={`${notificacion.tipo}-${notificacion.id}`}
-                                        >
-                                            <strong>
-                                                {notificacion.tipo === "MEDICAMENTO"
-                                                    ? notificacion.titulo
-                                                    : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
-                                            </strong>
-
-                                            <p>{notificacion.contenido}</p>
-
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    if (notificacion.tipo === "MEDICAMENTO") {
-                                                        navigate("/tratamientos-paciente");
-                                                    }
-                                                }}
-                                            >
-                                                &gt; Ver {notificacion.tipo === "MEDICAMENTO" ? "tratamiento" : "aviso"}
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
+                            <div className="notificaciones-header">
+                                <img src={iconNotificacion} alt="Notificaciones" />
                             </div>
-                        )}
-                    </div>
+
+                            {notificaciones.length === 0 ? (
+                                <div className="notificacion-item">
+                                    <strong>No tienes notificaciones nuevas.</strong>
+                                </div>
+                            ) : (
+                                notificaciones.map((notificacion) => (
+                                    <div className="notificacion-item"
+                                        key={`${notificacion.tipo}-${notificacion.id}`}
+                                    >
+                                        <strong>
+                                            {notificacion.tipo === "MEDICAMENTO"
+                                                ? notificacion.titulo
+                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
+                                        </strong>
+
+                                        <p>{notificacion.contenido}</p>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (notificacion.tipo === "MEDICAMENTO") {
+                                                    navigate("/tratamientos-paciente");
+                                                }
+                                            }}
+                                        >
+                                            &gt; Ver{" "}
+                                            {notificacion.tipo === "MEDICAMENTO"
+                                                ? "tratamiento"
+                                                : notificacion.tipo === "COMENTARIO"
+                                                    ? "comentario"
+                                                    : "aviso"}
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    )}
 
                     <button type="button">
                         <img src={iconPerfil} alt="Perfil" />

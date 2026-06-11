@@ -91,6 +91,7 @@ function InicioPaciente() {
           >
             <img src={iconNotificacion} alt="Notificaciones" />
           </button>
+          
           {mostrarNotificaciones && (
             <div className="paciente-notificaciones-panel" ref={notificacionesRef}>
               <div className="notificaciones-flecha"></div>

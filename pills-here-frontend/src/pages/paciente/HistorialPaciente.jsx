@@ -75,9 +75,9 @@ function HistorialPaciente() {
 
         <h1>Historial Clinico</h1>
 
-        <div className="historial-paciente-icons">
-          <div ref={notificacionesRef}>
+        <div className="historial-paciente-icons" ref={notificacionesRef}>
             <button
+              className="historial-paciente-btn-notificacion"
               type="button"
               onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
             >
@@ -131,7 +131,6 @@ function HistorialPaciente() {
                 )}
               </div>
             )}
-          </div>
 
           <button type="button">
             <img src={iconPerfil} alt="Perfil" />

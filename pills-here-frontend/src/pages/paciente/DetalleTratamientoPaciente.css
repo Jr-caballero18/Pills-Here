@@ -44,31 +44,6 @@
   position: relative;
 }
 
-.detalle-tratamiento-paciente-icons > div {
-  position: relative;
-}
-
-.detalle-tratamiento-paciente-icons > div > button {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background-color: #ffffff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-}
-
-.detalle-tratamiento-paciente-icons > div > button img {
-  width: 22px !important;
-  height: 22px !important;
-  max-width: 22px !important;
-  max-height: 22px !important;
-  object-fit: contain;
-}
-
 .detalle-tratamiento-paciente-icons > button {
   border: none;
   background: transparent;
@@ -80,7 +55,7 @@
   justify-content: center;
 }
 
-.detalle-tratamiento-paciente-icons > button img {
+.detalle-tratamiento-paciente-icons > button:not(.detalle-tratamiento-paciente-btn-notificacion) img {
   width: 56px !important;
   height: 56px !important;
   max-width: 56px !important;
@@ -582,7 +557,7 @@
 .paciente-notificaciones-panel {
   position: absolute;
   top: 58px;
-  right: -104px;
+  right: -6px;
   width: 430px;
   min-height: 320px;
   background-color: #d9d9d9;
@@ -650,4 +625,26 @@
   font-family: "Roboto Serif", serif;
   font-size: 12px;
   cursor: pointer;
+}
+
+.detalle-tratamiento-paciente-btn-notificacion {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  background-color: #ffffff !important;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  margin-left: 0 !important;
+}
+
+.detalle-tratamiento-paciente-btn-notificacion img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
 }

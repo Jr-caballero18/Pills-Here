@@ -41,13 +41,9 @@
   position: relative;
 }
 
-.historial-paciente-icons > div {
-  position: relative;
-}
-
-.historial-paciente-icons > div > button {
-  width: 42px;
-  height: 42px;
+.historial-paciente-btn-notificacion {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #ffffff;
   border: none;
@@ -56,15 +52,16 @@
   justify-content: center;
   padding: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
-.historial-paciente-icons > div > button img {
-  width: 20px !important;
-  height: 20px !important;
+.historial-paciente-btn-notificacion img {
+  width: 22px !important;
+  height: 22px !important;
   object-fit: contain;
 }
 
-.historial-paciente-icons > button {
+.historial-paciente-icons > button:last-child {
   border: none;
   background: transparent;
   padding: 0;
@@ -75,7 +72,7 @@
   justify-content: center;
 }
 
-.historial-paciente-icons > button img {
+.historial-paciente-icons > button:last-child img {
   width: 56px !important;
   height: 56px !important;
   max-width: 56px !important;
@@ -171,23 +168,15 @@
   height: auto;
 }
 
-.historial-paciente-icons {
-  position: relative;
-}
-
-.historial-paciente-icons>div {
-  position: relative;
-}
-
 .paciente-notificaciones-panel {
   position: absolute;
   top: 58px;
-  right: -115px;
+  right: -6px;
   width: 430px;
   min-height: 320px;
   background-color: #d9d9d9;
   border: 2px solid #111111;
-  z-index: 9999;
+  z-index: 20;
   box-sizing: border-box;
 }
 

@@ -70,61 +70,60 @@ function TratamientosPaciente() {
 
         <h1>Bienvenido {nombrePaciente}</h1>
 
-        <div className="tratamientos-paciente-icons">
+        <div className="tratamientos-paciente-icons" ref={notificacionesRef}>
 
-          <div ref={notificacionesRef}>
-            <button
-              type="button"
-              onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-            >
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
+          <button
+            className="tratamientos-paciente-btn-notificacion"
+            type="button"
+            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
+          >
+            <img src={iconNotificacion} alt="Notificaciones" />
+          </button>
 
-            {mostrarNotificaciones && (
-              <div className="paciente-notificaciones-panel">
-                <div className="notificaciones-flecha"></div>
+          {mostrarNotificaciones && (
+            <div className="paciente-notificaciones-panel">
+              <div className="notificaciones-flecha"></div>
 
-                <div className="notificaciones-header">
-                  <img src={iconNotificacion} alt="Notificaciones" />
-                </div>
-
-                {notificaciones.length === 0 ? (
-                  <div className="notificacion-item">
-                    <strong>No tienes notificaciones nuevas.</strong>
-                  </div>
-                ) : (
-                  notificaciones.map((notificacion) => (
-                    <div
-                      className="notificacion-item"
-                      key={`${notificacion.tipo}-${notificacion.id}`}
-                    >
-                      <strong>
-                        {notificacion.tipo === "MEDICAMENTO"
-                          ? notificacion.titulo
-                          : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
-                      </strong>
-
-                      <p>{notificacion.contenido}</p>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (notificacion.tipo === "MEDICAMENTO") {
-                            navigate("/tratamientos-paciente");
-                          }
-                        }}
-                      >
-                        &gt; Ver{" "}
-                        {notificacion.tipo === "MEDICAMENTO"
-                          ? "tratamiento"
-                          : "aviso"}
-                      </button>
-                    </div>
-                  ))
-                )}
+              <div className="notificaciones-header">
+                <img src={iconNotificacion} alt="Notificaciones" />
               </div>
-            )}
-          </div>
+
+              {notificaciones.length === 0 ? (
+                <div className="notificacion-item">
+                  <strong>No tienes notificaciones nuevas.</strong>
+                </div>
+              ) : (
+                notificaciones.map((notificacion) => (
+                  <div
+                    className="notificacion-item"
+                    key={`${notificacion.tipo}-${notificacion.id}`}
+                  >
+                    <strong>
+                      {notificacion.tipo === "MEDICAMENTO"
+                        ? notificacion.titulo
+                        : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
+                    </strong>
+
+                    <p>{notificacion.contenido}</p>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (notificacion.tipo === "MEDICAMENTO") {
+                          navigate("/tratamientos-paciente");
+                        }
+                      }}
+                    >
+                      &gt; Ver{" "}
+                      {notificacion.tipo === "MEDICAMENTO"
+                        ? "tratamiento"
+                        : "aviso"}
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
 
           <button type="button">
             <img src={iconPerfil} alt="Perfil" />
