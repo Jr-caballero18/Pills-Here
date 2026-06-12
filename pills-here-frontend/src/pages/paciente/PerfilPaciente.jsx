@@ -164,7 +164,7 @@ function PerfilPaciente() {
         <button
           className="perfil-paciente-back"
           type="button"
-          onClick={() => navigate("/inicio-paciente")}
+          onClick={() => navigate(-1)}
         >
           <img src={iconRegreso} alt="Regresar" />
         </button>

@@ -126,7 +126,7 @@ function TratamientosPaciente() {
           )}
 
           <button type="button">
-            <img src={iconPerfil} alt="Perfil" />
+            <img src={iconPerfil} alt="Perfil"  onClick={() => navigate("/perfil-paciente")} />
           </button>
 
         </div>
