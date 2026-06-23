@@ -16,7 +16,7 @@ export const crearTratamiento = async (tratamiento) => {
 };
 
 export const obtenerTratamientoPorPaciente = async (idPaciente) => {
-  const response = await axios.get(`${API_URL}/tratamientos/paciente/${idPaciente}`);
+  const response = await axios.get(`${API_URL}/tratamientos/paciente/${idPaciente}/todos`);
   return response.data;
 };
 

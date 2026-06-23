@@ -442,4 +442,20 @@ public class TratamientoService {
         }
     }
 
+    public List<TratamientoPacienteResponseDTO> obtenerTratamientosPorPaciente(Integer idPaciente) {
+        List<Tratamiento> tratamientos = tratamientoRepository
+                .findByPacienteIdPacienteAndEstadoOrderByFechaInicioDesc(idPaciente, "ACTIVO");
+
+        return tratamientos.stream()
+                .map(tratamiento -> new TratamientoPacienteResponseDTO(
+                tratamiento.getIdTratamiento(),
+                tratamiento.getNombreTratamiento(),
+                tratamiento.getDiagnostico(),
+                tratamiento.getEstado(),
+                tratamiento.getFechaInicio(),
+                tratamiento.getNotasMedicas()
+        ))
+                .toList();
+    }
+
 }

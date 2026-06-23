@@ -1,4 +1,3 @@
-
 package com.pillshere.backend.controller;
 
 import com.pillshere.backend.dto.ActualizarTratamientoRequestDTO;
@@ -19,6 +18,7 @@ import java.util.List;
 @RequestMapping("/tratamientos")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TratamientoController {
+
     private final TratamientoService tratamientoService;
 
     public TratamientoController(TratamientoService tratamientoService) {
@@ -30,81 +30,94 @@ public class TratamientoController {
         tratamientoService.crearTratamiento(request);
         return ResponseEntity.ok("Tratamiento creado correctamente");
     }
-    
-    @GetMapping("/paciente/{idPaciente}")
-public ResponseEntity<TratamientoPacienteResponseDTO> obtenerTratamientoPorPaciente(@PathVariable Integer idPaciente) {
-    TratamientoPacienteResponseDTO tratamiento = tratamientoService.obtenerTratamientoPorPaciente(idPaciente);
 
-    if (tratamiento == null) {
-        return ResponseEntity.noContent().build();
+    @GetMapping("/paciente/{idPaciente}")
+    public ResponseEntity<TratamientoPacienteResponseDTO> obtenerTratamientoPorPaciente(@PathVariable Integer idPaciente) {
+        TratamientoPacienteResponseDTO tratamiento = tratamientoService.obtenerTratamientoPorPaciente(idPaciente);
+
+        if (tratamiento == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(tratamiento);
     }
 
-    return ResponseEntity.ok(tratamiento);
-}
+    @GetMapping("/{idTratamiento}")
+    public ResponseEntity<DetalleTratamientoResponseDTO> obtenerDetalleTratamiento(@PathVariable Integer idTratamiento) {
+        return ResponseEntity.ok(tratamientoService.obtenerDetalleTratamiento(idTratamiento));
+    }
 
-@GetMapping("/{idTratamiento}")
-public ResponseEntity<DetalleTratamientoResponseDTO> obtenerDetalleTratamiento(@PathVariable Integer idTratamiento) {
-    return ResponseEntity.ok(tratamientoService.obtenerDetalleTratamiento(idTratamiento));
-}
+    @PutMapping("/{idTratamiento}/cancelar")
+    public ResponseEntity<String> cancelarTratamiento(@PathVariable Integer idTratamiento) {
+        tratamientoService.cancelarTratamiento(idTratamiento);
+        return ResponseEntity.ok("Tratamiento cancelado correctamente");
+    }
 
-@PutMapping("/{idTratamiento}/cancelar")
-public ResponseEntity<String> cancelarTratamiento(@PathVariable Integer idTratamiento) {
-    tratamientoService.cancelarTratamiento(idTratamiento);
-    return ResponseEntity.ok("Tratamiento cancelado correctamente");
-}
+    @PutMapping("/{idTratamiento}")
+    public ResponseEntity<String> actualizarTratamiento(
+            @PathVariable Integer idTratamiento,
+            @RequestBody ActualizarTratamientoRequestDTO request
+    ) {
+        tratamientoService.actualizarTratamiento(idTratamiento, request);
+        return ResponseEntity.ok("Tratamiento actualizado correctamente");
+    }
 
+    @GetMapping("/historial/paciente/{idPaciente}")
+    public ResponseEntity<HistorialPacienteResponseDTO> obtenerHistorialPaciente(@PathVariable Integer idPaciente) {
+        return ResponseEntity.ok(tratamientoService.obtenerHistorialPaciente(idPaciente));
+    }
 
-@PutMapping("/{idTratamiento}")
-public ResponseEntity<String> actualizarTratamiento(
-        @PathVariable Integer idTratamiento,
-        @RequestBody ActualizarTratamientoRequestDTO request
-) {
-    tratamientoService.actualizarTratamiento(idTratamiento, request);
-    return ResponseEntity.ok("Tratamiento actualizado correctamente");
-}
+    @PutMapping("/{idTratamiento}/comentario")
+    public ResponseEntity<String> agregarComentarioTratamiento(
+            @PathVariable Integer idTratamiento,
+            @RequestBody ComentarioTratamientoRequestDTO request
+    ) {
+        tratamientoService.agregarComentarioTratamiento(idTratamiento, request.getComentario());
+        return ResponseEntity.ok("Comentario agregado correctamente");
+    }
 
-@GetMapping("/historial/paciente/{idPaciente}")
-public ResponseEntity<HistorialPacienteResponseDTO> obtenerHistorialPaciente(@PathVariable Integer idPaciente) {
-    return ResponseEntity.ok(tratamientoService.obtenerHistorialPaciente(idPaciente));
-}
+    @GetMapping("/paciente-actuales/{idPaciente}")
+    public ResponseEntity<List<TratamientoActualPacienteDTO>> obtenerTratamientosActivosPaciente(
+            @PathVariable Integer idPaciente
+    ) {
+        return ResponseEntity.ok(tratamientoService.obtenerTratamientosActivosPaciente(idPaciente));
+    }
 
-@PutMapping("/{idTratamiento}/comentario")
-public ResponseEntity<String> agregarComentarioTratamiento(
-        @PathVariable Integer idTratamiento,
-        @RequestBody ComentarioTratamientoRequestDTO request
-) {
-    tratamientoService.agregarComentarioTratamiento(idTratamiento, request.getComentario());
-    return ResponseEntity.ok("Comentario agregado correctamente");
-}
+    @PutMapping("/paciente/iniciar")
+    public ResponseEntity<String> iniciarTratamientoPaciente(
+            @RequestBody IniciarTratamientoPacienteRequestDTO request
+    ) {
+        tratamientoService.iniciarTratamientoPaciente(request);
+        return ResponseEntity.ok("Tratamiento iniciado correctamente");
+    }
 
-@GetMapping("/paciente-actuales/{idPaciente}")
-public ResponseEntity<List<TratamientoActualPacienteDTO>> obtenerTratamientosActivosPaciente(
-        @PathVariable Integer idPaciente
-) {
-    return ResponseEntity.ok(tratamientoService.obtenerTratamientosActivosPaciente(idPaciente));
-}
+    @PutMapping("/tomas/{idToma}/tomada")
+    public ResponseEntity<String> marcarTomaComoTomada(@PathVariable Integer idToma) {
+        tratamientoService.marcarTomaComoTomada(idToma);
+        return ResponseEntity.ok("Toma marcada como tomada");
+    }
 
-@PutMapping("/paciente/iniciar")
-public ResponseEntity<String> iniciarTratamientoPaciente(
-        @RequestBody IniciarTratamientoPacienteRequestDTO request
-) {
-    tratamientoService.iniciarTratamientoPaciente(request);
-    return ResponseEntity.ok("Tratamiento iniciado correctamente");
-}
+    @GetMapping("/{idTratamiento}/medicacion")
+    public ResponseEntity<List<TomaMedicamentoResponseDTO>> obtenerTomasTratamiento(
+            @PathVariable Integer idTratamiento
+    ) {
+        return ResponseEntity.ok(
+                tratamientoService.obtenerTomasTratamiento(idTratamiento)
+        );
+    }
 
-@PutMapping("/tomas/{idToma}/tomada")
-public ResponseEntity<String> marcarTomaComoTomada(@PathVariable Integer idToma) {
-    tratamientoService.marcarTomaComoTomada(idToma);
-    return ResponseEntity.ok("Toma marcada como tomada");
-}
+    @GetMapping("/paciente/{idPaciente}/todos")
+    public ResponseEntity<List<TratamientoPacienteResponseDTO>> obtenerTratamientosPorPaciente(
+            @PathVariable Integer idPaciente
+    ) {
+        List<TratamientoPacienteResponseDTO> tratamientos
+                = tratamientoService.obtenerTratamientosPorPaciente(idPaciente);
 
-@GetMapping("/{idTratamiento}/medicacion")
-public ResponseEntity<List<TomaMedicamentoResponseDTO>> obtenerTomasTratamiento(
-        @PathVariable Integer idTratamiento
-) {
-    return ResponseEntity.ok(
-            tratamientoService.obtenerTomasTratamiento(idTratamiento)
-    );
-}
+        if (tratamientos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(tratamientos);
+    }
 
 }

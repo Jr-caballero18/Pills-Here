@@ -13,13 +13,16 @@ import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import { crearAviso } from "../../services/avisoService";
+import iconTratamiento from "../../assets/images/icon-tratamiento.png";
+import iconSinTratamientos from "../../assets/images/icon-sin-tratamientos.png";
+
 function DetallePaciente() {
   const navigate = useNavigate();
   const { idPaciente } = useParams();
 
   const [paciente, setPaciente] = useState(null);
-  const [tratamiento, setTratamiento] = useState(null);
-  const [comentario, setComentario] = useState("");
+  const [tratamientos, setTratamientos] = useState([]);
+  const [comentarios, setComentarios] = useState({});
   const [tituloAviso, setTituloAviso] = useState("");
   const [contenidoAviso, setContenidoAviso] = useState("");
   const [observacionesAviso, setObservacionesAviso] = useState("");
@@ -30,16 +33,17 @@ function DetallePaciente() {
         const data = await obtenerDetallePaciente(idPaciente);
         setPaciente(data);
 
-        try {
-          const tratamientoData = await obtenerTratamientoPorPaciente(idPaciente);
-          setTratamiento(tratamientoData);
-        } catch (error) {
-          if (error.response?.status === 204) {
-            setTratamiento(null);
-          } else {
-            console.error("Error al obtener tratamiento:", error);
-          }
+        const tratamientoData = await obtenerTratamientoPorPaciente(idPaciente);
+
+        if (Array.isArray(tratamientoData)) {
+          setTratamientos(tratamientoData);
+        } else if (tratamientoData) {
+          setTratamientos([tratamientoData]);
+        } else {
+          setTratamientos([]);
         }
+
+
       } catch (error) {
         console.error("Error al obtener detalle del paciente:", error);
       }
@@ -52,36 +56,42 @@ function DetallePaciente() {
     return <p>Cargando paciente...</p>;
   }
 
-  const cancelarTratamientoPaciente = async () => {
+  const cancelarTratamientoPaciente = async (idTratamiento) => {
     const confirmar = window.confirm("¿Seguro que deseas cancelar este tratamiento?");
 
     if (!confirmar) return;
 
     try {
-      await cancelarTratamiento(tratamiento.idTratamiento);
+
+      await cancelarTratamiento(idTratamiento);
 
       alert("Tratamiento cancelado correctamente");
-      setTratamiento(null);
+
+      setTratamientos((prev) =>
+        prev.filter((tratamiento) => tratamiento.idTratamiento !== idTratamiento)
+      );
+
     } catch (error) {
       console.error("Error al cancelar tratamiento:", error);
       alert("Error al cancelar tratamiento");
     }
   };
 
-  const guardarComentario = async () => {
+  const guardarComentario = async (idTratamiento) => {
+    const comentario = comentarios[idTratamiento] || "";
     if (!comentario.trim()) {
       alert("Escribe un comentario");
       return;
     }
 
     try {
-      await agregarComentarioTratamiento(tratamiento.idTratamiento, comentario);
-
-      const tratamientoActualizado = await obtenerTratamientoPorPaciente(idPaciente);
-      setTratamiento(tratamientoActualizado);
+      await agregarComentarioTratamiento(idTratamiento, comentario);
 
       alert("Comentario agregado correctamente");
-      setComentario("");
+      setComentarios((prev) => ({
+        ...prev,
+        [idTratamiento]: "",
+      }));
     } catch (error) {
       console.error("Error al agregar comentario:", error);
       alert("Error al agregar comentario");
@@ -89,31 +99,31 @@ function DetallePaciente() {
   };
 
   const guardarAviso = async () => {
-  if (!tituloAviso.trim() || !contenidoAviso.trim()) {
-    alert("Escribe el título y el aviso");
-    return;
-  }
+    if (!tituloAviso.trim() || !contenidoAviso.trim()) {
+      alert("Escribe el título y el aviso");
+      return;
+    }
 
-  try {
-    const idMedico = localStorage.getItem("idMedico");
+    try {
+      const idMedico = localStorage.getItem("idMedico");
 
-    await crearAviso({
-      idMedico: Number(idMedico),
-      idPaciente: Number(idPaciente),
-      titulo: tituloAviso,
-      contenido: contenidoAviso,
-      observaciones: observacionesAviso,
-    });
+      await crearAviso({
+        idMedico: Number(idMedico),
+        idPaciente: Number(idPaciente),
+        titulo: tituloAviso,
+        contenido: contenidoAviso,
+        observaciones: observacionesAviso,
+      });
 
-    alert("Aviso enviado correctamente");
-    setTituloAviso("");
-    setContenidoAviso("");
-    setObservacionesAviso("");
-  } catch (error) {
-    console.error("Error al enviar aviso:", error);
-    alert("Error al enviar aviso");
-  }
-};
+      alert("Aviso enviado correctamente");
+      setTituloAviso("");
+      setContenidoAviso("");
+      setObservacionesAviso("");
+    } catch (error) {
+      console.error("Error al enviar aviso:", error);
+      alert("Error al enviar aviso");
+    }
+  };
 
   return (
     <div className="detalle-paciente-page">
@@ -156,103 +166,149 @@ function DetallePaciente() {
             </button>
 
             <button className="detalle-btn-perfil" type="button" aria-label="Perfil"
-            onClick={() => navigate("/perfil-medico")}>
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
         </div>
 
-        <section className="detalle-paciente-panel">
-          <div className="detalle-avatar-wrapper">
-            <img src={iconPerfil} alt="Paciente" className="detalle-avatar" />
-          </div>
+        <div className="detalle-layout">
 
-          <div className="detalle-info-box">
-            <p>{paciente.nombreCompleto}</p>
-            <p>Edad: {paciente.edad}</p>
-            <p>Sexo: {paciente.sexo}</p>
-            <p>Tipo de sangre: {paciente.tipoSangre || "No especificado"}</p>
-          </div>
+          <section className="detalle-paciente-panel">
+            <div className="detalle-avatar-wrapper">
+              <img src={iconPerfil} alt="Paciente" className="detalle-avatar" />
+            </div>
 
-          {tratamiento ? (
-            <>
-              <div className="detalle-tratamiento-box">
-                <span>Tratamiento</span>
+            <div className="detalle-info-box">
+              <p>{paciente.nombreCompleto}</p>
+              <p>Edad: {paciente.edad}</p>
+              <p>Sexo: {paciente.sexo}</p>
+              <p>Tipo de sangre: {paciente.tipoSangre || "No especificado"}</p>
+            </div>
 
-                <div className="detalle-tratamiento-actions">
+          </section>
+
+          <section className="detalle-tratamientos-panel">
+            {tratamientos.length === 0 ? (
+              <div className="detalle-sin-tratamientos-card">
+                <div className="detalle-sin-tratamientos-icon">
+                  <img
+                    src={iconSinTratamientos}
+                    alt="Sin tratamientos"
+                    className="detalle-sin-tratamientos-img"
+                  />
+                </div>
+
+                <h2>Este paciente aún no tiene tratamientos</h2>
+
+                <p>
+                  Crea un tratamiento para registrar el diagnóstico,
+                  medicamentos y recomendaciones.
+                </p>
+
+                <button
+                  className="detalle-crear-btn"
+                  type="button"
+                  onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
+                >
+                  + Crear tratamiento
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="detalle-tratamientos-header">
+                  <h2>Tratamientos del paciente</h2>
+
                   <button
-                    className="detalle-tratamiento-icon-btn"
+                    className="detalle-nuevo-tratamiento-btn"
                     type="button"
-                    onClick={() => navigate(`/editar-tratamiento/${tratamiento.idTratamiento}`)}
+                    onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
                   >
-                    <img src={iconEditar} alt="Editar tratamiento" />
-                  </button>
-
-                  <button
-                    className="detalle-tratamiento-icon-btn"
-                    type="button"
-                    onClick={cancelarTratamientoPaciente}
-                  >
-                    <img src={iconBorrar} alt="Cancelar tratamiento" />
+                    + Nuevo tratamiento
                   </button>
                 </div>
-              </div>
 
-              <textarea
-                className="detalle-comentario-textarea"
-                placeholder="Agregar comentario."
-                value={comentario}
-                onChange={(e) => setComentario(e.target.value)}
-              ></textarea>
+                <div className="detalle-tratamientos-lista">
+                  {tratamientos.map((tratamiento, index) => (
+                    <div className="medico-tratamiento-card" key={tratamiento.idTratamiento}>
+                      <div className="medico-tratamiento-icono">
+                        <img src={iconTratamiento} alt="Tratamiento" />
+                      </div>
 
-              <button className="detalle-agregar-btn" type="button" onClick={guardarComentario}>
-                Agregar
-              </button>
-            </>
-          ) : (
-            <>
-              <p className="detalle-sin-tratamiento">No hay tratamiento existente</p>
+                      <div className="medico-tratamiento-info">
+                        <h3>Tratamiento de {tratamiento.nombreTratamiento}</h3>
+                        <p>{tratamiento.diagnostico}</p>
 
-              <button
-                className="detalle-crear-btn"
-                type="button"
-                onClick={() => navigate(`/crear-tratamiento/${idPaciente}`)}
-              >
-                Crear tratamiento
-              </button>
-            </>
-          )}
-        </section>
+                        <span className="medico-tratamiento-estado">
+                          ● Activo
+                        </span>
+                      </div>
 
-        <section className="detalle-avisos-panel">
-          <h2>Avisos</h2>
+                      <div className="medico-tratamiento-opciones">
+                        <button
+                          className="medico-tratamiento-ver-btn"
+                          type="button"
+                          onClick={() => navigate(`/tratamiento-paciente/${tratamiento.idTratamiento}`)}
+                        >
+                          Ver tratamiento
+                        </button>
 
-          <input
-            className="detalle-aviso-input"
-            type="text"
-            placeholder="Titulo."
-            value={tituloAviso}
-            onChange={(e) => setTituloAviso(e.target.value)}
-          />
+                        <div className="medico-tratamiento-actions">
+                          <button
+                            className="medico-tratamiento-icon-btn"
+                            type="button"
+                            onClick={() => navigate(`/editar-tratamiento/${tratamiento.idTratamiento}`)}
+                          >
+                            <img src={iconEditar} alt="Editar tratamiento" />
+                          </button>
 
-          <textarea
-            className="detalle-aviso-textarea"
-            placeholder="Agregar aviso."
-            value={contenidoAviso}
-            onChange={(e) => setContenidoAviso(e.target.value)}
-          ></textarea>
+                          <button
+                            className="medico-tratamiento-icon-btn"
+                            type="button"
+                            onClick={() => cancelarTratamientoPaciente(tratamiento.idTratamiento)}
+                          >
+                            <img src={iconBorrar} alt="Eliminar tratamiento" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </section>
 
-          <textarea
-            className="detalle-aviso-textarea"
-            placeholder="Observaciones."
-            value={observacionesAviso}
-            onChange={(e) => setObservacionesAviso(e.target.value)}
-          ></textarea>
+          <section className="detalle-avisos-panel">
+            <h2>Avisos</h2>
 
-          <button className="detalle-aviso-btn" type="button"  onClick={guardarAviso}>
-            Agregar
-          </button>
-        </section>
+            <input
+              className="detalle-aviso-input"
+              type="text"
+              placeholder="Titulo."
+              value={tituloAviso}
+              onChange={(e) => setTituloAviso(e.target.value)}
+            />
+
+            <textarea
+              className="detalle-aviso-textarea"
+              placeholder="Agregar aviso."
+              value={contenidoAviso}
+              onChange={(e) => setContenidoAviso(e.target.value)}
+            ></textarea>
+
+            <textarea
+              className="detalle-aviso-textarea"
+              placeholder="Observaciones."
+              value={observacionesAviso}
+              onChange={(e) => setObservacionesAviso(e.target.value)}
+            ></textarea>
+
+            <button className="detalle-aviso-btn" type="button" onClick={guardarAviso}>
+              Agregar
+            </button>
+          </section>
+
+        </div>
 
       </main>
     </div>
