@@ -36,6 +36,9 @@ import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.Optional;
+import com.pillshere.backend.dto.EstadisticaDiaDTO;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Service
 public class TratamientoService {
@@ -223,7 +226,8 @@ public class TratamientoService {
 
         tratamientoRepository.save(tratamiento);
 
-        dosisRepository.deleteByTratamientoIdTratamiento(idTratamiento);
+        tomaMedicamentoRepository.deleteByDosisTratamientoIdTratamiento(idTratamiento);
+dosisRepository.deleteByTratamientoIdTratamiento(idTratamiento);
 
         for (MedicamentoTratamientoDTO medicamentoDTO : request.getMedicamentos()) {
             Medicamento medicamento = medicamentoRepository.findById(medicamentoDTO.getIdMedicamento())
@@ -458,4 +462,42 @@ public class TratamientoService {
                 .toList();
     }
 
+    
+    public List<EstadisticaDiaDTO> obtenerEstadisticasTratamiento(Integer idTratamiento) {
+
+    actualizarTomasOmitidas(idTratamiento);
+
+    List<TomaMedicamento> tomas = tomaMedicamentoRepository
+            .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
+
+    Map<LocalDate, int[]> estadisticasPorDia = new LinkedHashMap<>();
+
+    for (TomaMedicamento toma : tomas) {
+        LocalDate fecha = toma.getFechaHoraProgramada().toLocalDate();
+
+        estadisticasPorDia.putIfAbsent(fecha, new int[]{0, 0, 0});
+
+        int[] conteos = estadisticasPorDia.get(fecha);
+
+        if ("TOMADA".equals(toma.getEstado())) {
+            conteos[0]++;
+        } else if ("PENDIENTE".equals(toma.getEstado())) {
+            conteos[1]++;
+        } else if ("OMITIDA".equals(toma.getEstado())) {
+            conteos[2]++;
+        }
+    }
+
+    DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("d MMMM");
+
+    return estadisticasPorDia.entrySet()
+            .stream()
+            .map(entry -> new EstadisticaDiaDTO(
+                    entry.getKey().format(formatoFecha),
+                    entry.getValue()[0],
+                    entry.getValue()[1],
+                    entry.getValue()[2]
+            ))
+            .toList();
+}
 }

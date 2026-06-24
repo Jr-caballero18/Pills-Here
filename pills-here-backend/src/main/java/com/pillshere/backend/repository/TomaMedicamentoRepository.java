@@ -20,4 +20,6 @@ public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento
             Integer idPaciente,
             String estado
     );
+    
+    void deleteByDosisTratamientoIdTratamiento(Integer idTratamiento);
 }
