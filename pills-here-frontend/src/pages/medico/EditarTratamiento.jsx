@@ -84,6 +84,7 @@ function EditarTratamiento() {
       nombre: medicamento.nombre,
       dosis: "",
       intervaloHoras: "",
+      duracionDias: "",
       presentacion: medicamento.presentacion,
       via: medicamento.viaAdministracion,
     };
@@ -105,6 +106,12 @@ function EditarTratamiento() {
     setMedicamentos(nuevosMedicamentos);
   };
 
+  const actualizarDuracionDias = (index, nuevaDuracion) => {
+    const nuevosMedicamentos = [...medicamentos];
+    nuevosMedicamentos[index].duracionDias = nuevaDuracion;
+    setMedicamentos(nuevosMedicamentos);
+  };
+
   const eliminarMedicamento = (index) => {
     const nuevosMedicamentos = medicamentos.filter((_, i) => i !== index);
     setMedicamentos(nuevosMedicamentos);
@@ -123,6 +130,7 @@ function EditarTratamiento() {
           idMedicamento: medicamento.idMedicamento,
           dosis: medicamento.dosis,
           intervaloHoras: Number(medicamento.intervaloHoras),
+          duracionDias: Number(medicamento.duracionDias),
 
         })),
       };
@@ -233,7 +241,7 @@ function EditarTratamiento() {
           <ul>
             {medicamentos.map((medicamento, index) => (
               <li key={`${medicamento.idMedicamento}-${index}`}>
-      {medicamento.nombre} {medicamento.dosis} cada {medicamento.intervaloHoras || ""} horas
+                {medicamento.nombre} {medicamento.dosis} cada {medicamento.intervaloHoras || ""} horas por {medicamento.duracionDias || ""} dias
               </li>
             ))}
           </ul>
@@ -283,6 +291,7 @@ function EditarTratamiento() {
                   <th>Nombre</th>
                   <th>Dosis</th>
                   <th>Horario</th>
+                  <th>Duracion</th>
                   <th>Presentación</th>
                   <th>Vía</th>
                   <th></th>
@@ -312,6 +321,17 @@ function EditarTratamiento() {
                         value={medicamento.intervaloHoras || ""}
                         placeholder="Horas"
                         onChange={(e) => actualizarIntervaloHoras(index, e.target.value)}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="number"
+                        min="1"
+                        className="crear-tratamiento-input-dosis"
+                        value={medicamento.duracionDias || ""}
+                        placeholder="Días"
+                        onChange={(e) => actualizarDuracionDias(index, e.target.value)}
                       />
                     </td>
 

@@ -303,7 +303,7 @@ function DetalleTratamientoPaciente() {
                     <ul>
                         {tratamiento.medicamentos.map((medicamento, index) => (
                             <li key={index}>
-                                {medicamento.nombre}. {medicamento.dosis} cada {medicamento.intervaloHoras} horas
+                                {medicamento.nombre}. {medicamento.dosis} cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
                             </li>
                         ))}
                     </ul>
@@ -368,7 +368,7 @@ function DetalleTratamientoPaciente() {
                                     <div>
                                         <p>{medicamento.dosis}</p>
                                         <small>
-                                            Diariamente cada {medicamento.intervaloHoras} horas
+                                             Cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
                                         </small>
                                     </div>
 
