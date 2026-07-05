@@ -282,7 +282,7 @@
 
 .detalle-tratamientos-header h2 {
   margin: 0;
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .detalle-nuevo-tratamiento-btn {
@@ -476,7 +476,7 @@
 
 .medico-tratamiento-info h3 {
   margin: 0 0 6px 0;
-  font-size: 21px;
+  font-size: 15px;
   font-weight: 700;
   line-height: 1.1;
 }
