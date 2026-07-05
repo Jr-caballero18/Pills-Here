@@ -5,6 +5,7 @@ public class MedicamentoTratamientoDTO {
     private Integer idMedicamento;
     private String dosis;
     private Integer intervaloHoras;
+    private Integer duracionDias;
 
     public Integer getIdMedicamento() {
         return idMedicamento;
@@ -29,4 +30,14 @@ public class MedicamentoTratamientoDTO {
     public void setIntervaloHoras(Integer intervaloHoras) {
         this.intervaloHoras = intervaloHoras;
     }
+
+    public Integer getDuracionDias() {
+        return duracionDias;
+    }
+
+    public void setDuracionDias(Integer duracionDias) {
+        this.duracionDias = duracionDias;
+    }
+    
+    
 }

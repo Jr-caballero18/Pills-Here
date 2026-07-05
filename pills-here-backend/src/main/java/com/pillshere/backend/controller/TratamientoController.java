@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
 import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
 import com.pillshere.backend.dto.TomaMedicamentoResponseDTO;
+import com.pillshere.backend.dto.EstadisticaDiaDTO;
 import java.util.List;
 
 @RestController
@@ -120,4 +121,12 @@ public class TratamientoController {
         return ResponseEntity.ok(tratamientos);
     }
 
+    @GetMapping("/{idTratamiento}/estadisticas")
+    public ResponseEntity<List<EstadisticaDiaDTO>> obtenerEstadisticasTratamiento(
+            @PathVariable Integer idTratamiento
+    ) {
+        return ResponseEntity.ok(
+                tratamientoService.obtenerEstadisticasTratamiento(idTratamiento)
+        );
+    }
 }

@@ -245,13 +245,7 @@ function DetallePaciente() {
                       </div>
 
                       <div className="medico-tratamiento-opciones">
-                        <button
-                          className="medico-tratamiento-ver-btn"
-                          type="button"
-                          onClick={() => navigate(`/tratamiento-paciente/${tratamiento.idTratamiento}`)}
-                        >
-                          Ver tratamiento
-                        </button>
+                  
 
                         <div className="medico-tratamiento-actions">
                           <button

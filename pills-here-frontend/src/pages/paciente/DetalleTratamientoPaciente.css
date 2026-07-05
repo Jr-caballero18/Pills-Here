@@ -648,3 +648,15 @@
   max-height: 22px !important;
   object-fit: contain;
 }
+
+.detalle-tratamiento-grafica-recharts {
+  width: 640px;
+  height: 280px;
+  margin: 0 auto 20px auto;
+}
+
+.grafica-sin-datos {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 60px;
+}

@@ -87,3 +87,11 @@ export const obtenerTomasTratamiento = async (idTratamiento) => {
 
   return response.data;
 };
+
+export const obtenerEstadisticasTratamiento = async (idTratamiento) => {
+  const response = await axios.get(
+    `${API_URL}/tratamientos/${idTratamiento}/estadisticas`
+  );
+
+  return response.data;
+};

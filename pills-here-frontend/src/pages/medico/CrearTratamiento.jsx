@@ -77,6 +77,7 @@ function CrearTratamiento() {
       nombre: medicamento.nombre,
       dosis: "",
       intervaloHoras: "",
+      duracionDias: "",
       presentacion: medicamento.presentacion,
       via: medicamento.viaAdministracion,
     };
@@ -98,6 +99,12 @@ function CrearTratamiento() {
     setMedicamentos(nuevosMedicamentos);
   };
 
+  const actualizarDuracionDias = (index, nuevaDuracion) => {
+    const nuevosMedicamentos = [...medicamentos];
+    nuevosMedicamentos[index].duracionDias = nuevaDuracion;
+    setMedicamentos(nuevosMedicamentos);
+  };
+
   const eliminarMedicamento = (index) => {
     const nuevosMedicamentos = medicamentos.filter((_, i) => i !== index);
     setMedicamentos(nuevosMedicamentos);
@@ -106,7 +113,7 @@ function CrearTratamiento() {
   const guardarTratamiento = async () => {
     try {
       const idMedico = localStorage.getItem("idMedico");
-console.log("idMedico localStorage:", idMedico);
+      console.log("idMedico localStorage:", idMedico);
       const tratamiento = {
         idPaciente: Number(idPaciente),
         idMedico: Number(idMedico),
@@ -116,10 +123,10 @@ console.log("idMedico localStorage:", idMedico);
           idMedicamento: medicamento.idMedicamento,
           dosis: medicamento.dosis,
           intervaloHoras: Number(medicamento.intervaloHoras),
-
+          duracionDias: Number(medicamento.duracionDias),
         })),
       };
-console.log("Tratamiento enviado:", tratamiento);
+      console.log("Tratamiento enviado:", tratamiento);
       await crearTratamiento(tratamiento);
       alert("Tratamiento creado correctamente");
       navigate(`/detalle-paciente/${idPaciente}`);
@@ -267,6 +274,7 @@ console.log("Tratamiento enviado:", tratamiento);
                   <th>Nombre</th>
                   <th>Dosis</th>
                   <th>Horario</th>
+                  <th>Duracion</th>
                   <th>Presentación</th>
                   <th>Vía</th>
                   <th></th>
@@ -295,6 +303,17 @@ console.log("Tratamiento enviado:", tratamiento);
                         value={medicamento.intervaloHoras}
                         placeholder="Horas"
                         onChange={(e) => actualizarIntervaloHoras(index, e.target.value)}
+                      />
+                    </td>
+
+                    <td>
+                      <input
+                        type="number"
+                        min="1"
+                        className="crear-tratamiento-input-dosis"
+                        value={medicamento.duracionDias}
+                        placeholder="Días"
+                        onChange={(e) => actualizarDuracionDias(index, e.target.value)}
                       />
                     </td>
 

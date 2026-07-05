@@ -2,7 +2,7 @@ import "./DetalleTratamientoPaciente.css";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetalleTratamiento } from "../../services/tratamientoService";
-import { iniciarTratamientoPaciente, marcarDosisComoTomada, obtenerTomasTratamiento } from "../../services/tratamientoService";
+import { iniciarTratamientoPaciente, marcarDosisComoTomada, obtenerTomasTratamiento, obtenerEstadisticasTratamiento } from "../../services/tratamientoService";
 import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
@@ -14,6 +14,15 @@ import iconPendiente from "../../assets/images/icon-pendiente.png";
 import iconNoTomada from "../../assets/images/icon-no-tomadas.png";
 import iconHorarios from "../../assets/images/icon-horarios.png";
 import iconHorarioSelect from "../../assets/images/icon-horario-select.png";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+} from "recharts";
 
 function DetalleTratamientoPaciente() {
     const navigate = useNavigate();
@@ -25,6 +34,7 @@ function DetalleTratamientoPaciente() {
     const [tabActiva, setTabActiva] = useState("PENDIENTES");
     const [horariosSeleccionados, setHorariosSeleccionados] = useState({});
     const [registrosMedicacion, setRegistrosMedicacion] = useState([]);
+    const [estadisticas, setEstadisticas] = useState([]);
     const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
     const [notificaciones, setNotificaciones] = useState([]);
     const notificacionesRef = useRef(null);
@@ -36,6 +46,9 @@ function DetalleTratamientoPaciente() {
                 setTratamiento(data);
 
                 const tomas = await obtenerTomasTratamiento(idTratamiento);
+
+                const estadisticasData = await obtenerEstadisticasTratamiento(idTratamiento);
+                setEstadisticas(estadisticasData);
 
                 if (tomas.length > 0) {
                     setRegistrosMedicacion(tomas);
@@ -145,6 +158,9 @@ function DetalleTratamientoPaciente() {
             const tomas = await obtenerTomasTratamiento(idTratamiento);
 
             setRegistrosMedicacion(tomas);
+
+            const estadisticasData = await obtenerEstadisticasTratamiento(idTratamiento);
+            setEstadisticas(estadisticasData);
             setMedicamentoAbierto(null);
             setTratamientoIniciado(true);
 
@@ -178,6 +194,9 @@ function DetalleTratamientoPaciente() {
             await marcarDosisComoTomada(idDosis);
 
             const tomasActualizadas = await obtenerTomasTratamiento(idTratamiento);
+
+            const estadisticasActualizadas = await obtenerEstadisticasTratamiento(idTratamiento);
+            setEstadisticas(estadisticasActualizadas);
 
             setRegistrosMedicacion(tomasActualizadas);
         } catch (error) {
@@ -250,7 +269,7 @@ function DetalleTratamientoPaciente() {
                     )}
 
                     <button type="button">
-                        <img src={iconPerfil} alt="Perfil" onClick={() => navigate("/perfil-paciente")}/>
+                        <img src={iconPerfil} alt="Perfil" onClick={() => navigate("/perfil-paciente")} />
                     </button>
                 </div>
             </header>
@@ -284,7 +303,7 @@ function DetalleTratamientoPaciente() {
                     <ul>
                         {tratamiento.medicamentos.map((medicamento, index) => (
                             <li key={index}>
-                                {medicamento.nombre}. {medicamento.dosis} cada {medicamento.intervaloHoras} horas
+                                {medicamento.nombre}. {medicamento.dosis} cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
                             </li>
                         ))}
                     </ul>
@@ -297,24 +316,24 @@ function DetalleTratamientoPaciente() {
 
                 <h2 className="detalle-tratamiento-subtitulo">Cumplimiento de Medicación.</h2>
 
-                <section className="detalle-tratamiento-grafica">
-                    <div className="grafica-barras">
-                        <div className="barra verde" style={{ height: "60px" }}></div>
-                        <div className="barra amarilla" style={{ height: "35px" }}></div>
-                        <div className="barra verde" style={{ height: "80px" }}></div>
-                        <div className="barra roja" style={{ height: "25px" }}></div>
-                        <div className="barra verde" style={{ height: "70px" }}></div>
-                        <div className="barra amarilla" style={{ height: "55px" }}></div>
-                    </div>
-
-                    <div className="grafica-dias">
-                        <span>5 Abril</span>
-                        <span>6 Abril</span>
-                        <span>7 Abril</span>
-                        <span>8 Abril</span>
-                        <span>9 Abril</span>
-                        <span>10 Abril</span>
-                    </div>
+                <section className="detalle-tratamiento-grafica-recharts">
+                    {estadisticas.length === 0 ? (
+                        <p className="grafica-sin-datos">
+                            Aún no hay datos de medicación para graficar.
+                        </p>
+                    ) : (
+                        <ResponsiveContainer width="100%" height={260}>
+                            <BarChart data={estadisticas}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="fecha" />
+                                <YAxis allowDecimals={false} />
+                                <Tooltip />
+                                <Bar dataKey="tomadas" stackId="a" fill="#86c98b" name="Tomadas" />
+                                <Bar dataKey="pendientes" stackId="a" fill="#f5df61" name="Pendientes" />
+                                <Bar dataKey="omitidas" stackId="a" fill="#ec6464" name="No tomadas" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    )}
                 </section>
 
                 <div className="detalle-tratamiento-leyenda">
@@ -349,7 +368,7 @@ function DetalleTratamientoPaciente() {
                                     <div>
                                         <p>{medicamento.dosis}</p>
                                         <small>
-                                            Diariamente cada {medicamento.intervaloHoras} horas
+                                             Cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
                                         </small>
                                     </div>
 

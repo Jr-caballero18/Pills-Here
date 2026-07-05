@@ -20,6 +20,9 @@ public class Dosis {
     @JoinColumn(name = "id_medicamento", nullable = false)
     private Medicamento medicamento;
 
+    @Column(name = "duracion_dias", nullable = false)
+    private Integer duracionDias;
+
     @Column(name = "cantidad", length = 50)
     private String cantidad;
 
@@ -121,4 +124,11 @@ public class Dosis {
         this.tratamientoIniciado = tratamientoIniciado;
     }
 
+    public Integer getDuracionDias() {
+        return duracionDias;
+    }
+
+    public void setDuracionDias(Integer duracionDias) {
+        this.duracionDias = duracionDias;
+    }
 }
