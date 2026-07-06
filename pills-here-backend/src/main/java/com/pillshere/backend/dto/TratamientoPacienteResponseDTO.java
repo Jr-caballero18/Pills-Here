@@ -1,17 +1,16 @@
-
 package com.pillshere.backend.dto;
 
 import java.time.LocalDate;
 
-
 public class TratamientoPacienteResponseDTO {
 
-private Integer idTratamiento;
+    private Integer idTratamiento;
     private String nombreTratamiento;
     private String diagnostico;
     private String estado;
     private LocalDate fechaInicio;
     private String notasMedicas;
+    private Integer porcentajeCumplimiento;
 
     public TratamientoPacienteResponseDTO() {
     }
@@ -72,6 +71,13 @@ private Integer idTratamiento;
     public void setNotasMedicas(String notasMedicas) {
         this.notasMedicas = notasMedicas;
     }
-    
-}
 
+    public Integer getPorcentajeCumplimiento() {
+        return porcentajeCumplimiento;
+    }
+
+    public void setPorcentajeCumplimiento(Integer porcentajeCumplimiento) {
+        this.porcentajeCumplimiento = porcentajeCumplimiento;
+    }
+
+}

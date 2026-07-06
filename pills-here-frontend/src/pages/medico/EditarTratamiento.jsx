@@ -233,7 +233,8 @@ function EditarTratamiento() {
         </section>
 
         <section className="editar-tratamiento-estado-box">
-          El tratamiento se encuentra a medio proceso. Cumplimiento 50%
+          El tratamiento se encuentra en estado: {tratamiento.estado}.
+          Cumplimiento {tratamiento.porcentajeCumplimiento || 0}%
         </section>
 
         <section className="editar-tratamiento-resumen-box">

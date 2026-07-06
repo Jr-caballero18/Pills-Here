@@ -9,6 +9,8 @@ import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconTratamiento from "../../assets/images/icon-tratamiento.png";
+import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
+import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
 
 function TratamientosPaciente() {
   const navigate = useNavigate();
@@ -89,44 +91,65 @@ function TratamientosPaciente() {
               </div>
 
               {notificaciones.length === 0 ? (
-                <div className="notificacion-item">
-                  <strong>No tienes notificaciones nuevas.</strong>
+                <div className="notificacion-vacia">
+                  No tienes notificaciones nuevas.
                 </div>
               ) : (
-                notificaciones.map((notificacion) => (
-                  <div
-                    className="notificacion-item"
-                    key={`${notificacion.tipo}-${notificacion.id}`}
-                  >
-                    <strong>
-                      {notificacion.tipo === "MEDICAMENTO"
-                        ? notificacion.titulo
-                        : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
-                    </strong>
+                notificaciones.map((notificacion) => {
+                  const esMedicamento = notificacion.tipo === "MEDICAMENTO";
+                  const esComentario = notificacion.tipo === "COMENTARIO";
 
-                    <p>{notificacion.contenido}</p>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (notificacion.tipo === "MEDICAMENTO") {
-                          navigate("/tratamientos-paciente");
-                        }
-                      }}
+                  return (
+                    <div
+                      className={`notificacion-card ${esMedicamento ? "notificacion-medicamento" : "notificacion-comentario"
+                        }`}
+                      key={`${notificacion.tipo}-${notificacion.id}`}
                     >
-                      &gt; Ver{" "}
-                      {notificacion.tipo === "MEDICAMENTO"
-                        ? "tratamiento"
-                        : "aviso"}
-                    </button>
-                  </div>
-                ))
+                      <div className="notificacion-icono">
+                        <img
+                          src={esMedicamento ? iconRecordatorioNotif : iconComentarioNotif}
+                          alt="Tipo de notificación"
+                        />
+                      </div>
+
+                      <div className="notificacion-contenido">
+                        <div className="notificacion-titulo">
+                          <span className="notificacion-punto"></span>
+
+                          <strong>
+                            {esMedicamento
+                              ? notificacion.titulo
+                              : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
+                              }.`}
+                          </strong>
+                        </div>
+
+                        <p>{notificacion.contenido}</p>
+
+                        <div className="notificacion-footer">
+                          <span>Hace 10 min</span>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (esMedicamento) {
+                                navigate("/tratamientos-paciente");
+                              }
+                            }}
+                          >
+                            Ver {esMedicamento ? "dosis" : esComentario ? "comentario" : "aviso"} &gt;
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
               )}
             </div>
           )}
 
           <button type="button">
-            <img src={iconPerfil} alt="Perfil"  onClick={() => navigate("/perfil-paciente")} />
+            <img src={iconPerfil} alt="Perfil" onClick={() => navigate("/perfil-paciente")} />
           </button>
 
         </div>

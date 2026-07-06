@@ -352,72 +352,147 @@
 .paciente-notificaciones-panel {
   position: absolute;
   top: 58px;
-  right: -6px;
-  width: 430px;
-  min-height: 320px;
-  background-color: #d9d9d9;
-  border: 2px solid #111111;
-  z-index: 20;
+  right: 58px;
+  width: 490px;
+  min-height: 315px;
+  background: #ffffff;
+  border: 3px solid #111111;
+  border-radius: 3px;
+  z-index: 50;
   box-sizing: border-box;
 }
 
 .notificaciones-flecha {
   position: absolute;
-  top: -22px;
-  right: 104px;
-  width: 0;
-  height: 0;
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-  border-bottom: 22px solid #111111;
+  top: -18px;
+  right: 24px;
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border-left: 3px solid #111111;
+  border-top: 3px solid #111111;
+  transform: rotate(45deg);
 }
 
 .notificaciones-header {
-  height: 36px;
-  border-bottom: 1px solid #111111;
+  height: 52px;
+  border-bottom: 2px solid #111111;
   display: flex;
   align-items: center;
-  padding-left: 12px;
+  gap: 12px;
+  padding: 0 18px;
+  background: #ffffff;
+  position: relative;
+  z-index: 2;
 }
 
 .notificaciones-header img {
-  width: 28px;
-  height: 28px;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.notificaciones-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.notificaciones-lista {
+  padding: 8px 12px 14px;
+}
+
+.notificacion-card {
+  display: grid;
+  grid-template-columns: 78px 1fr;
+  align-items: center;
+  min-height: 98px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+}
+
+.notificacion-comentario {
+  background: #dff0ff;
+}
+
+.notificacion-medicamento {
+  background: #d9ffd9;
+}
+
+.notificacion-icono {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificacion-icono img {
+  width: 42px !important;
+  height: 42px !important;
   object-fit: contain;
 }
 
-.notificacion-item {
-  min-height: 82px;
-  border-bottom: 1px solid #111111;
-  padding: 10px 14px;
-  box-sizing: border-box;
-  font-family: "Roboto Serif", serif;
+.notificacion-titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
 }
 
-.notificacion-item strong {
-  display: block;
-  font-size: 15px;
+.notificacion-punto {
+  width: 12px;
+  height: 12px;
+  background: #38a3f1;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.notificacion-medicamento .notificacion-punto {
+  background: #008f2f;
+}
+
+.notificacion-titulo strong {
+  font-size: 14px;
+  font-weight: 700;
   color: #111111;
-  margin-bottom: 8px;
 }
 
-.notificacion-item p {
-  margin: 0 0 4px 14px;
+.notificacion-contenido p {
+  margin: 0 0 10px 24px;
   font-size: 12px;
   color: #111111;
-  max-width: 340px;
+  max-width: 310px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.notificacion-item button {
-  display: block;
-  margin-left: auto;
+.notificacion-footer {
+  margin-left: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.notificacion-footer span {
+  font-size: 12px;
+  color: #9c9c9c;
+}
+
+.notificacion-footer button {
   border: none;
   background: transparent;
-  color: #3b7cff;
+  color: #008cff;
   font-family: "Roboto Serif", serif;
   font-size: 12px;
   cursor: pointer;
+  padding: 0;
+}
+
+.notificacion-vacia {
+  padding: 20px;
+  font-weight: 700;
 }

@@ -14,6 +14,8 @@ import iconPendiente from "../../assets/images/icon-pendiente.png";
 import iconNoTomada from "../../assets/images/icon-no-tomadas.png";
 import iconHorarios from "../../assets/images/icon-horarios.png";
 import iconHorarioSelect from "../../assets/images/icon-horario-select.png";
+import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
+import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
 import {
     BarChart,
     Bar,
@@ -231,39 +233,59 @@ function DetalleTratamientoPaciente() {
                             </div>
 
                             {notificaciones.length === 0 ? (
-                                <div className="notificacion-item">
-                                    <strong>No tienes notificaciones nuevas.</strong>
+                                <div className="notificacion-vacia">
+                                    No tienes notificaciones nuevas.
                                 </div>
                             ) : (
-                                notificaciones.map((notificacion) => (
-                                    <div className="notificacion-item"
-                                        key={`${notificacion.tipo}-${notificacion.id}`}
-                                    >
-                                        <strong>
-                                            {notificacion.tipo === "MEDICAMENTO"
-                                                ? notificacion.titulo
-                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
-                                        </strong>
+                                notificaciones.map((notificacion) => {
+                                    const esMedicamento = notificacion.tipo === "MEDICAMENTO";
+                                    const esComentario = notificacion.tipo === "COMENTARIO";
 
-                                        <p>{notificacion.contenido}</p>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (notificacion.tipo === "MEDICAMENTO") {
-                                                    navigate("/tratamientos-paciente");
-                                                }
-                                            }}
+                                    return (
+                                        <div
+                                            className={`notificacion-card ${esMedicamento ? "notificacion-medicamento" : "notificacion-comentario"
+                                                }`}
+                                            key={`${notificacion.tipo}-${notificacion.id}`}
                                         >
-                                            &gt; Ver{" "}
-                                            {notificacion.tipo === "MEDICAMENTO"
-                                                ? "tratamiento"
-                                                : notificacion.tipo === "COMENTARIO"
-                                                    ? "comentario"
-                                                    : "aviso"}
-                                        </button>
-                                    </div>
-                                ))
+                                            <div className="notificacion-icono">
+                                                <img
+                                                    src={esMedicamento ? iconRecordatorioNotif : iconComentarioNotif}
+                                                    alt="Tipo de notificación"
+                                                />
+                                            </div>
+
+                                            <div className="notificacion-contenido">
+                                                <div className="notificacion-titulo">
+                                                    <span className="notificacion-punto"></span>
+
+                                                    <strong>
+                                                        {esMedicamento
+                                                            ? notificacion.titulo
+                                                            : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
+                                                            }.`}
+                                                    </strong>
+                                                </div>
+
+                                                <p>{notificacion.contenido}</p>
+
+                                                <div className="notificacion-footer">
+                                                    <span>Hace 10 min</span>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            if (esMedicamento) {
+                                                                navigate("/tratamientos-paciente");
+                                                            }
+                                                        }}
+                                                    >
+                                                        Ver {esMedicamento ? "dosis" : esComentario ? "comentario" : "aviso"} &gt;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })
                             )}
                         </div>
                     )}
@@ -294,8 +316,9 @@ function DetalleTratamientoPaciente() {
                     </div>
                 </section>
 
-                <section className="detalle-tratamiento-estado">
-                    El tratamiento se encuentra a medio proceso. Cumplimiento 50%
+                <section className="editar-tratamiento-estado-box">
+                    El tratamiento se encuentra en estado: {tratamiento.estado}.
+                    Cumplimiento {tratamiento.porcentajeCumplimiento ?? 0}%
                 </section>
 
                 <section className="detalle-tratamiento-resumen">
@@ -368,7 +391,7 @@ function DetalleTratamientoPaciente() {
                                     <div>
                                         <p>{medicamento.dosis}</p>
                                         <small>
-                                             Cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
+                                            Cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
                                         </small>
                                     </div>
 

@@ -133,7 +133,7 @@ public class TratamientoService {
         if (!"ACTIVO".equals(tratamiento.getEstado())) {
             return null;
         }
-        return new TratamientoPacienteResponseDTO(
+        TratamientoPacienteResponseDTO dto = new TratamientoPacienteResponseDTO(
                 tratamiento.getIdTratamiento(),
                 tratamiento.getNombreTratamiento(),
                 tratamiento.getDiagnostico(),
@@ -141,6 +141,13 @@ public class TratamientoService {
                 tratamiento.getFechaInicio(),
                 tratamiento.getNotasMedicas()
         );
+
+        actualizarTomasOmitidas(tratamiento.getIdTratamiento());
+        dto.setPorcentajeCumplimiento(
+                calcularPorcentajeCumplimiento(tratamiento.getIdTratamiento())
+        );
+
+        return dto;
     }
 
     public DetalleTratamientoResponseDTO obtenerDetalleTratamiento(Integer idTratamiento) {
@@ -204,6 +211,9 @@ public class TratamientoService {
         response.setMedicamentos(medicamentosDTO);
         response.setNombreMedico(nombreMedico);
 
+        actualizarTomasOmitidas(idTratamiento);
+        response.setPorcentajeCumplimiento(calcularPorcentajeCumplimiento(idTratamiento));
+
         return response;
     }
 
@@ -256,7 +266,7 @@ public class TratamientoService {
                     ? medicamentoDTO.getDuracionDias()
                     : 1;
 
-duracionMaximaDias = Math.max(duracionMaximaDias, duracionDias);
+            duracionMaximaDias = Math.max(duracionMaximaDias, duracionDias);
             Medicamento medicamento = medicamentoRepository.findById(medicamentoDTO.getIdMedicamento())
                     .orElseThrow(() -> new RuntimeException("Medicamento no encontrado"));
 
@@ -456,40 +466,40 @@ duracionMaximaDias = Math.max(duracionMaximaDias, duracionDias);
 
             tomaMedicamentoRepository.save(siguienteToma);
         }
-        
+
         verificarYFinalizarTratamiento(dosis.getTratamiento().getIdTratamiento());
     }
 
     private void actualizarTomasOmitidas(Integer idTratamiento) {
 
-    List<TomaMedicamento> tomas = tomaMedicamentoRepository
-            .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
+        List<TomaMedicamento> tomas = tomaMedicamentoRepository
+                .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
 
-    for (TomaMedicamento toma : tomas) {
+        for (TomaMedicamento toma : tomas) {
 
-        if ("PENDIENTE".equals(toma.getEstado())
-                && toma.getFechaHoraProgramada().plusMinutes(1).isBefore(LocalDateTime.now())) {
+            if ("PENDIENTE".equals(toma.getEstado())
+                    && toma.getFechaHoraProgramada().plusMinutes(1).isBefore(LocalDateTime.now())) {
 
-            toma.setEstado("OMITIDA");
-            tomaMedicamentoRepository.save(toma);
+                toma.setEstado("OMITIDA");
+                tomaMedicamentoRepository.save(toma);
 
-            Dosis dosis = toma.getDosis();
+                Dosis dosis = toma.getDosis();
 
-            LocalDateTime siguienteFecha = toma.getFechaHoraProgramada()
-                    .plusHours(dosis.getIntervaloHoras());
+                LocalDateTime siguienteFecha = toma.getFechaHoraProgramada()
+                        .plusHours(dosis.getIntervaloHoras());
 
-            if (puedeGenerarSiguienteToma(dosis, siguienteFecha)) {
-                TomaMedicamento siguienteToma = new TomaMedicamento();
-                siguienteToma.setDosis(dosis);
-                siguienteToma.setFechaHoraProgramada(siguienteFecha);
-                siguienteToma.setEstado("PENDIENTE");
+                if (puedeGenerarSiguienteToma(dosis, siguienteFecha)) {
+                    TomaMedicamento siguienteToma = new TomaMedicamento();
+                    siguienteToma.setDosis(dosis);
+                    siguienteToma.setFechaHoraProgramada(siguienteFecha);
+                    siguienteToma.setEstado("PENDIENTE");
 
-                tomaMedicamentoRepository.save(siguienteToma);
+                    tomaMedicamentoRepository.save(siguienteToma);
+                }
             }
         }
+        verificarYFinalizarTratamiento(idTratamiento);
     }
-    verificarYFinalizarTratamiento(idTratamiento);
-}
 
     public List<TratamientoPacienteResponseDTO> obtenerTratamientosPorPaciente(Integer idPaciente) {
         List<Tratamiento> tratamientos = tratamientoRepository
@@ -567,47 +577,87 @@ duracionMaximaDias = Math.max(duracionMaximaDias, duracionDias);
 
         return !siguienteFecha.toLocalDate().isAfter(fechaFinMedicamento);
     }
-    
+
     private void verificarYFinalizarTratamiento(Integer idTratamiento) {
-    Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
-            .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
+        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento)
+                .orElseThrow(() -> new RuntimeException("Tratamiento no encontrado"));
 
-    if (!"ACTIVO".equals(tratamiento.getEstado())) {
-        return;
-    }
-
-    List<TomaMedicamento> tomas = tomaMedicamentoRepository
-            .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
-
-    boolean hayPendientes = tomas.stream()
-            .anyMatch(toma -> "PENDIENTE".equals(toma.getEstado()));
-
-    if (hayPendientes) {
-        return;
-    }
-
-    List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);
-
-    for (Dosis dosis : dosisList) {
-        Optional<TomaMedicamento> ultimaToma = tomas.stream()
-                .filter(toma -> toma.getDosis().getIdDosis().equals(dosis.getIdDosis()))
-                .max((a, b) -> a.getFechaHoraProgramada().compareTo(b.getFechaHoraProgramada()));
-
-        if (ultimaToma.isEmpty()) {
+        if (!"ACTIVO".equals(tratamiento.getEstado())) {
             return;
         }
 
-        LocalDateTime siguienteFecha = ultimaToma.get()
-                .getFechaHoraProgramada()
-                .plusHours(dosis.getIntervaloHoras());
+        List<TomaMedicamento> tomas = tomaMedicamentoRepository
+                .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
 
-        if (puedeGenerarSiguienteToma(dosis, siguienteFecha)) {
+        boolean hayPendientes = tomas.stream()
+                .anyMatch(toma -> "PENDIENTE".equals(toma.getEstado()));
+
+        if (hayPendientes) {
             return;
         }
+
+        List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);
+
+        for (Dosis dosis : dosisList) {
+            Optional<TomaMedicamento> ultimaToma = tomas.stream()
+                    .filter(toma -> toma.getDosis().getIdDosis().equals(dosis.getIdDosis()))
+                    .max((a, b) -> a.getFechaHoraProgramada().compareTo(b.getFechaHoraProgramada()));
+
+            if (ultimaToma.isEmpty()) {
+                return;
+            }
+
+            LocalDateTime siguienteFecha = ultimaToma.get()
+                    .getFechaHoraProgramada()
+                    .plusHours(dosis.getIntervaloHoras());
+
+            if (puedeGenerarSiguienteToma(dosis, siguienteFecha)) {
+                return;
+            }
+        }
+
+        tratamiento.setEstado("FINALIZADO");
+        tratamientoRepository.save(tratamiento);
     }
 
-    tratamiento.setEstado("FINALIZADO");
-    tratamientoRepository.save(tratamiento);
-}
-    
+    private int calcularPorcentajeCumplimiento(Integer idTratamiento) {
+
+        List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);
+
+        System.out.println("=== CALCULO CUMPLIMIENTO ===");
+        System.out.println("ID TRATAMIENTO: " + idTratamiento);
+        System.out.println("DOSIS ENCONTRADAS: " + dosisList.size());
+
+        int totalTratamiento = 0;
+
+        for (Dosis dosis : dosisList) {
+            System.out.println("MED: " + dosis.getMedicamento().getNombre());
+            System.out.println("INTERVALO: " + dosis.getIntervaloHoras());
+            System.out.println("DURACION: " + dosis.getDuracionDias());
+
+            int tomasPorDia = 24 / dosis.getIntervaloHoras();
+            int duracionDias = dosis.getDuracionDias();
+
+            totalTratamiento += tomasPorDia * duracionDias;
+        }
+
+        List<TomaMedicamento> tomas = tomaMedicamentoRepository
+                .findByDosisTratamientoIdTratamientoOrderByFechaHoraProgramadaAsc(idTratamiento);
+
+        long tomadas = tomas.stream()
+                .filter(toma -> "TOMADA".equals(toma.getEstado()))
+                .count();
+
+        System.out.println("TOMADAS: " + tomadas);
+        System.out.println("TOTAL TRATAMIENTO: " + totalTratamiento);
+
+        int porcentaje = totalTratamiento == 0
+                ? 0
+                : (int) Math.round((tomadas * 100.0) / totalTratamiento);
+
+        System.out.println("PORCENTAJE: " + porcentaje);
+
+        return porcentaje;
+    }
+
 }

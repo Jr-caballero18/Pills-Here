@@ -13,7 +13,15 @@ public class DetalleTratamientoResponseDTO {
     private PacienteTratamientoDTO paciente;
     private List<MedicamentoTratamientoResponseDTO> medicamentos;
     private String nombreMedico;
+    private Integer porcentajeCumplimiento;
 
+    public Integer getPorcentajeCumplimiento() {
+        return porcentajeCumplimiento;
+    }
+
+    public void setPorcentajeCumplimiento(Integer porcentajeCumplimiento) {
+        this.porcentajeCumplimiento = porcentajeCumplimiento;
+    }
 
     public Integer getIdTratamiento() {
         return idTratamiento;
@@ -70,12 +78,12 @@ public class DetalleTratamientoResponseDTO {
     public void setMedicamentos(List<MedicamentoTratamientoResponseDTO> medicamentos) {
         this.medicamentos = medicamentos;
     }
-    
-    public String getNombreMedico() {
-    return nombreMedico;
-}
 
-public void setNombreMedico(String nombreMedico) {
-    this.nombreMedico = nombreMedico;
-}
+    public String getNombreMedico() {
+        return nombreMedico;
+    }
+
+    public void setNombreMedico(String nombreMedico) {
+        this.nombreMedico = nombreMedico;
+    }
 }
