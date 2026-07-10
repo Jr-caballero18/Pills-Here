@@ -620,6 +620,19 @@ public class TratamientoService {
         tratamientoRepository.save(tratamiento);
     }
 
+    @Transactional
+    public long contarTratamientosActivosMedico(Integer idMedico) {
+        List<Tratamiento> activos = tratamientoRepository.findByMedicoIdMedicoAndEstado(idMedico, "ACTIVO");
+
+        activos.forEach(this::actualizarEstadoTratamientoSiVencido);
+
+        return tratamientoRepository.countByMedicoIdMedicoAndEstado(idMedico, "ACTIVO");
+    }
+
+    public long contarTratamientosFinalizadosMedico(Integer idMedico) {
+        return tratamientoRepository.countByMedicoIdMedicoAndEstado(idMedico, "FINALIZADO");
+    }
+
     private int calcularPorcentajeCumplimiento(Integer idTratamiento) {
 
         List<Dosis> dosisList = dosisRepository.findByTratamientoIdTratamiento(idTratamiento);

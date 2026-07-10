@@ -349,150 +349,210 @@
   position: relative;
 }
 
-.paciente-notificaciones-panel {
+.inicio-paciente-page .paciente-notificaciones-panel {
   position: absolute;
   top: 58px;
-  right: 58px;
-  width: 490px;
-  min-height: 315px;
-  background: #ffffff;
-  border: 3px solid #111111;
+  right: 0;
+  width: 575px !important;
+  min-height: 385px !important;
+  background-color: #ffffff;
+  border: 2px solid #111111;
   border-radius: 3px;
-  z-index: 50;
+  z-index: 100;
   box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
 }
 
-.notificaciones-flecha {
-  position: absolute;
-  top: -18px;
-  right: 24px;
-  width: 32px;
-  height: 32px;
-  background: #ffffff;
-  border-left: 3px solid #111111;
-  border-top: 3px solid #111111;
-  transform: rotate(45deg);
-}
-
-.notificaciones-header {
-  height: 52px;
-  border-bottom: 2px solid #111111;
+.inicio-paciente-page .notificaciones-header {
+  height: 58px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 0 18px;
-  background: #ffffff;
+  background-color: #ffffff;
+  border-bottom: 2px solid #111111;
+  box-sizing: border-box;
   position: relative;
-  z-index: 2;
+  z-index: 102;
 }
 
-.notificaciones-header img {
-  width: 28px !important;
-  height: 28px !important;
+.inicio-paciente-page .notificaciones-header img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
-.notificaciones-header h2 {
+.inicio-paciente-page .notificaciones-header h2 {
   margin: 0;
-  font-size: 21px;
+  font-size: 23px;
   font-weight: 700;
   color: #111111;
+  text-decoration: none;
 }
 
-.notificaciones-lista {
-  padding: 8px 12px 14px;
-}
-
-.notificacion-card {
-  display: grid;
-  grid-template-columns: 78px 1fr;
-  align-items: center;
-  min-height: 98px;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  padding: 10px 14px;
+.inicio-paciente-page .notificaciones-lista {
+  width: 100%;
+  padding: 10px 12px 18px !important;
+  background-color: #ffffff;
   box-sizing: border-box;
 }
 
-.notificacion-comentario {
-  background: #dff0ff;
+.inicio-paciente-page .notificacion-card {
+  width: 100%;
+  
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  
+  margin: 0 0 12px 0;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  min-height: 116px !important;
+  margin-bottom: 14px !important;
+  padding: 12px 18px !important;
+
+  overflow: hidden;
 }
 
-.notificacion-medicamento {
-  background: #d9ffd9;
+.inicio-paciente-page .notificacion-card:last-child {
+  margin-bottom: 0;
 }
 
-.notificacion-icono {
-  width: 48px;
-  height: 48px;
+.inicio-paciente-page .notificacion-comentario {
+  background-color: #dff0ff;
+}
+
+.inicio-paciente-page .notificacion-medicamento {
+  background-color: #d9ffd9;
+}
+
+.inicio-paciente-page .notificacion-icono {
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0;
 }
 
-.notificacion-icono img {
-  width: 42px !important;
-  height: 42px !important;
+.inicio-paciente-page .notificacion-icono img {
+  width: 46px !important;
+  height: 46px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
   object-fit: contain;
+  display: block;
 }
 
-.notificacion-titulo {
-  display: flex;
-  align-items: center;
+.inicio-paciente-page .notificacion-contenido {
+  width: 100%;
+  min-width: 0;
+}
+
+.inicio-paciente-page .notificacion-titulo {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  align-items: start;
   gap: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 }
 
-.notificacion-punto {
+.inicio-paciente-page .notificacion-punto {
   width: 12px;
   height: 12px;
-  background: #38a3f1;
+  margin-top: 3px;
+  background-color: #38a3f1;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.notificacion-medicamento .notificacion-punto {
-  background: #008f2f;
+.inicio-paciente-page .notificacion-medicamento .notificacion-punto {
+  background-color: #008f2f;
 }
 
-.notificacion-titulo strong {
+.inicio-paciente-page .notificacion-titulo strong {
+  display: block;
+  min-width: 0;
+  font-size: 16px !important;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #111111;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.inicio-paciente-page .notificacion-contenido p {
+  margin: 0 0 10px 25px;
+  max-width: calc(100% - 25px);
+  font-size: 12px;
+  line-height: 1.3;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.inicio-paciente-page .notificacion-footer {
+  width: calc(100% - 25px);
+  margin-left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  box-sizing: border-box;
+  font-size: 13px !important;
+}
+
+.inicio-paciente-page .notificacion-footer span {
+  font-size: 13px !important;
+  color: #9c9c9c;
+  white-space: nowrap;
+}
+
+.inicio-paciente-page .notificacion-footer button {
+  border: none;
+  background: transparent;
+  font-size: 13px !important;
+  color: #008cff;
+  font-family: "Roboto Serif", serif;
+  
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inicio-paciente-page .notificacion-footer button:hover {
+  text-decoration: underline;
+}
+
+.inicio-paciente-page .notificacion-vacia {
+  padding: 20px;
   font-size: 14px;
   font-weight: 700;
   color: #111111;
 }
 
-.notificacion-contenido p {
-  margin: 0 0 10px 24px;
-  font-size: 12px;
-  color: #111111;
-  max-width: 310px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha {
+  position: absolute !important;
+  top: -22px !important;
+  right: 82px !important;
+  width: 39px !important;
+  height: 22px !important;
+  background: #111111 !important;
+  clip-path: polygon(0% -21999%, 66% 0%, 2% 100%) !important;
+  border: none !important;
+  z-index: 103 !important;
 }
 
-.notificacion-footer {
-  margin-left: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.notificacion-footer span {
-  font-size: 12px;
-  color: #9c9c9c;
-}
-
-.notificacion-footer button {
-  border: none;
-  background: transparent;
-  color: #008cff;
-  font-family: "Roboto Serif", serif;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 0;
-}
-
-.notificacion-vacia {
-  padding: 20px;
-  font-weight: 700;
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha::before,
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha::after {
+  display: none !important;
+  content: none !important;
 }

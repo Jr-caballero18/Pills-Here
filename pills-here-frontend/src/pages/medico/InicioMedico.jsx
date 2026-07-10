@@ -12,7 +12,10 @@ import iconTratamientosCompletados from "../../assets/images/icon-check.png";
 import iconVer from "../../assets/images/icon-ver.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
-
+import {
+  contarTratamientosActivosMedico,
+  contarTratamientosFinalizadosMedico,
+} from "../../services/tratamientoService";
 import { obtenerDashboardMedico } from "../../services/medicoService";
 
 function InicioMedico() {
@@ -25,26 +28,35 @@ function InicioMedico() {
   const navigate = useNavigate();
   const location = useLocation();
 
- useEffect(() => {
-  const cargarDashboard = async () => {
-    try {
-      const idUsuario = localStorage.getItem("idUsuario");
-      if (!idUsuario) return;
+  useEffect(() => {
+    const cargarDashboard = async () => {
+      try {
+        const idUsuario = localStorage.getItem("idUsuario");
+        const idMedico = localStorage.getItem("idMedico");
 
-      const data = await obtenerDashboardMedico(idUsuario);
+        if (!idUsuario) return;
 
-      setNombreUsuario(data.nombre || "");
-      setTotalPacientes(data.totalPacientes || 0);
-      setTratamientosActivos(data.tratamientosActivos || 0);
-      setTratamientosCompletados(data.tratamientosCompletados || 0);
-      setPacientesRecientes(data.pacientesRecientes || []);
-    } catch (error) {
-      console.error("Error al cargar dashboard médico:", error);
-    }
-  };
+        const data = await obtenerDashboardMedico(idUsuario);
 
-  cargarDashboard();
-}, [location.key]);
+        setNombreUsuario(data.nombre || "");
+        setTotalPacientes(data.totalPacientes || 0);
+        setPacientesRecientes(data.pacientesRecientes || []);
+
+        if (idMedico) {
+          const activos = await contarTratamientosActivosMedico(idMedico);
+          const finalizados = await contarTratamientosFinalizadosMedico(idMedico);
+
+          setTratamientosActivos(activos || 0);
+          setTratamientosCompletados(finalizados || 0);
+        }
+
+      } catch (error) {
+        console.error("Error al cargar dashboard médico:", error);
+      }
+    };
+
+    cargarDashboard();
+  }, [location.key]);
 
   return (
     <div className="inicio-medico-page">
@@ -81,7 +93,7 @@ function InicioMedico() {
             </button>
 
             <button className="btn-perfil" type="button" aria-label="Perfil"
-            onClick={() => navigate("/perfil-medico")}>
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>

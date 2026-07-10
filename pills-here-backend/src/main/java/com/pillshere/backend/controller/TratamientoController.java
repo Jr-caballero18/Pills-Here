@@ -129,4 +129,14 @@ public class TratamientoController {
                 tratamientoService.obtenerEstadisticasTratamiento(idTratamiento)
         );
     }
+
+    @GetMapping("/medico/{idMedico}/activos/count")
+    public ResponseEntity<Long> contarTratamientosActivosMedico(@PathVariable Integer idMedico) {
+        return ResponseEntity.ok(tratamientoService.contarTratamientosActivosMedico(idMedico));
+    }
+
+    @GetMapping("/medico/{idMedico}/finalizados/count")
+    public ResponseEntity<Long> contarTratamientosFinalizadosMedico(@PathVariable Integer idMedico) {
+        return ResponseEntity.ok(tratamientoService.contarTratamientosFinalizadosMedico(idMedico));
+    }
 }

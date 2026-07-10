@@ -95,3 +95,19 @@ export const obtenerEstadisticasTratamiento = async (idTratamiento) => {
 
   return response.data;
 };
+
+export const contarTratamientosActivosMedico = async (idMedico) => {
+  const response = await axios.get(
+    `${API_URL}/tratamientos/medico/${idMedico}/activos/count`
+  );
+
+  return response.data;
+};
+
+export const contarTratamientosFinalizadosMedico = async (idMedico) => {
+  const response = await axios.get(
+    `${API_URL}/tratamientos/medico/${idMedico}/finalizados/count`
+  );
+
+  return response.data;
+};

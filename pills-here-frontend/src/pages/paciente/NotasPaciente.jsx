@@ -12,6 +12,9 @@ import iconDetalleNota from "../../assets/images/icon-detalles-not.png";
 
 import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 
+import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
+import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
+
 function NotasPaciente() {
     const navigate = useNavigate();
 
@@ -70,44 +73,83 @@ function NotasPaciente() {
                         <img src={iconNotificacion} alt="Notificaciones" />
                     </button>
                     {mostrarNotificaciones && (
-                        <div className="notas-notificaciones-panel">
-                            <div className="notas-notificaciones-flecha"></div>
+                        <div className="paciente-notificaciones-panel">
+                            <div className="notificaciones-flecha"></div>
 
-                            <div className="notas-notificaciones-header" >
+                            <div className="notificaciones-header">
                                 <img src={iconNotificacion} alt="Notificaciones" />
+                                <h2>Notificaciones</h2>
                             </div>
 
-                            {notificaciones.length === 0 ? (
-                                <div className="notificacion-item">
-                                    <strong>No tienes notificaciones nuevas.</strong>
-                                </div>
-                            ) : (
-                                notificaciones.map((notificacion) => (
-                                    <div className="notificacion-item" key={`${notificacion.tipo}-${notificacion.id}`}>
-                                        <strong>
-                                            {notificacion.tipo === "MEDICAMENTO"
-                                                ? notificacion.titulo
-                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo aviso.`}
-                                        </strong>
-
-                                        <p>{notificacion.contenido}</p>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (notificacion.tipo === "MEDICAMENTO") {
-                                                    navigate("/tratamientos-paciente");
-                                                } else {
-                                                    setAvisoSeleccionado(notificacion);
-                                                    setMostrarNotificaciones(false);
-                                                }
-                                            }}
-                                        >
-                                            &gt; Ver {notificacion.tipo === "MEDICAMENTO" ? "tratamiento" : "aviso"}
-                                        </button>
+                            <div className="notificaciones-lista">
+                                {notificaciones.length === 0 ? (
+                                    <div className="notificacion-vacia">
+                                        No tienes notificaciones nuevas.
                                     </div>
-                                ))
-                            )}
+                                ) : (
+                                    notificaciones.map((notificacion) => {
+                                        const esMedicamento = notificacion.tipo === "MEDICAMENTO";
+                                        const esComentario = notificacion.tipo === "COMENTARIO";
+
+                                        return (
+                                            <div
+                                                className={`notificacion-card ${esMedicamento
+                                                    ? "notificacion-medicamento"
+                                                    : "notificacion-comentario"
+                                                    }`}
+                                                key={`${notificacion.tipo}-${notificacion.id}`}
+                                            >
+                                                <div className="notificacion-icono">
+                                                    <img
+                                                        src={
+                                                            esMedicamento
+                                                                ? iconRecordatorioNotif
+                                                                : iconComentarioNotif
+                                                        }
+                                                        alt="Tipo de notificación"
+                                                    />
+                                                </div>
+
+                                                <div className="notificacion-contenido">
+                                                    <div className="notificacion-titulo">
+                                                        <span className="notificacion-punto"></span>
+
+                                                        <strong>
+                                                            {esMedicamento
+                                                                ? notificacion.titulo
+                                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
+                                                                }.`}
+                                                        </strong>
+                                                    </div>
+
+                                                    <p>{notificacion.contenido}</p>
+
+                                                    <div className="notificacion-footer">
+                                                        <span>Hace 10 min</span>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (esMedicamento) {
+                                                                    navigate("/tratamientos-paciente");
+                                                                }
+                                                            }}
+                                                        >
+                                                            Ver{" "}
+                                                            {esMedicamento
+                                                                ? "dosis"
+                                                                : esComentario
+                                                                    ? "comentario"
+                                                                    : "aviso"}{" "}
+                                                            &gt;
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </div>
                         </div>
                     )}
 
