@@ -13,6 +13,7 @@ import com.pillshere.backend.dto.TratamientoActualPacienteDTO;
 import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
 import com.pillshere.backend.dto.TomaMedicamentoResponseDTO;
 import com.pillshere.backend.dto.EstadisticaDiaDTO;
+import com.pillshere.backend.dto.EstadisticasGeneralesPacienteDTO;
 import java.util.List;
 
 @RestController
@@ -139,4 +140,18 @@ public class TratamientoController {
     public ResponseEntity<Long> contarTratamientosFinalizadosMedico(@PathVariable Integer idMedico) {
         return ResponseEntity.ok(tratamientoService.contarTratamientosFinalizadosMedico(idMedico));
     }
+    
+    @GetMapping("/estadisticas-generales/paciente/{idPaciente}")
+public ResponseEntity<EstadisticasGeneralesPacienteDTO>
+        obtenerEstadisticasGeneralesPaciente(
+                @PathVariable Integer idPaciente
+        ) {
+
+    EstadisticasGeneralesPacienteDTO estadisticas =
+            tratamientoService.obtenerEstadisticasGeneralesPaciente(
+                    idPaciente
+            );
+
+    return ResponseEntity.ok(estadisticas);
+}
 }

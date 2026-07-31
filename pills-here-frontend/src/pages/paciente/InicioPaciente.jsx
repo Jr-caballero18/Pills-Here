@@ -12,10 +12,17 @@ import iconCalendario from "../../assets/images/icon-calendario.png";
 import iconEstadisticas from "../../assets/images/icon-estadisticas.png";
 import iconAyuda from "../../assets/images/icon-ayuda.png";
 import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
-
+import { obtenerEstadisticasGeneralesPaciente } from "../../services/tratamientoService";
 import { obtenerDashboardPaciente } from "../../services/pacienteService";
 import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
 import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 function InicioPaciente() {
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -23,6 +30,37 @@ function InicioPaciente() {
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [notificaciones, setNotificaciones] = useState([]);
   const notificacionesRef = useRef(null);
+
+  const [estadisticas, setEstadisticas] = useState({
+    tomadas: 0,
+    pendientes: 0,
+    omitidas: 0,
+    porcentajeCumplimiento: 0,
+  });
+
+  const datosGrafica = [
+    {
+      nombre: "Tomadas",
+      valor: estadisticas.tomadas,
+      color: "#78c98b",
+    },
+    {
+      nombre: "Pendientes",
+      valor: estadisticas.pendientes,
+      color: "#f2a65a",
+    },
+    {
+      nombre: "Omitidas",
+      valor: estadisticas.omitidas,
+      color: "#ef6b6b",
+    },
+  ];
+
+  const totalTomas =
+    estadisticas.tomadas +
+    estadisticas.pendientes +
+    estadisticas.omitidas;
+  const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
 
   useEffect(() => {
     const cargarDashboard = async () => {
@@ -54,8 +92,41 @@ function InicioPaciente() {
       }
     };
 
+    const cargarEstadisticas = async () => {
+      try {
+        setCargandoEstadisticas(true);
+
+        const idPaciente = localStorage.getItem("idPaciente");
+
+        if (!idPaciente) {
+          console.error("No se encontró idPaciente en localStorage");
+          return;
+        }
+
+        const data =
+          await obtenerEstadisticasGeneralesPaciente(idPaciente);
+
+        setEstadisticas({
+          tomadas: data.tomadas || 0,
+          pendientes: data.pendientes || 0,
+          omitidas: data.omitidas || 0,
+          porcentajeCumplimiento:
+            data.porcentajeCumplimiento || 0,
+        });
+      } catch (error) {
+        console.error(
+          "Error al cargar estadísticas generales:",
+          error
+        );
+      } finally {
+        setCargandoEstadisticas(false);
+      }
+    };
+
     cargarDashboard();
     cargarNotificaciones();
+    cargarEstadisticas();
+
   }, []);
 
   useEffect(() => {
@@ -227,23 +298,100 @@ function InicioPaciente() {
           </div>
 
           <div className="estadistica-contenido">
-            <div className="estadistica-placeholder">
-              <div className="grafica-placeholder">
-                <div className="grafica-centro">Sin datos</div>
+            {cargandoEstadisticas ? (
+              <div className="estadistica-mensaje">
+                Cargando estadísticas...
               </div>
-            </div>
+            ) : totalTomas === 0 ? (
+              <>
+                <div className="estadistica-placeholder">
+                  <div className="grafica-placeholder">
+                    <div className="grafica-centro">Sin datos</div>
+                  </div>
+                </div>
 
-            <div className="estadistica-info">
-              <p>Aún no hay estadísticas disponibles.</p>
-              <p>
-                Las estadísticas se mostrarán cuando existan tratamientos y
-                registros de seguimiento.
-              </p>
-            </div>
+                <div className="estadistica-info">
+                  <p>Aún no hay estadísticas disponibles.</p>
+                  <p>
+                    Las estadísticas se mostrarán cuando existan tratamientos y
+                    registros de seguimiento.
+                  </p>
+                </div>
 
-            <div className="estadistica-footer">
-              <strong>Cumplimiento: --</strong>
-            </div>
+                <div className="estadistica-footer">
+                  <strong>Cumplimiento: --</strong>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="estadistica-grafica">
+                  <ResponsiveContainer width="100%" height={260}>
+                    <PieChart>
+                      <Pie
+                        data={datosGrafica}
+                        dataKey="valor"
+                        nameKey="nombre"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={105}
+                        stroke="#202020"
+                        strokeWidth={2}
+                        label={({ percent }) =>
+                          `${Math.round(percent * 100)}%`
+                        }
+                        labelLine={false}
+                      >
+                        {datosGrafica.map((dato) => (
+                          <Cell
+                            key={dato.nombre}
+                            fill={dato.color}
+                          />
+                        ))}
+                      </Pie>
+
+                      <Tooltip
+                        formatter={(valor, nombre) => [
+                          valor,
+                          nombre,
+                        ]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div className="estadistica-separador"></div>
+
+                <div className="estadistica-leyenda">
+                  {datosGrafica.map((dato) => (
+                    <div
+                      className="estadistica-leyenda-item"
+                      key={dato.nombre}
+                    >
+                      <span
+                        className="estadistica-color"
+                        style={{ backgroundColor: dato.color }}
+                      ></span>
+
+                      <span>{dato.nombre}:</span>
+
+                      <strong>{dato.valor}</strong>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="estadistica-separador"></div>
+
+                <div className="estadistica-footer">
+                  <strong>
+                    Cumplimiento:{" "}
+                    {Math.round(
+                      estadisticas.porcentajeCumplimiento
+                    )}
+                    %
+                  </strong>
+                </div>
+              </>
+            )}
           </div>
         </aside>
       </main>

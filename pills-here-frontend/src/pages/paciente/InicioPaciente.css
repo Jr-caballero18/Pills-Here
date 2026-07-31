@@ -556,3 +556,62 @@
   display: none !important;
   content: none !important;
 }
+
+.estadistica-grafica {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.estadistica-separador {
+  width: 85%;
+  height: 1px;
+  background-color: #444444;
+  margin: 12px auto 18px;
+}
+
+.estadistica-leyenda {
+  width: 72%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.estadistica-leyenda-item {
+  display: grid;
+  grid-template-columns: 18px 1fr 40px;
+  align-items: center;
+  column-gap: 10px;
+  font-size: 17px;
+}
+
+.estadistica-leyenda-item strong {
+  text-align: right;
+}
+
+.estadistica-color {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #333333;
+  border-radius: 50%;
+  display: block;
+}
+
+.estadistica-footer {
+  text-align: center;
+  font-size: 18px;
+  padding-bottom: 16px;
+}
+
+.estadistica-mensaje {
+  min-height: 430px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777777;
+  font-size: 17px;
+}
+

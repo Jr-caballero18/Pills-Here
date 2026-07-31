@@ -111,3 +111,20 @@ export const contarTratamientosFinalizadosMedico = async (idMedico) => {
 
   return response.data;
 };
+
+export const obtenerEstadisticasGeneralesPaciente = async (idPaciente) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/tratamientos/estadisticas-generales/paciente/${idPaciente}`
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error al obtener estadísticas generales del paciente:",
+      error
+    );
+
+    throw error;
+  }
+};

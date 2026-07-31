@@ -40,6 +40,7 @@ function DetalleTratamientoPaciente() {
     const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
     const [notificaciones, setNotificaciones] = useState([]);
     const notificacionesRef = useRef(null);
+    const [tomaProcesando, setTomaProcesando] = useState(null);
 
     useEffect(() => {
         const cargarTratamiento = async () => {
@@ -192,18 +193,30 @@ function DetalleTratamientoPaciente() {
     };
 
     const marcarComoTomada = async (idDosis) => {
+
+        if (tomaProcesando !== null) {
+            return;
+        }
+
         try {
+            setTomaProcesando(idDosis);
+
             await marcarDosisComoTomada(idDosis);
 
-            const tomasActualizadas = await obtenerTomasTratamiento(idTratamiento);
-
-            const estadisticasActualizadas = await obtenerEstadisticasTratamiento(idTratamiento);
-            setEstadisticas(estadisticasActualizadas);
+            const [tomasActualizadas, estadisticasActualizadas] =
+                await Promise.all([
+                    obtenerTomasTratamiento(idTratamiento),
+                    obtenerEstadisticasTratamiento(idTratamiento)
+                ]);
 
             setRegistrosMedicacion(tomasActualizadas);
+            setEstadisticas(estadisticasActualizadas);
+
         } catch (error) {
             console.error("Error al marcar dosis como tomada:", error);
             alert("Error al marcar dosis como tomada");
+        } finally {
+            setTomaProcesando(null);
         }
     };
 
@@ -514,11 +527,12 @@ function DetalleTratamientoPaciente() {
                                             ) : (
                                                 <button
                                                     type="button"
-                                                    onClick={() =>
-                                                        marcarComoTomada(registro.idToma)
-                                                    }
+                                                    onClick={() => marcarComoTomada(registro.idToma)}
+                                                    disabled={tomaProcesando !== null}
                                                 >
-                                                    Marcar como tomada
+                                                    {tomaProcesando === registro.idToma
+                                                        ? "Procesando..."
+                                                        : "Marcar como tomada"}
                                                 </button>
                                             )}
                                         </div>
