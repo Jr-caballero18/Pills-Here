@@ -517,14 +517,7 @@ function DetalleTratamientoPaciente() {
                                                 </small>
                                             </div>
 
-                                            {registro.estado === "TOMADA" ? (
-                                                <button
-                                                    type="button"
-                                                    className="tomada"
-                                                >
-                                                    Tomada
-                                                </button>
-                                            ) : (
+                                            {registro.estado === "PENDIENTE" && (
                                                 <button
                                                     type="button"
                                                     onClick={() => marcarComoTomada(registro.idToma)}
@@ -533,6 +526,26 @@ function DetalleTratamientoPaciente() {
                                                     {tomaProcesando === registro.idToma
                                                         ? "Procesando..."
                                                         : "Marcar como tomada"}
+                                                </button>
+                                            )}
+
+                                            {registro.estado === "TOMADA" && (
+                                                <button
+                                                    type="button"
+                                                    className="tomada"
+                                                    disabled
+                                                >
+                                                    Tomada
+                                                </button>
+                                            )}
+
+                                            {registro.estado === "OMITIDA" && (
+                                                <button
+                                                    type="button"
+                                                    className="omitida"
+                                                    disabled
+                                                >
+                                                    Marcar como tomada
                                                 </button>
                                             )}
                                         </div>

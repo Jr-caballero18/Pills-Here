@@ -808,3 +808,17 @@
   top: 68px !important;
   right: 0 !important;
 }
+
+
+.btn-omitida {
+    background: #9aa8b8;
+    color: #ffffff;
+}
+
+.registro-cuerpo button.tomada:disabled,
+.registro-cuerpo button.omitida:disabled {
+    background-color: #9aa8b8;
+    color: white;
+    cursor: not-allowed;
+    opacity: 1;
+}
