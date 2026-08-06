@@ -174,26 +174,34 @@
 
 .detalle-layout {
   display: grid;
-  grid-template-columns: 310px 520px 310px;
-  gap: 95px;
+  grid-template-columns: 375px 600px 310px;
+  gap: 28px;
   align-items: start;
   margin-left: 20px;
 }
 
-.detalle-paciente-panel {
+.detalle-columna-izquierda {
   width: 330px;
   height: 355px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.detalle-paciente-panel {
+  width: 330px;
+  height: 255px;
   background-color: #d9d9d9;
   border: 1px solid #8a8a8a;
   border-radius: 4px;
-  padding: 35px 20px;
+  padding: 22px 20px;
   box-sizing: border-box;
 }
 
 .detalle-avatar-wrapper {
   display: flex;
   justify-content: center;
-  margin-bottom: 45px;
+  margin-bottom: 22px;
 }
 
 .detalle-avatar {
@@ -398,14 +406,13 @@
 }
 
 .detalle-avisos-panel {
-  width: 310px;
-  height: 355px;
+  width: 330px;
+  min-height: 299px;
   background-color: #d9d9d9;
   border: 1px solid #8a8a8a;
   border-radius: 8px;
-  padding: 22px 12px;
+  padding: 18px 12px;
   box-sizing: border-box;
-  position: static;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -417,8 +424,9 @@
 }
 
 .detalle-aviso-input {
-  width: 280px;
+  width: 285px;
   height: 32px;
+  box-sizing: border-box;
   border: 1px solid #7d7d7d;
   border-radius: 13px;
   padding: 0 12px;
@@ -427,9 +435,10 @@
 }
 
 .detalle-aviso-textarea {
-  width: 280px;
+  width: 285px;
   height: 65px;
   border: 1px solid #7d7d7d;
+  box-sizing: border-box;
   border-radius: 13px;
   padding: 12px;
   font-family: "Roboto Serif", serif;
@@ -541,4 +550,102 @@
 .medico-tratamiento-icon-btn img {
   width: 14px;
   height: 14px;
+}
+
+.detalle-estadisticas-panel {
+  width: 310px;
+  min-height: 520px;
+  background-color: #d9d9d9;
+  border: 1px solid #8a8a8a;
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.detalle-estadisticas-header {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-bottom: 1px solid #8a8a8a;
+  background-color: #d0d0d0;
+}
+
+.detalle-estadisticas-header h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.detalle-estadisticas-icono {
+  font-size: 23px;
+}
+
+.detalle-estadisticas-contenido {
+  padding: 18px 12px;
+}
+
+.detalle-grafica-placeholder {
+  width: 230px;
+  height: 230px;
+  margin: 0 auto;
+  border: 2px solid #333333;
+  border-radius: 50%;
+  background-color: #eeeeee;
+  color: #777777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detalle-estadisticas-separador {
+  width: 90%;
+  height: 1px;
+  background-color: #555555;
+  margin: 20px auto;
+}
+
+.detalle-estadisticas-leyenda {
+  width: 75%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detalle-leyenda-item {
+  display: grid;
+  grid-template-columns: 14px 1fr 30px;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.detalle-leyenda-item strong {
+  text-align: right;
+}
+
+.detalle-leyenda-color {
+  width: 12px;
+  height: 12px;
+  border: 1px solid #555555;
+  border-radius: 50%;
+}
+
+.detalle-leyenda-color.tomadas {
+  background-color: #6fcf97;
+}
+
+.detalle-leyenda-color.pendientes {
+  background-color: #f2a65a;
+}
+
+.detalle-leyenda-color.omitidas {
+  background-color: #eb5757;
+}
+
+.detalle-estadisticas-footer {
+  text-align: center;
+  font-size: 16px;
+  padding-bottom: 6px;
 }

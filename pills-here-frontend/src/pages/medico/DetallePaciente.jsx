@@ -174,19 +174,63 @@ function DetallePaciente() {
 
         <div className="detalle-layout">
 
-          <section className="detalle-paciente-panel">
-            <div className="detalle-avatar-wrapper">
-              <img src={iconPerfil} alt="Paciente" className="detalle-avatar" />
-            </div>
+          <div className="detalle-columna-izquierda">
 
-            <div className="detalle-info-box">
-              <p>{paciente.nombreCompleto}</p>
-              <p>Edad: {paciente.edad}</p>
-              <p>Sexo: {paciente.sexo}</p>
-              <p>Tipo de sangre: {paciente.tipoSangre || "No especificado"}</p>
-            </div>
+            <section className="detalle-paciente-panel">
+              <div className="detalle-avatar-wrapper">
+                <img
+                  src={iconPerfil}
+                  alt="Paciente"
+                  className="detalle-avatar"
+                />
+              </div>
 
-          </section>
+              <div className="detalle-info-box">
+                <p>{paciente.nombreCompleto}</p>
+                <p>Edad: {paciente.edad}</p>
+                <p>Sexo: {paciente.sexo}</p>
+                <p>
+                  Tipo de sangre:{" "}
+                  {paciente.tipoSangre || "No especificado"}
+                </p>
+              </div>
+            </section>
+
+            <section className="detalle-avisos-panel">
+              <h2>Avisos</h2>
+
+              <input
+                className="detalle-aviso-input"
+                type="text"
+                placeholder="Titulo."
+                value={tituloAviso}
+                onChange={(e) => setTituloAviso(e.target.value)}
+              />
+
+              <textarea
+                className="detalle-aviso-textarea"
+                placeholder="Agregar aviso."
+                value={contenidoAviso}
+                onChange={(e) => setContenidoAviso(e.target.value)}
+              ></textarea>
+
+              <textarea
+                className="detalle-aviso-textarea"
+                placeholder="Observaciones."
+                value={observacionesAviso}
+                onChange={(e) => setObservacionesAviso(e.target.value)}
+              ></textarea>
+
+              <button
+                className="detalle-aviso-btn"
+                type="button"
+                onClick={guardarAviso}
+              >
+                Agregar
+              </button>
+            </section>
+
+          </div>
 
           <section className="detalle-tratamientos-panel">
             {tratamientos.length === 0 ? (
@@ -245,7 +289,7 @@ function DetallePaciente() {
                       </div>
 
                       <div className="medico-tratamiento-opciones">
-                  
+
 
                         <div className="medico-tratamiento-actions">
                           <button
@@ -272,35 +316,52 @@ function DetallePaciente() {
             )}
           </section>
 
-          <section className="detalle-avisos-panel">
-            <h2>Avisos</h2>
+          <aside className="detalle-estadisticas-panel">
 
-            <input
-              className="detalle-aviso-input"
-              type="text"
-              placeholder="Titulo."
-              value={tituloAviso}
-              onChange={(e) => setTituloAviso(e.target.value)}
-            />
+            <div className="detalle-estadisticas-header">
+              <span className="detalle-estadisticas-icono">📊</span>
+              <h2>Estadística de cumplimiento</h2>
+            </div>
 
-            <textarea
-              className="detalle-aviso-textarea"
-              placeholder="Agregar aviso."
-              value={contenidoAviso}
-              onChange={(e) => setContenidoAviso(e.target.value)}
-            ></textarea>
+            <div className="detalle-estadisticas-contenido">
 
-            <textarea
-              className="detalle-aviso-textarea"
-              placeholder="Observaciones."
-              value={observacionesAviso}
-              onChange={(e) => setObservacionesAviso(e.target.value)}
-            ></textarea>
+              <div className="detalle-grafica-placeholder">
+                <span>Sin datos</span>
+              </div>
 
-            <button className="detalle-aviso-btn" type="button" onClick={guardarAviso}>
-              Agregar
-            </button>
-          </section>
+              <div className="detalle-estadisticas-separador"></div>
+
+              <div className="detalle-estadisticas-leyenda">
+
+                <div className="detalle-leyenda-item">
+                  <span className="detalle-leyenda-color tomadas"></span>
+                  <span>Tomadas:</span>
+                  <strong>0</strong>
+                </div>
+
+                <div className="detalle-leyenda-item">
+                  <span className="detalle-leyenda-color pendientes"></span>
+                  <span>Pendientes:</span>
+                  <strong>0</strong>
+                </div>
+
+                <div className="detalle-leyenda-item">
+                  <span className="detalle-leyenda-color omitidas"></span>
+                  <span>Omitidas:</span>
+                  <strong>0</strong>
+                </div>
+
+              </div>
+
+              <div className="detalle-estadisticas-separador"></div>
+
+              <div className="detalle-estadisticas-footer">
+                <strong>Cumplimiento: --</strong>
+              </div>
+
+            </div>
+
+          </aside>
 
         </div>
 
