@@ -140,18 +140,33 @@ public class TratamientoController {
     public ResponseEntity<Long> contarTratamientosFinalizadosMedico(@PathVariable Integer idMedico) {
         return ResponseEntity.ok(tratamientoService.contarTratamientosFinalizadosMedico(idMedico));
     }
-    
+
     @GetMapping("/estadisticas-generales/paciente/{idPaciente}")
-public ResponseEntity<EstadisticasGeneralesPacienteDTO>
-        obtenerEstadisticasGeneralesPaciente(
-                @PathVariable Integer idPaciente
-        ) {
+    public ResponseEntity<EstadisticasGeneralesPacienteDTO>
+            obtenerEstadisticasGeneralesPaciente(
+                    @PathVariable Integer idPaciente
+            ) {
 
-    EstadisticasGeneralesPacienteDTO estadisticas =
-            tratamientoService.obtenerEstadisticasGeneralesPaciente(
-                    idPaciente
-            );
+        EstadisticasGeneralesPacienteDTO estadisticas
+                = tratamientoService.obtenerEstadisticasGeneralesPaciente(
+                        idPaciente
+                );
 
-    return ResponseEntity.ok(estadisticas);
-}
+        return ResponseEntity.ok(estadisticas);
+    }
+
+    @GetMapping("/estadisticas-generales/medico/{idMedico}")
+    public ResponseEntity<EstadisticasGeneralesPacienteDTO>
+            obtenerEstadisticasGeneralesMedico(
+                    @PathVariable Integer idMedico
+            ) {
+
+        EstadisticasGeneralesPacienteDTO estadisticas
+                = tratamientoService.obtenerEstadisticasGeneralesMedico(
+                        idMedico
+                );
+
+        return ResponseEntity.ok(estadisticas);
+    }
+
 }

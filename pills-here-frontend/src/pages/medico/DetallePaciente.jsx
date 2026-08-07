@@ -2,7 +2,9 @@ import "./DetallePaciente.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { obtenerDetallePaciente } from "../../services/medicoPacienteService";
-import { obtenerTratamientoPorPaciente, cancelarTratamiento, agregarComentarioTratamiento } from "../../services/tratamientoService";
+import {
+  obtenerTratamientoPorPaciente, cancelarTratamiento, agregarComentarioTratamiento, obtenerEstadisticasGeneralesPaciente,
+} from "../../services/tratamientoService";
 import iconEditar from "../../assets/images/editar-icon.png";
 import iconBorrar from "../../assets/images/borrar-icon.png";
 import logo from "../../assets/images/logo.png";
@@ -15,6 +17,13 @@ import iconRegreso from "../../assets/images/flecha-regreso.png";
 import { crearAviso } from "../../services/avisoService";
 import iconTratamiento from "../../assets/images/icon-tratamiento.png";
 import iconSinTratamientos from "../../assets/images/icon-sin-tratamientos.png";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+} from "recharts";
 
 function DetallePaciente() {
   const navigate = useNavigate();
@@ -26,6 +35,41 @@ function DetallePaciente() {
   const [tituloAviso, setTituloAviso] = useState("");
   const [contenidoAviso, setContenidoAviso] = useState("");
   const [observacionesAviso, setObservacionesAviso] = useState("");
+  const [estadisticasGenerales, setEstadisticasGenerales] = useState({
+    tomadas: 0,
+    pendientes: 0,
+    omitidas: 0,
+    porcentajeCumplimiento: 0,
+  });
+
+  const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
+
+  const datosLeyenda = [
+    {
+      nombre: "Tomadas",
+      valor: estadisticasGenerales.tomadas,
+      color: "#6fcf97",
+    },
+    {
+      nombre: "Pendientes",
+      valor: estadisticasGenerales.pendientes,
+      color: "#f2a65a",
+    },
+    {
+      nombre: "Omitidas",
+      valor: estadisticasGenerales.omitidas,
+      color: "#eb5757",
+    },
+  ];
+
+  const datosGrafica = datosLeyenda.filter(
+    (dato) => dato.valor > 0
+  );
+
+  const totalTomas =
+    estadisticasGenerales.tomadas +
+    estadisticasGenerales.pendientes +
+    estadisticasGenerales.omitidas;
 
   useEffect(() => {
     const cargarDetalle = async () => {
@@ -42,6 +86,19 @@ function DetallePaciente() {
         } else {
           setTratamientos([]);
         }
+
+        const estadisticasData =
+          await obtenerEstadisticasGeneralesPaciente(idPaciente);
+
+        setEstadisticasGenerales({
+          tomadas: estadisticasData.tomadas || 0,
+          pendientes: estadisticasData.pendientes || 0,
+          omitidas: estadisticasData.omitidas || 0,
+          porcentajeCumplimiento:
+            estadisticasData.porcentajeCumplimiento || 0,
+        });
+
+        setCargandoEstadisticas(false);
 
 
       } catch (error) {
@@ -325,8 +382,47 @@ function DetallePaciente() {
 
             <div className="detalle-estadisticas-contenido">
 
-              <div className="detalle-grafica-placeholder">
-                <span>Sin datos</span>
+              <div className="detalle-estadisticas-grafica">
+                {cargandoEstadisticas ? (
+                  <span>Cargando...</span>
+                ) : totalTomas === 0 ? (
+                  <div className="detalle-grafica-placeholder">
+                    <span>Sin datos</span>
+                  </div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={290}>
+                    <PieChart>
+                      <Pie
+                        data={datosGrafica}
+                        dataKey="valor"
+                        nameKey="nombre"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={125}
+                        stroke="#222222"
+                        strokeWidth={2}
+                        label={({ percent }) =>
+                          `${Math.round(percent * 100)}%`
+                        }
+                        labelLine={false}
+                      >
+                        {datosGrafica.map((dato) => (
+                          <Cell
+                            key={dato.nombre}
+                            fill={dato.color}
+                          />
+                        ))}
+                      </Pie>
+
+                      <Tooltip
+                        formatter={(valor, nombre) => [
+                          valor,
+                          nombre,
+                        ]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
               </div>
 
               <div className="detalle-estadisticas-separador"></div>
@@ -336,19 +432,19 @@ function DetallePaciente() {
                 <div className="detalle-leyenda-item">
                   <span className="detalle-leyenda-color tomadas"></span>
                   <span>Tomadas:</span>
-                  <strong>0</strong>
+                  <strong>{estadisticasGenerales.tomadas}</strong>
                 </div>
 
                 <div className="detalle-leyenda-item">
                   <span className="detalle-leyenda-color pendientes"></span>
                   <span>Pendientes:</span>
-                  <strong>0</strong>
+                  <strong>{estadisticasGenerales.pendientes}</strong>
                 </div>
 
                 <div className="detalle-leyenda-item">
                   <span className="detalle-leyenda-color omitidas"></span>
                   <span>Omitidas:</span>
-                  <strong>0</strong>
+                  <strong>{estadisticasGenerales.omitidas}</strong>
                 </div>
 
               </div>
@@ -356,7 +452,14 @@ function DetallePaciente() {
               <div className="detalle-estadisticas-separador"></div>
 
               <div className="detalle-estadisticas-footer">
-                <strong>Cumplimiento: --</strong>
+                <strong>
+                  Cumplimiento:{" "}
+                  {cargandoEstadisticas
+                    ? "--"
+                    : `${Math.round(
+                      estadisticasGenerales.porcentajeCumplimiento
+                    )}%`}
+                </strong>
               </div>
 
             </div>

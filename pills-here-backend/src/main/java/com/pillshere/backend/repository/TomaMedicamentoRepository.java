@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento, Integer> {
 
     long countByDosisIdDosis(Integer idDosis);
-    
+
     Optional<TomaMedicamento> findFirstByDosisIdDosisAndEstadoOrderByFechaHoraProgramadaAsc(
             Integer idDosis,
             String estado
@@ -24,18 +24,28 @@ public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento
             Integer idPaciente,
             String estado
     );
-    
+
     void deleteByDosisTratamientoIdTratamiento(Integer idTratamiento);
-    
+
     @Query("""
     SELECT COUNT(t)
     FROM TomaMedicamento t
     WHERE t.dosis.tratamiento.paciente.idPaciente = :idPaciente
     AND t.estado = :estado
-""")
-Long contarPorPacienteYEstado(
-        @Param("idPaciente") Integer idPaciente,
-        @Param("estado") String estado
-);
-    
+    """)
+    Long contarPorPacienteYEstado(
+            @Param("idPaciente") Integer idPaciente,
+            @Param("estado") String estado
+    );
+
+    @Query("""
+    SELECT COUNT(t)
+    FROM TomaMedicamento t
+    WHERE t.dosis.tratamiento.medico.idMedico = :idMedico
+    AND t.estado = :estado
+    """)
+    Long contarPorMedicoYEstado(
+            @Param("idMedico") Integer idMedico,
+            @Param("estado") String estado
+    );
 }

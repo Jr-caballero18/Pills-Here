@@ -21,4 +21,6 @@ public interface TratamientoRepository extends JpaRepository<Tratamiento, Intege
     long countByMedicoIdMedicoAndEstado(Integer idMedico, String estado);
 
     List<Tratamiento> findByMedicoIdMedicoAndEstado(Integer idMedico, String estado);
+    
+    List<Tratamiento> findByMedicoIdMedico(Integer idMedico);
 }
