@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FullCalendar from "@fullcalendar/react";
@@ -13,61 +13,260 @@ import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
+import {
+    obtenerTratamientoPorPaciente,
+    obtenerEstadisticasCalendarioDia
+} from "../../services/tratamientoService";
 
+const formatearFecha = (fecha) => {
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+    const dia = String(fecha.getDate()).padStart(2, "0");
+
+    return `${anio}-${mes}-${dia}`;
+};
+
+
+const sumarUnDia = (fecha) => {
+    const nuevaFecha = new Date(fecha);
+    nuevaFecha.setDate(nuevaFecha.getDate() + 1);
+    return nuevaFecha;
+};
+
+
+const coloresTratamientos = [
+    "#2d8cf0",
+    "#bb2cf0",
+    "#22b573",
+    "#f39c12",
+    "#e74c3c",
+    "#16a085",
+    "#8e44ad",
+    "#3498db"
+];
+
+
+const obtenerColorTratamiento = (idTratamiento) => {
+    return coloresTratamientos[
+        Math.abs(idTratamiento) % coloresTratamientos.length
+    ];
+};
 const CalendarioPaciente = () => {
     const navigate = useNavigate();
 
     const [tratamientosHover, setTratamientosHover] = useState([]);
 
 
-    const eventos = [
-        {
-            id: "1",
-            title: "Tratamiento de Asma",
-            start: "2026-02-02",
-            end: "2026-02-05",
-            backgroundColor: "#2d8cf0",
-            borderColor: "#2d8cf0",
-            extendedProps: {
-                tomadas: 3,
-                pendientes: 2,
-                omitidas: 1,
-            },
-        },
+    const [eventos, setEventos] = useState([]);
+    const cacheEstadisticas = useRef(new Map());
+    const [detallePosicion, setDetallePosicion] = useState(null);
 
-        {
-            id: "2",
-            title: "Tratamiento de Diabetes",
-            start: "2026-02-02",
-            end: "2026-02-05",
-            backgroundColor: "#bb2cf0",
-            borderColor: "#bb2cf0",
-            extendedProps: {
-                tomadas: 1,
-                pendientes: 2,
-                omitidas: 0,
-            },
-        },
-    ];
+    const mostrarDetalleDia = async (fecha, celda) => {
+        try {
+            const idPaciente =
+                localStorage.getItem("idPaciente");
 
-    const obtenerTratamientosPorFecha = (fecha) => {
-        const fechaStr = fecha.toISOString().split("T")[0];
+            if (!idPaciente) {
+                return;
+            }
 
-        return eventos.filter((evento) => {
-            const inicio = evento.start;
-            const fin = evento.end;
+            const fechaStr =
+                formatearFecha(fecha);
 
-            return fechaStr >= inicio && fechaStr < fin;
-        });
+            let estadisticas;
+
+            if (
+                cacheEstadisticas.current.has(fechaStr)
+            ) {
+                estadisticas =
+                    cacheEstadisticas.current.get(
+                        fechaStr
+                    );
+            } else {
+                estadisticas =
+                    await obtenerEstadisticasCalendarioDia(
+                        idPaciente,
+                        fechaStr
+                    );
+
+                cacheEstadisticas.current.set(
+                    fechaStr,
+                    estadisticas
+                );
+            }
+
+             console.log(
+                "ESTADISTICAS DEL DIA:",
+                fechaStr,
+                estadisticas
+            );
+
+            if (!estadisticas?.length) {
+                setTratamientosHover([]);
+                setDetallePosicion(null);
+                return;
+            }
+           
+
+            const tratamientosConColor =
+                estadisticas.map((tratamiento) => ({
+                    ...tratamiento,
+
+                    color: obtenerColorTratamiento(
+                        tratamiento.idTratamiento
+                    )
+                }));
+
+            setTratamientosHover(
+                tratamientosConColor
+            );
+
+            if (
+                celda &&
+                wrapperRef.current
+            ) {
+                const rectCelda =
+                    celda.getBoundingClientRect();
+
+                const rectWrapper =
+                    wrapperRef.current
+                        .getBoundingClientRect();
+
+                let izquierda =
+                    rectCelda.left -
+                    rectWrapper.left +
+                    105;
+
+                const anchoDetalle = 505;
+
+                if (
+                    izquierda + anchoDetalle >
+                    rectWrapper.width
+                ) {
+                    izquierda =
+                        rectWrapper.width -
+                        anchoDetalle -
+                        5;
+                }
+
+                if (izquierda < 0) {
+                    izquierda = 5;
+                }
+
+                setDetallePosicion({
+                    top:
+                        rectCelda.bottom -
+                        rectWrapper.top -
+                        5,
+
+                    left: izquierda
+                });
+            }
+
+        } catch (error) {
+            console.error(
+                "Error al obtener estadísticas del día:",
+                error
+            );
+        }
     };
 
+    const ocultarDetalleDia = () => {
+        setTratamientosHover([]);
+        setDetallePosicion(null);
+    };
+
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        const cargarTratamientos = async () => {
+            try {
+                const idPaciente = localStorage.getItem("idPaciente");
+
+                if (!idPaciente) {
+                    console.error("No se encontró idPaciente");
+                    return;
+                }
+
+                const tratamientos =
+                    await obtenerTratamientoPorPaciente(idPaciente);
+
+                const nuevosEventos = [];
+
+                tratamientos.forEach((tratamiento) => {
+                    console.log(
+                        "TRATAMIENTO:",
+                        tratamiento.idTratamiento,
+                        "INICIO:",
+                        tratamiento.fechaInicio,
+                        "FIN:",
+                        tratamiento.fechaFin
+                    );
+                    if (!tratamiento.fechaInicio) {
+                        return;
+                    }
+
+                    const inicio = new Date(
+                        `${tratamiento.fechaInicio}T00:00:00`
+                    );
+
+                    const fin = tratamiento.fechaFin
+                        ? new Date(`${tratamiento.fechaFin}T00:00:00`)
+                        : new Date(inicio);
+
+                    let fechaActual = new Date(inicio);
+
+                    const color = obtenerColorTratamiento(
+                        tratamiento.idTratamiento
+                    );
+
+                    while (fechaActual <= fin) {
+                        const fechaStr =
+                            formatearFecha(fechaActual);
+
+                        nuevosEventos.push({
+                            id: `${tratamiento.idTratamiento}-${fechaStr}`,
+                            title: tratamiento.nombreTratamiento,
+                            start: fechaStr,
+                            allDay: true,
+                            color: color,
+                            extendedProps: {
+                                idTratamiento: tratamiento.idTratamiento,
+                                nombreTratamiento: tratamiento.nombreTratamiento,
+                                color: color
+                            }
+                        });
+
+                        fechaActual =
+                            sumarUnDia(fechaActual);
+                    }
+                });
+
+                console.log("TRATAMIENTOS RECIBIDOS:", tratamientos);
+                console.log("EVENTOS GENERADOS:", nuevosEventos);
+                setEventos(nuevosEventos);
+
+            } catch (error) {
+                console.error(
+                    "Error al cargar tratamientos del calendario:",
+                    error
+                );
+            }
+        };
+
+        cargarTratamientos();
+    }, []);
+
+    const obtenerEventosDelDia = (fecha) => {
+        const fechaStr = formatearFecha(fecha);
+
+        return eventos.filter(
+            (evento) => evento.start === fechaStr
+        );
+    };
 
     return (
         <div className="calendario-paciente-page">
-
-            {
-
-            }
 
             <header className="calendario-paciente-header">
 
@@ -102,24 +301,19 @@ const CalendarioPaciente = () => {
 
             </header>
 
-
-            {
-
-
-            }
-
             <main className="calendario-paciente-content">
 
-                <div className="calendario-wrapper">
+                <div className="calendario-wrapper" ref={wrapperRef}>
 
                     <FullCalendar
+                        key={eventos.length}
                         plugins={[dayGridPlugin,
                             themePlugin
-                        
+
                         ]}
 
                         initialView="dayGridMonth"
-                                
+
                         locale="es"
 
 
@@ -129,59 +323,126 @@ const CalendarioPaciente = () => {
                             end: "",
                         }}
 
-                        events={eventos}
-
                         fixedWeekCount={false}
                         showNonCurrentDates={false}
-
                         displayEventTime={false}
 
                         height="auto"
 
-                        dayCellDidMount={(info) => {
+                        toolbarClass="calendario-toolbar"
 
-                            const tratamientosDia =
-                                obtenerTratamientosPorFecha(info.date);
+                        toolbarTitleClass="calendario-titulo-mes"
 
-                            if (tratamientosDia.length > 0) {
+                        tableHeaderClass="calendario-header-dias"
 
-                                info.el.addEventListener("mouseenter", () => {
-                                    setTratamientosHover(tratamientosDia);
-                                });
+                        tableBodyClass="calendario-cuerpo"
 
-                                info.el.addEventListener("mouseleave", () => {
-                                    setTratamientosHover([]);
-                                });
-                            }
+                        dayRowClass="calendario-fila"
+
+                        dayCellClass="calendario-celda"
+
+                        dayHeaderClass="calendario-dia-header"
+
+                        dayHeaderFormat={{
+                            weekday: "short",
                         }}
-                    />
-                    {
 
-                    }
 
-                    {tratamientosHover.length > 0 && (
 
-                        <div className="calendario-detalle">
+                        eventContent={(arg) => {
+                            console.log("EVENTO RENDERIZADO:", arg.event.title, arg.event.startStr);
 
-                            {tratamientosHover.map((tratamiento) => (
-
+                            return (
                                 <div
-                                    className="calendario-detalle-tratamiento"
-                                    key={tratamiento.id}
-                                >
+                                    className="barra-tratamiento-calendario"
+                                    style={{
+                                        backgroundColor: arg.event.extendedProps.color
+                                    }}
+                                />
+                            );
+                        }}
 
+                        dayCellDidMount={(info) => {
+                            const fecha = info.date;
+
+                            const eventosDia = obtenerEventosDelDia(fecha);
+
+                            if (eventosDia.length > 0) {
+                                const contenedorBarras =
+                                    document.createElement("div");
+
+                                contenedorBarras.className =
+                                    "calendario-barras-dia";
+
+                                eventosDia.forEach((evento) => {
+                                    const barra =
+                                        document.createElement("div");
+
+                                    barra.className =
+                                        "barra-tratamiento-calendario";
+
+                                    barra.style.backgroundColor =
+                                        evento.extendedProps.color;
+
+                                    contenedorBarras.appendChild(
+                                        barra
+                                    );
+                                });
+
+                                info.el.appendChild(
+                                    contenedorBarras
+                                );
+                            }
+
+                            const entrar = () => {
+                                mostrarDetalleDia(
+                                    fecha,
+                                    info.el
+                                );
+                            };
+
+                            const salir = () => {
+                                ocultarDetalleDia();
+                            };
+
+                            info.el.addEventListener(
+                                "mouseenter",
+                                entrar
+                            );
+
+                            info.el.addEventListener(
+                                "mouseleave",
+                                salir
+                            );
+                        }}
+
+                    />
+
+
+                    {tratamientosHover.length > 0 && detallePosicion && (
+                        <div
+                            className="calendario-detalle"
+                            style={{
+                                top: detallePosicion.top,
+                                left: detallePosicion.left
+                            }}
+                        >
+                            {tratamientosHover.map((tratamiento) => (
+                                <div
+                                    key={tratamiento.idTratamiento}
+                                    className="calendario-detalle-tratamiento"
+                                >
                                     <div className="calendario-detalle-titulo">
 
                                         <span
                                             className="calendario-color-tratamiento"
                                             style={{
-                                                backgroundColor:
-                                                    tratamiento.backgroundColor,
+                                                backgroundColor: tratamiento.color
                                             }}
                                         />
 
                                         <strong>
-                                            {tratamiento.title}.
+                                            {tratamiento.nombreTratamiento}.
                                         </strong>
 
                                     </div>
@@ -193,7 +454,7 @@ const CalendarioPaciente = () => {
                                             <span className="calendario-punto tomada" />
 
                                             <span className="calendario-etiqueta tomada-etiqueta">
-                                                {tratamiento.extendedProps.tomadas} dosis tomadas
+                                                {tratamiento.tomadas} dosis tomadas
                                             </span>
 
                                         </div>
@@ -203,7 +464,7 @@ const CalendarioPaciente = () => {
                                             <span className="calendario-punto pendiente" />
 
                                             <span className="calendario-etiqueta pendiente-etiqueta">
-                                                {tratamiento.extendedProps.pendientes} dosis pendientes
+                                                {tratamiento.pendientes} dosis pendientes
                                             </span>
 
                                         </div>
@@ -213,29 +474,21 @@ const CalendarioPaciente = () => {
                                             <span className="calendario-punto omitida" />
 
                                             <span className="calendario-etiqueta omitida-etiqueta">
-                                                {tratamiento.extendedProps.omitidas} dosis omitidas
+                                                {tratamiento.omitidas} dosis omitidas
                                             </span>
 
                                         </div>
 
                                     </div>
-
                                 </div>
-
                             ))}
-
                         </div>
-
                     )}
 
                 </div>
 
             </main>
 
-
-            {
-
-            }
 
             <button
                 type="button"

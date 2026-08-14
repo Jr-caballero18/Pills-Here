@@ -128,3 +128,16 @@ export const obtenerEstadisticasGeneralesPaciente = async (idPaciente) => {
     throw error;
   }
 };
+
+export const obtenerEstadisticasCalendarioDia = async (idPaciente, fecha) => {
+    const response = await axios.get(
+        `${API_URL}/tratamientos/calendario/paciente/${idPaciente}`,
+        {
+            params: {
+                fecha: fecha
+            }
+        }
+    );
+
+    return response.data;
+};

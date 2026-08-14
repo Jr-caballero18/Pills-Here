@@ -9,18 +9,28 @@ public class TratamientoPacienteResponseDTO {
     private String diagnostico;
     private String estado;
     private LocalDate fechaInicio;
+    private LocalDate fechaFin;
     private String notasMedicas;
     private Integer porcentajeCumplimiento;
 
     public TratamientoPacienteResponseDTO() {
     }
 
-    public TratamientoPacienteResponseDTO(Integer idTratamiento, String nombreTratamiento, String diagnostico, String estado, LocalDate fechaInicio, String notasMedicas) {
+    public TratamientoPacienteResponseDTO(
+            Integer idTratamiento,
+            String nombreTratamiento,
+            String diagnostico,
+            String estado,
+            LocalDate fechaInicio,
+            LocalDate fechaFin,
+            String notasMedicas
+    ) {
         this.idTratamiento = idTratamiento;
         this.nombreTratamiento = nombreTratamiento;
         this.diagnostico = diagnostico;
         this.estado = estado;
         this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
         this.notasMedicas = notasMedicas;
     }
 
@@ -64,6 +74,14 @@ public class TratamientoPacienteResponseDTO {
         this.fechaInicio = fechaInicio;
     }
 
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
     public String getNotasMedicas() {
         return notasMedicas;
     }
@@ -79,5 +97,4 @@ public class TratamientoPacienteResponseDTO {
     public void setPorcentajeCumplimiento(Integer porcentajeCumplimiento) {
         this.porcentajeCumplimiento = porcentajeCumplimiento;
     }
-
 }
