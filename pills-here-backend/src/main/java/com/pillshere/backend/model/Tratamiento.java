@@ -41,6 +41,10 @@ public class Tratamiento {
     @Column(name = "notas_medicas", columnDefinition = "TEXT")
     private String notasMedicas;
 
+     @Column(name = "fecha_inicio_real")
+    private LocalDate fechaInicioReal;
+    
+    
     public Integer getIdTratamiento() {
         return idTratamiento;
     }
@@ -119,5 +123,13 @@ public class Tratamiento {
 
     public void setNotasMedicas(String notasMedicas) {
         this.notasMedicas = notasMedicas;
+    }
+    
+    public LocalDate getFechaInicioReal() {
+        return fechaInicioReal;
+    }
+
+    public void setFechaInicioReal(LocalDate fechaInicioReal) {
+        this.fechaInicioReal = fechaInicioReal;
     }
 }

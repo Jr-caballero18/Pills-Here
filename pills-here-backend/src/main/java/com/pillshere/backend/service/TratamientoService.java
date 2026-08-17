@@ -402,6 +402,13 @@ public class TratamientoService {
             Dosis dosis = dosisRepository.findById(horarioDTO.getIdDosis())
                     .orElseThrow(() -> new RuntimeException("Dosis no encontrada"));
 
+            Tratamiento tratamiento = dosis.getTratamiento();
+            
+            if (tratamiento.getFechaInicioReal() == null) {
+                tratamiento.setFechaInicioReal(LocalDate.now());
+                tratamientoRepository.save(tratamiento);
+            }
+
             dosis.setHoraInicioPaciente(horarioDTO.getHoraInicioPaciente());
             dosis.setTratamientoIniciado(true);
             dosisRepository.save(dosis);
@@ -956,64 +963,77 @@ public class TratamientoService {
     }
 
     private LocalDateTime calcularFechaHoraFinTratamiento(
-            Tratamiento tratamiento
-    ) {
+        Tratamiento tratamiento
+) {
 
-        List<Dosis> dosisList
-                = dosisRepository.findByTratamientoIdTratamiento(
-                        tratamiento.getIdTratamiento()
-                );
-
-        LocalDateTime fechaHoraFinMaxima = null;
-
-        for (Dosis dosis : dosisList) {
-
-            Integer duracionDias = dosis.getDuracionDias();
-
-            if (duracionDias == null || duracionDias <= 0) {
-                continue;
-            }
-
-            LocalTime horaInicio = dosis.getHoraInicioPaciente();
-
-            if (horaInicio == null) {
-                horaInicio = LocalTime.of(0, 0);
-            }
-
-            LocalDateTime fechaHoraInicio
-                    = tratamiento.getFechaInicio()
-                            .atTime(horaInicio);
-
-            LocalDateTime fechaHoraFin
-                    = fechaHoraInicio.plusDays(duracionDias);
-
-            if (fechaHoraFinMaxima == null
-                    || fechaHoraFin.isAfter(fechaHoraFinMaxima)) {
-                fechaHoraFinMaxima = fechaHoraFin;
-            }
-        }
-
-        return fechaHoraFinMaxima;
+    
+    if (tratamiento.getFechaInicioReal() == null) {
+        return null;
     }
 
-    private void recalcularFechaFinTratamiento(
-            Tratamiento tratamiento
-    ) {
+    List<Dosis> dosisList
+            = dosisRepository.findByTratamientoIdTratamiento(
+                    tratamiento.getIdTratamiento()
+            );
+
+    LocalDateTime fechaHoraFinMaxima = null;
+
+    for (Dosis dosis : dosisList) {
+
+        Integer duracionDias = dosis.getDuracionDias();
+
+        if (duracionDias == null || duracionDias <= 0) {
+            continue;
+        }
+
+        LocalTime horaInicio = dosis.getHoraInicioPaciente();
+
+       
+        if (horaInicio == null) {
+            continue;
+        }
+
+        LocalDateTime fechaHoraInicio
+                = tratamiento.getFechaInicioReal()
+                        .atTime(horaInicio);
 
         LocalDateTime fechaHoraFin
-                = calcularFechaHoraFinTratamiento(tratamiento);
+                = fechaHoraInicio.plusDays(duracionDias);
 
-        if (fechaHoraFin == null) {
-            return;
-        }
+        if (fechaHoraFinMaxima == null
+                || fechaHoraFin.isAfter(fechaHoraFinMaxima)) {
 
-        LocalDate nuevaFechaFin
-                = fechaHoraFin.toLocalDate();
-
-        if (tratamiento.getFechaFin() == null
-                || !tratamiento.getFechaFin().equals(nuevaFechaFin)) {
-            tratamiento.setFechaFin(nuevaFechaFin);
-            tratamientoRepository.save(tratamiento);
+            fechaHoraFinMaxima = fechaHoraFin;
         }
     }
+
+    return fechaHoraFinMaxima;
+}
+
+private void recalcularFechaFinTratamiento(
+        Tratamiento tratamiento
+) {
+
+    if (tratamiento.getFechaInicioReal() == null) {
+        return;
+    }
+
+    LocalDateTime fechaHoraFin
+            = calcularFechaHoraFinTratamiento(tratamiento);
+
+    if (fechaHoraFin == null) {
+        return;
+    }
+
+    LocalDate nuevaFechaFin
+            = fechaHoraFin.toLocalDate();
+
+    if (tratamiento.getFechaFin() == null
+            || !tratamiento.getFechaFin().equals(nuevaFechaFin)) {
+
+        tratamiento.setFechaFin(nuevaFechaFin);
+
+        tratamientoRepository.save(tratamiento);
+    }
+}
 }
