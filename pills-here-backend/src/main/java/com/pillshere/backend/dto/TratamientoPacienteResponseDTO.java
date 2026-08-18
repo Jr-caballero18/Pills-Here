@@ -1,6 +1,7 @@
 package com.pillshere.backend.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TratamientoPacienteResponseDTO {
 
@@ -9,18 +10,31 @@ public class TratamientoPacienteResponseDTO {
     private String diagnostico;
     private String estado;
     private LocalDate fechaInicio;
+    private LocalDateTime fechaInicioReal;
+    private LocalDate fechaFin;
     private String notasMedicas;
     private Integer porcentajeCumplimiento;
 
     public TratamientoPacienteResponseDTO() {
     }
 
-    public TratamientoPacienteResponseDTO(Integer idTratamiento, String nombreTratamiento, String diagnostico, String estado, LocalDate fechaInicio, String notasMedicas) {
+    public TratamientoPacienteResponseDTO(
+            Integer idTratamiento,
+            String nombreTratamiento,
+            String diagnostico,
+            String estado,
+            LocalDate fechaInicio,
+            LocalDateTime fechaInicioReal,
+            LocalDate fechaFin,
+            String notasMedicas
+    ) {
         this.idTratamiento = idTratamiento;
         this.nombreTratamiento = nombreTratamiento;
         this.diagnostico = diagnostico;
         this.estado = estado;
         this.fechaInicio = fechaInicio;
+        this.fechaInicioReal = fechaInicioReal;
+        this.fechaFin = fechaFin;
         this.notasMedicas = notasMedicas;
     }
 
@@ -64,6 +78,14 @@ public class TratamientoPacienteResponseDTO {
         this.fechaInicio = fechaInicio;
     }
 
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
     public String getNotasMedicas() {
         return notasMedicas;
     }
@@ -80,4 +102,11 @@ public class TratamientoPacienteResponseDTO {
         this.porcentajeCumplimiento = porcentajeCumplimiento;
     }
 
+    public LocalDateTime getFechaInicioReal() {
+        return fechaInicioReal;
+    }
+
+    public void setFechaInicioReal(LocalDateTime fechaInicioReal) {
+        this.fechaInicioReal = fechaInicioReal;
+    }
 }

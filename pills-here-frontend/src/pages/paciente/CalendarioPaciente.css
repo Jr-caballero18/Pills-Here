@@ -1,0 +1,517 @@
+.calendario-paciente-page {
+    min-height: 100vh;
+    background-color: #ffffff;
+    font-family: "Roboto Serif", serif;
+}
+
+
+.calendario-paciente-header {
+    height: 95px;
+    background-color: #173f6c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 22px 0 14px;
+    box-sizing: border-box;
+    color: #ffffff;
+}
+
+
+.calendario-paciente-logo {
+    width: 64px !important;
+    height: 64px !important;
+    max-width: 64px !important;
+    max-height: 64px !important;
+    object-fit: contain;
+    display: block;
+}
+
+
+.calendario-paciente-header h1 {
+    margin: 0 0 0 18px;
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 700;
+    flex: 1;
+    text-align: left;
+}
+
+
+.calendario-paciente-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+
+.calendario-paciente-icons button:first-child {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+.calendario-paciente-icons button:first-child img {
+    width: 20px !important;
+    height: 20px !important;
+    object-fit: contain;
+}
+
+
+.calendario-paciente-icons button:last-child {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin-left: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.calendario-paciente-icons button:last-child img {
+    width: 56px !important;
+    height: 56px !important;
+    max-width: 56px !important;
+    max-height: 56px !important;
+    object-fit: contain;
+    display: block;
+}
+
+
+.calendario-paciente-back {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+
+.calendario-paciente-back img {
+    width: 50px;
+    height: auto;
+    display: block;
+}
+
+
+.calendario-paciente-content {
+    padding: 90px 40px 100px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+
+.calendario-wrapper {
+    width: 748px;
+    position: relative;
+}
+
+
+.calendario-toolbar {
+    width: 100%;
+    height: 46px;
+    padding: 0 15px;
+    margin: 0 !important;
+    border: 1px solid #333333;
+    border-radius: 5px 5px 0 0;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+
+.calendario-titulo-mes {
+    margin: 0;
+    font-family: "Roboto Serif", serif;
+    font-size: 23px;
+    font-weight: 400;
+    color: #111111;
+    text-transform: capitalize;
+}
+
+
+.calendario-header-dias {
+    width: 100%;
+    margin: 0 !important;
+    background-color: #eeeeee;
+    border: 1px solid #444444;
+    border-top: none;
+    box-sizing: border-box;
+}
+
+
+.calendario-dia-header {
+    height: 44px !important;
+    padding: 0 !important;
+    background-color: #eeeeee;
+    border-right: 1px solid #777777;
+    border-bottom: 1px solid #444444;
+    box-sizing: border-box;
+    vertical-align: middle !important;
+    font-family: "Roboto Serif", serif;
+    font-size: 26px !important;
+    font-weight: 700;
+    line-height: 44px !important;
+    color: #111111;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+
+.calendario-header-dias tr {
+    height: 44px !important;
+}
+
+
+.calendario-header-dias th {
+    height: 44px !important;
+    padding: 0 !important;
+}
+
+
+.calendario-header-dias + tbody {
+    margin-top: 0 !important;
+}
+
+
+.calendario-wrapper .fc {
+    gap: 0 !important;
+}
+
+
+.calendario-wrapper .fc-header-toolbar {
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+.calendario-wrapper .fc-view-harness {
+    margin-top: 0 !important;
+}
+
+
+.calendario-wrapper .fc-view {
+    margin-top: 0 !important;
+}
+
+
+.calendario-wrapper .fc-dayGridMonth-view {
+    margin-top: 0 !important;
+}
+
+
+.calendario-wrapper table {
+    margin: 0 !important;
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+}
+
+
+.calendario-cuerpo {
+    width: 100%;
+    border-left: 1px solid #555555;
+    border-right: 1px solid #555555;
+    border-bottom: 1px solid #555555;
+    border-radius: 0 0 4px 4px;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-top: 0 !important;
+}
+
+
+.calendario-fila {
+    width: 100%;
+    min-height: 77px;
+    border-bottom: 1px solid #aaaaaa;
+}
+
+
+.calendario-fila:last-child {
+    border-bottom: none;
+}
+
+
+.calendario-celda {
+    min-height: 77px;
+    background-color: #ffffff;
+    border-right: 1px solid #aaaaaa;
+    box-sizing: border-box;
+    position: relative;
+    font-family: "Roboto Serif", serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: #111111;
+}
+
+
+.calendario-celda a {
+    font-size: 19px !important;
+    font-weight: 700 !important;
+    color: #111111 !important;
+    text-decoration: none !important;
+}
+
+
+.calendario-celda:last-child {
+    border-right: none;
+}
+
+
+.calendario-celda:hover {
+    background-color: #fafafa;
+}
+
+
+.calendario-detalle {
+    position: absolute;
+    width: 505px;
+    padding: 13px 20px 14px;
+    box-sizing: border-box;
+    background-color: #f7f7f7;
+    border: 1px solid #444444;
+    border-radius: 3px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.calendario-detalle-tratamiento {
+    margin-bottom: 18px;
+}
+
+.calendario-detalle-tratamiento:last-child {
+    margin-bottom: 0;
+}
+
+.calendario-detalle-titulo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 11px;
+    font-size: 13px;
+    color: #111111;
+}
+
+.calendario-color-tratamiento {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    border: 1px solid #555555;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.calendario-detalle-estadisticas {
+    margin-left: 35px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.calendario-estadistica {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendario-punto {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid #555555;
+    box-sizing: border-box;
+    display: block;
+    flex-shrink: 0;
+}
+
+.calendario-punto.tomada {
+    background-color: #65d09a;
+}
+
+.calendario-punto.pendiente {
+    background-color: #f6a14b;
+}
+
+.calendario-punto.omitida {
+    background-color: #ef6262;
+}
+
+.calendario-etiqueta {
+    height: 14px;
+    padding: 0 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    font-family: "Roboto Serif", serif;
+    font-size: 11px;
+    line-height: 12px;
+    white-space: nowrap;
+}
+
+.tomada-etiqueta {
+    background-color: #d8f7e6;
+    border: 1px solid #70cb99;
+}
+
+.pendiente-etiqueta {
+    background-color: #ffe1bd;
+    border: 1px solid #e59b48;
+}
+
+.omitida-etiqueta {
+    background-color: #ffd2d2;
+    border: 1px solid #e56d6d;
+}
+
+.calendario-barras-dia {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: 38px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+
+.barra-tratamiento-calendario {
+    width: 100%;
+    height: 8px;
+
+    border-radius: 5px;
+
+    display: block;
+}
+
+.calendario-medicamentos-dia {
+    margin-left: 35px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.calendario-medicamento-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendario-punto-medicamento {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid #555555;
+    box-sizing: border-box;
+    display: block;
+    flex-shrink: 0;
+}
+
+.calendario-medicamento-etiqueta {
+    height: 17px;
+    padding: 0 12px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    font-family: "Roboto Serif", serif;
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+.medicamento-color-0 {
+    background-color: #65d09a;
+}
+
+.medicamento-etiqueta-0 {
+    background-color: #d8f7e6;
+    border: 1px solid #70cb99;
+}
+
+.medicamento-color-1 {
+    background-color: #f6a14b;
+}
+
+.medicamento-etiqueta-1 {
+    background-color: #ffe1bd;
+    border: 1px solid #e59b48;
+}
+
+.medicamento-color-2 {
+    background-color: #ef6262;
+}
+
+.medicamento-etiqueta-2 {
+    background-color: #ffd2d2;
+    border: 1px solid #e56d6d;
+}
+
+.medicamento-color-3 {
+    background-color: #4aa3df;
+}
+
+.medicamento-etiqueta-3 {
+    background-color: #dceeff;
+    border: 1px solid #67aee0;
+}
+
+.medicamento-color-4 {
+    background-color: #a35bd8;
+}
+
+.medicamento-etiqueta-4 {
+    background-color: #ead9f8;
+    border: 1px solid #ad71d5;
+}
+
+.medicamento-color-5 {
+    background-color: #e76fa3;
+}
+
+.medicamento-etiqueta-5 {
+    background-color: #f9dcea;
+    border: 1px solid #e786ad;
+}
+
+.medicamento-color-6 {
+    background-color: #d6b53f;
+}
+
+.medicamento-etiqueta-6 {
+    background-color: #fff3bd;
+    border: 1px solid #d8b94d;
+}
+
+.medicamento-color-7 {
+    background-color: #35b7b0;
+}
+
+.medicamento-etiqueta-7 {
+    background-color: #d4f5f3;
+    border: 1px solid #50bab4;
+}

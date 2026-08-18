@@ -4,6 +4,7 @@ import com.pillshere.backend.dto.ActualizarTratamientoRequestDTO;
 import com.pillshere.backend.dto.ComentarioTratamientoRequestDTO;
 import com.pillshere.backend.dto.CrearTratamientoRequestDTO;
 import com.pillshere.backend.dto.DetalleTratamientoResponseDTO;
+import com.pillshere.backend.dto.EstadisticaCalendarioTratamientoDTO;
 import com.pillshere.backend.dto.HistorialPacienteResponseDTO;
 import com.pillshere.backend.dto.TratamientoPacienteResponseDTO;
 import com.pillshere.backend.service.TratamientoService;
@@ -14,6 +15,7 @@ import com.pillshere.backend.dto.IniciarTratamientoPacienteRequestDTO;
 import com.pillshere.backend.dto.TomaMedicamentoResponseDTO;
 import com.pillshere.backend.dto.EstadisticaDiaDTO;
 import com.pillshere.backend.dto.EstadisticasGeneralesPacienteDTO;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -169,4 +171,19 @@ public class TratamientoController {
         return ResponseEntity.ok(estadisticas);
     }
 
+    @GetMapping("/calendario/paciente/{idPaciente}")
+    public ResponseEntity<List<EstadisticaCalendarioTratamientoDTO>>
+            obtenerEstadisticasCalendarioPorDia(
+                    @PathVariable Integer idPaciente,
+                    @RequestParam LocalDate fecha
+            ) {
+
+        List<EstadisticaCalendarioTratamientoDTO> resultado
+                = tratamientoService.obtenerEstadisticasCalendarioPorDia(
+                        idPaciente,
+                        fecha
+                );
+
+        return ResponseEntity.ok(resultado);
+    }
 }

@@ -1,12 +1,13 @@
-
 package com.pillshere.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tratamiento")
 public class Tratamiento {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tratamiento")
@@ -40,6 +41,9 @@ public class Tratamiento {
 
     @Column(name = "notas_medicas", columnDefinition = "TEXT")
     private String notasMedicas;
+
+    @Column(name = "fecha_inicio_real")
+    private LocalDateTime fechaInicioReal;
 
     public Integer getIdTratamiento() {
         return idTratamiento;
@@ -119,5 +123,13 @@ public class Tratamiento {
 
     public void setNotasMedicas(String notasMedicas) {
         this.notasMedicas = notasMedicas;
+    }
+
+    public LocalDateTime getFechaInicioReal() {
+        return fechaInicioReal;
+    }
+
+    public void setFechaInicioReal(LocalDateTime fechaInicioReal) {
+        this.fechaInicioReal = fechaInicioReal;
     }
 }

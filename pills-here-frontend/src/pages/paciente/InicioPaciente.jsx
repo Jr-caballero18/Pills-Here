@@ -24,6 +24,7 @@ import {
   Tooltip,
 } from "recharts";
 
+
 function InicioPaciente() {
   const [nombreUsuario, setNombreUsuario] = useState("");
   const navigate = useNavigate();
@@ -286,7 +287,7 @@ function InicioPaciente() {
 
             <div className="paciente-card-content">
               <h2>Calendario de Medicación</h2>
-              <a href="/">Ver calendario</a>
+              <a href="/calendario-paciente">Ver calendario</a>
             </div>
           </article>
         </section>

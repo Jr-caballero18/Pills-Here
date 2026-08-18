@@ -15,6 +15,7 @@ import HistorialPaciente from "../pages/paciente/HistorialPaciente";
 import PerfilPaciente from "../pages/paciente/PerfilPaciente";
 import NotasPaciente from "../pages/paciente/NotasPaciente";
 import PerfilMedico from "../pages/medico/PerfilMedico";
+import CalendarioPaciente from "../pages/paciente/CalendarioPaciente";
 function AppRoutes() {
     return (
         <BrowserRouter>
@@ -35,6 +36,8 @@ function AppRoutes() {
                 <Route path="/perfil-paciente" element={<PerfilPaciente />} />
                 <Route path="/notas-paciente" element={<NotasPaciente />} />
                 <Route path="/perfil-medico" element={<PerfilMedico />} />
+                <Route path="/calendario-paciente" element={<CalendarioPaciente />}
+                />
             </Routes>
         </BrowserRouter>
     );

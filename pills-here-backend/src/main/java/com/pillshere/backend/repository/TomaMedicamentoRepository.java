@@ -1,6 +1,7 @@
 package com.pillshere.backend.repository;
 
 import com.pillshere.backend.model.TomaMedicamento;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,4 +49,34 @@ public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento
             @Param("idMedico") Integer idMedico,
             @Param("estado") String estado
     );
+
+    @Query("""
+    SELECT t
+    FROM TomaMedicamento t
+    JOIN FETCH t.dosis d
+    JOIN FETCH d.tratamiento tr
+    WHERE tr.paciente.idPaciente = :idPaciente
+    AND t.fechaHoraProgramada >= :inicio
+    AND t.fechaHoraProgramada < :fin
+""")
+    List<TomaMedicamento> obtenerTomasCalendarioPorDia(
+            @Param("idPaciente") Integer idPaciente,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fin") LocalDateTime fin
+    );
+
+@Query("""
+    SELECT COUNT(t)
+    FROM TomaMedicamento t
+    JOIN t.dosis d
+    JOIN d.tratamiento tr
+    WHERE tr.paciente.idPaciente = :idPaciente
+    AND t.estado = :estado
+    AND tr.estado <> 'CANCELADO'
+""")
+Long contarPorPacienteYEstadoSinCancelados(
+        @Param("idPaciente") Integer idPaciente,
+        @Param("estado") String estado
+);
+
 }
