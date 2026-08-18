@@ -17,6 +17,7 @@ import {
   contarTratamientosFinalizadosMedico,
 } from "../../services/tratamientoService";
 import { obtenerDashboardMedico } from "../../services/medicoService";
+import ManualMedico from "../../components/ManualMedico/ManualMedico";
 
 function InicioMedico() {
   const [nombreUsuario, setNombreUsuario] = useState("");
@@ -24,6 +25,7 @@ function InicioMedico() {
   const [tratamientosActivos, setTratamientosActivos] = useState(0);
   const [tratamientosCompletados, setTratamientosCompletados] = useState(0);
   const [pacientesRecientes, setPacientesRecientes] = useState([]);
+  const [manualAbierto, setManualAbierto] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -189,9 +191,18 @@ function InicioMedico() {
         </section>
       </main>
 
-      <button className="btn-ayuda" type="button">
+      <button
+        className="btn-ayuda"
+        type="button"
+        onClick={() => setManualAbierto(true)}
+      >
         <img src={iconAyuda} alt="Ayuda" />
       </button>
+
+      {manualAbierto && (
+        <ManualMedico onCerrar={() => setManualAbierto(false)} />
+      )}
+      
     </div>
   );
 }
