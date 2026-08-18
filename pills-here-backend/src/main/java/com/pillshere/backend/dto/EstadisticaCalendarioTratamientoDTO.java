@@ -1,14 +1,12 @@
-
 package com.pillshere.backend.dto;
 
+import java.util.List;
 
 public class EstadisticaCalendarioTratamientoDTO {
 
     private Integer idTratamiento;
     private String nombreTratamiento;
-    private Long tomadas;
-    private Long pendientes;
-    private Long omitidas;
+    private List<String> medicamentos;
 
     public EstadisticaCalendarioTratamientoDTO() {
     }
@@ -16,15 +14,11 @@ public class EstadisticaCalendarioTratamientoDTO {
     public EstadisticaCalendarioTratamientoDTO(
             Integer idTratamiento,
             String nombreTratamiento,
-            Long tomadas,
-            Long pendientes,
-            Long omitidas
+            List<String> medicamentos
     ) {
         this.idTratamiento = idTratamiento;
         this.nombreTratamiento = nombreTratamiento;
-        this.tomadas = tomadas;
-        this.pendientes = pendientes;
-        this.omitidas = omitidas;
+        this.medicamentos = medicamentos;
     }
 
     public Integer getIdTratamiento() {
@@ -43,27 +37,11 @@ public class EstadisticaCalendarioTratamientoDTO {
         this.nombreTratamiento = nombreTratamiento;
     }
 
-    public Long getTomadas() {
-        return tomadas;
+    public List<String> getMedicamentos() {
+        return medicamentos;
     }
 
-    public void setTomadas(Long tomadas) {
-        this.tomadas = tomadas;
-    }
-
-    public Long getPendientes() {
-        return pendientes;
-    }
-
-    public void setPendientes(Long pendientes) {
-        this.pendientes = pendientes;
-    }
-
-    public Long getOmitidas() {
-        return omitidas;
-    }
-
-    public void setOmitidas(Long omitidas) {
-        this.omitidas = omitidas;
+    public void setMedicamentos(List<String> medicamentos) {
+        this.medicamentos = medicamentos;
     }
 }

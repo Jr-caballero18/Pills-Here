@@ -402,3 +402,116 @@
 
     display: block;
 }
+
+.calendario-medicamentos-dia {
+    margin-left: 35px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.calendario-medicamento-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.calendario-punto-medicamento {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1px solid #555555;
+    box-sizing: border-box;
+    display: block;
+    flex-shrink: 0;
+}
+
+.calendario-medicamento-etiqueta {
+    height: 17px;
+    padding: 0 12px;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    font-family: "Roboto Serif", serif;
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+.medicamento-color-0 {
+    background-color: #65d09a;
+}
+
+.medicamento-etiqueta-0 {
+    background-color: #d8f7e6;
+    border: 1px solid #70cb99;
+}
+
+.medicamento-color-1 {
+    background-color: #f6a14b;
+}
+
+.medicamento-etiqueta-1 {
+    background-color: #ffe1bd;
+    border: 1px solid #e59b48;
+}
+
+.medicamento-color-2 {
+    background-color: #ef6262;
+}
+
+.medicamento-etiqueta-2 {
+    background-color: #ffd2d2;
+    border: 1px solid #e56d6d;
+}
+
+.medicamento-color-3 {
+    background-color: #4aa3df;
+}
+
+.medicamento-etiqueta-3 {
+    background-color: #dceeff;
+    border: 1px solid #67aee0;
+}
+
+.medicamento-color-4 {
+    background-color: #a35bd8;
+}
+
+.medicamento-etiqueta-4 {
+    background-color: #ead9f8;
+    border: 1px solid #ad71d5;
+}
+
+.medicamento-color-5 {
+    background-color: #e76fa3;
+}
+
+.medicamento-etiqueta-5 {
+    background-color: #f9dcea;
+    border: 1px solid #e786ad;
+}
+
+.medicamento-color-6 {
+    background-color: #d6b53f;
+}
+
+.medicamento-etiqueta-6 {
+    background-color: #fff3bd;
+    border: 1px solid #d8b94d;
+}
+
+.medicamento-color-7 {
+    background-color: #35b7b0;
+}
+
+.medicamento-etiqueta-7 {
+    background-color: #d4f5f3;
+    border: 1px solid #50bab4;
+}

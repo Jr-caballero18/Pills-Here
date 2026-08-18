@@ -58,7 +58,6 @@ const CalendarioPaciente = () => {
 
 
     const [eventos, setEventos] = useState([]);
-    const cacheEstadisticas = useRef(new Map());
     const [detallePosicion, setDetallePosicion] = useState(null);
 
     const mostrarDetalleDia = async (fecha, celda) => {
@@ -73,29 +72,14 @@ const CalendarioPaciente = () => {
             const fechaStr =
                 formatearFecha(fecha);
 
-            let estadisticas;
-
-            if (
-                cacheEstadisticas.current.has(fechaStr)
-            ) {
-                estadisticas =
-                    cacheEstadisticas.current.get(
-                        fechaStr
-                    );
-            } else {
-                estadisticas =
-                    await obtenerEstadisticasCalendarioDia(
-                        idPaciente,
-                        fechaStr
-                    );
-
-                cacheEstadisticas.current.set(
-                    fechaStr,
-                    estadisticas
+            const estadisticas =
+                await obtenerEstadisticasCalendarioDia(
+                    idPaciente,
+                    fechaStr
                 );
-            }
 
-             console.log(
+
+            console.log(
                 "ESTADISTICAS DEL DIA:",
                 fechaStr,
                 estadisticas
@@ -106,7 +90,7 @@ const CalendarioPaciente = () => {
                 setDetallePosicion(null);
                 return;
             }
-           
+
 
             const tratamientosConColor =
                 estadisticas.map((tratamiento) => ({
@@ -194,25 +178,38 @@ const CalendarioPaciente = () => {
                 const nuevosEventos = [];
 
                 tratamientos.forEach((tratamiento) => {
+
                     console.log(
-                        "TRATAMIENTO:",
+                        "CALENDARIO TRATAMIENTO:",
                         tratamiento.idTratamiento,
-                        "INICIO:",
-                        tratamiento.fechaInicio,
+                        tratamiento.nombreTratamiento,
+                        "INICIO REAL:",
+                        tratamiento.fechaInicioReal,
                         "FIN:",
                         tratamiento.fechaFin
                     );
-                    if (!tratamiento.fechaInicio) {
+
+
+                    if (
+                        !tratamiento.fechaInicioReal ||
+                        !tratamiento.fechaFin
+                    ) {
                         return;
                     }
 
-                    const inicio = new Date(
-                        `${tratamiento.fechaInicio}T00:00:00`
+                    const inicioReal = new Date(
+                        tratamiento.fechaInicioReal
                     );
 
-                    const fin = tratamiento.fechaFin
-                        ? new Date(`${tratamiento.fechaFin}T00:00:00`)
-                        : new Date(inicio);
+                    const inicio = new Date(
+                        inicioReal.getFullYear(),
+                        inicioReal.getMonth(),
+                        inicioReal.getDate()
+                    );
+
+                    const fin = new Date(
+                        `${tratamiento.fechaFin}T00:00:00`
+                    );
 
                     let fechaActual = new Date(inicio);
 
@@ -221,6 +218,7 @@ const CalendarioPaciente = () => {
                     );
 
                     while (fechaActual <= fin) {
+
                         const fechaStr =
                             formatearFecha(fechaActual);
 
@@ -230,9 +228,14 @@ const CalendarioPaciente = () => {
                             start: fechaStr,
                             allDay: true,
                             color: color,
+
                             extendedProps: {
-                                idTratamiento: tratamiento.idTratamiento,
-                                nombreTratamiento: tratamiento.nombreTratamiento,
+                                idTratamiento:
+                                    tratamiento.idTratamiento,
+
+                                nombreTratamiento:
+                                    tratamiento.nombreTratamiento,
+
                                 color: color
                             }
                         });
@@ -242,8 +245,7 @@ const CalendarioPaciente = () => {
                     }
                 });
 
-                console.log("TRATAMIENTOS RECIBIDOS:", tratamientos);
-                console.log("EVENTOS GENERADOS:", nuevosEventos);
+
                 setEventos(nuevosEventos);
 
             } catch (error) {
@@ -306,7 +308,7 @@ const CalendarioPaciente = () => {
                 <div className="calendario-wrapper" ref={wrapperRef}>
 
                     <FullCalendar
-                        key={eventos.length}
+                        key={eventos.map((evento) => evento.id).join("-")}
                         plugins={[dayGridPlugin,
                             themePlugin
 
@@ -345,21 +347,6 @@ const CalendarioPaciente = () => {
 
                         dayHeaderFormat={{
                             weekday: "short",
-                        }}
-
-
-
-                        eventContent={(arg) => {
-                            console.log("EVENTO RENDERIZADO:", arg.event.title, arg.event.startStr);
-
-                            return (
-                                <div
-                                    className="barra-tratamiento-calendario"
-                                    style={{
-                                        backgroundColor: arg.event.extendedProps.color
-                                    }}
-                                />
-                            );
                         }}
 
                         dayCellDidMount={(info) => {
@@ -447,38 +434,25 @@ const CalendarioPaciente = () => {
 
                                     </div>
 
-                                    <div className="calendario-detalle-estadisticas">
+                                    <div className="calendario-medicamentos-dia">
+                                        {(tratamiento.medicamentos || []).map(
+                                            (medicamento, index) => (
+                                                <div
+                                                    key={`${tratamiento.idTratamiento}-${medicamento}`}
+                                                    className="calendario-medicamento-item"
+                                                >
+                                                    <span
+                                                        className={`calendario-punto-medicamento medicamento-color-${index % 8}`}
+                                                    />
 
-                                        <div className="calendario-estadistica">
-
-                                            <span className="calendario-punto tomada" />
-
-                                            <span className="calendario-etiqueta tomada-etiqueta">
-                                                {tratamiento.tomadas} dosis tomadas
-                                            </span>
-
-                                        </div>
-
-                                        <div className="calendario-estadistica">
-
-                                            <span className="calendario-punto pendiente" />
-
-                                            <span className="calendario-etiqueta pendiente-etiqueta">
-                                                {tratamiento.pendientes} dosis pendientes
-                                            </span>
-
-                                        </div>
-
-                                        <div className="calendario-estadistica">
-
-                                            <span className="calendario-punto omitida" />
-
-                                            <span className="calendario-etiqueta omitida-etiqueta">
-                                                {tratamiento.omitidas} dosis omitidas
-                                            </span>
-
-                                        </div>
-
+                                                    <span
+                                                        className={`calendario-medicamento-etiqueta medicamento-etiqueta-${index % 8}`}
+                                                    >
+                                                        {medicamento}.
+                                                    </span>
+                                                </div>
+                                            )
+                                        )}
                                     </div>
                                 </div>
                             ))}

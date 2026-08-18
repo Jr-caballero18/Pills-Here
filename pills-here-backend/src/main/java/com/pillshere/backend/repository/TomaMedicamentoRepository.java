@@ -65,4 +65,18 @@ public interface TomaMedicamentoRepository extends JpaRepository<TomaMedicamento
             @Param("fin") LocalDateTime fin
     );
 
+@Query("""
+    SELECT COUNT(t)
+    FROM TomaMedicamento t
+    JOIN t.dosis d
+    JOIN d.tratamiento tr
+    WHERE tr.paciente.idPaciente = :idPaciente
+    AND t.estado = :estado
+    AND tr.estado <> 'CANCELADO'
+""")
+Long contarPorPacienteYEstadoSinCancelados(
+        @Param("idPaciente") Integer idPaciente,
+        @Param("estado") String estado
+);
+
 }
