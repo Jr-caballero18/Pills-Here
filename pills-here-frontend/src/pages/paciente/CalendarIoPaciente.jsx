@@ -8,7 +8,7 @@ import themePlugin from "@fullcalendar/react/themes/classic";
 import "@fullcalendar/react/skeleton.css";
 import "@fullcalendar/react/themes/classic/theme.css";
 import "./CalendarioPaciente.css";
-
+import NotificacionesPaciente from "../../components/NotificacionesPaciente/NotificacionesPaciente";
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
@@ -282,12 +282,9 @@ const CalendarioPaciente = () => {
 
                 <div className="calendario-paciente-icons">
 
-                    <button type="button">
-                        <img
-                            src={iconNotificacion}
-                            alt="Notificaciones"
-                        />
-                    </button>
+                    <NotificacionesPaciente
+                        className="calendario-paciente-btn-notificacion"
+                    />
 
                     <button
                         type="button"

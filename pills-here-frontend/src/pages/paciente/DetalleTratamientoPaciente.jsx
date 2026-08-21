@@ -8,7 +8,7 @@ import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
-
+import NotificacionesPaciente from "../../components/NotificacionesPaciente/NotificacionesPaciente";
 import iconTomada from "../../assets/images/icon-palomita.png";
 import iconPendiente from "../../assets/images/icon-pendiente.png";
 import iconNoTomada from "../../assets/images/icon-no-tomadas.png";
@@ -37,9 +37,6 @@ function DetalleTratamientoPaciente() {
     const [horariosSeleccionados, setHorariosSeleccionados] = useState({});
     const [registrosMedicacion, setRegistrosMedicacion] = useState([]);
     const [estadisticas, setEstadisticas] = useState([]);
-    const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
-    const [notificaciones, setNotificaciones] = useState([]);
-    const notificacionesRef = useRef(null);
     const [tomaProcesando, setTomaProcesando] = useState(null);
 
     useEffect(() => {
@@ -65,39 +62,13 @@ function DetalleTratamientoPaciente() {
             }
         };
 
-        const cargarNotificaciones = async () => {
-            try {
-                const idPaciente = localStorage.getItem("idPaciente");
-                if (!idPaciente) return;
-
-                const data = await obtenerNotificacionesPaciente(idPaciente);
-                setNotificaciones(data);
-            } catch (error) {
-                console.error("Error al cargar notificaciones:", error);
-            }
-        };
 
         cargarTratamiento();
-        cargarNotificaciones();
+
 
     }, [idTratamiento]);
 
-    useEffect(() => {
-        const cerrarAlDarClickFuera = (e) => {
-            if (
-                notificacionesRef.current &&
-                !notificacionesRef.current.contains(e.target)
-            ) {
-                setMostrarNotificaciones(false);
-            }
-        };
 
-        document.addEventListener("mousedown", cerrarAlDarClickFuera);
-
-        return () => {
-            document.removeEventListener("mousedown", cerrarAlDarClickFuera);
-        };
-    }, []);
 
     if (!tratamiento) {
         return <p>Cargando tratamiento...</p>;
@@ -228,86 +199,18 @@ function DetalleTratamientoPaciente() {
 
                 <h1>Tratamiento de {tratamiento.nombreTratamiento || tratamiento.diagnostico}</h1>
 
-                <div className="detalle-tratamiento-paciente-icons" ref={notificacionesRef}>
-                    <button
-                        className="detalle-tratamiento-paciente-btn-notificacion"
-                        type="button"
-                        onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
-                    >
-                        <img src={iconNotificacion} alt="Notificaciones" />
-                    </button>
+                <div className="detalle-tratamiento-paciente-icons">
 
-                    {mostrarNotificaciones && (
-                        <div className="paciente-notificaciones-panel" ref={notificacionesRef}>
-                            <div className="notificaciones-flecha"></div>
-
-                            <div className="notificaciones-header">
-                                <img src={iconNotificacion} alt="Notificaciones" />
-                                <h2>Notificaciones</h2>
-                            </div>
-                            <div className="notificaciones-lista">
-                                {notificaciones.length === 0 ? (
-                                    <div className="notificacion-vacia">
-                                        No tienes notificaciones nuevas.
-                                    </div>
-                                ) : (
-                                    notificaciones.map((notificacion) => {
-                                        const esMedicamento = notificacion.tipo === "MEDICAMENTO";
-                                        const esComentario = notificacion.tipo === "COMENTARIO";
-
-                                        return (
-                                            <div
-                                                className={`notificacion-card ${esMedicamento ? "notificacion-medicamento" : "notificacion-comentario"
-                                                    }`}
-                                                key={`${notificacion.tipo}-${notificacion.id}`}
-                                            >
-                                                <div className="notificacion-icono">
-                                                    <img
-                                                        src={esMedicamento ? iconRecordatorioNotif : iconComentarioNotif}
-                                                        alt="Tipo de notificación"
-                                                    />
-                                                </div>
-
-                                                <div className="notificacion-contenido">
-                                                    <div className="notificacion-titulo">
-                                                        <span className="notificacion-punto"></span>
-
-                                                        <strong>
-                                                            {esMedicamento
-                                                                ? notificacion.titulo
-                                                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
-                                                                }.`}
-                                                        </strong>
-                                                    </div>
-
-                                                    <p>{notificacion.contenido}</p>
-
-                                                    <div className="notificacion-footer">
-                                                        <span>Hace 10 min</span>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (esMedicamento) {
-                                                                    navigate("/tratamientos-paciente");
-                                                                }
-                                                            }}
-                                                        >
-                                                            Ver {esMedicamento ? "dosis" : esComentario ? "comentario" : "aviso"} &gt;
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    <NotificacionesPaciente />
 
                     <button type="button">
-                        <img src={iconPerfil} alt="Perfil" onClick={() => navigate("/perfil-paciente")} />
+                        <img
+                            src={iconPerfil}
+                            alt="Perfil"
+                            onClick={() => navigate("/perfil-paciente")}
+                        />
                     </button>
+
                 </div>
             </header>
 

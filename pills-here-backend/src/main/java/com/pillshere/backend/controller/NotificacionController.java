@@ -43,7 +43,9 @@ public class NotificacionController {
                         aviso.getContenido(),
                         aviso.getTitulo(),
                         aviso.getObservaciones(),
-                        aviso.getFechaPublicacion().toLocalDate().toString()
+                        aviso.getFechaPublicacion().toLocalDate().toString(),
+                        null,
+                        aviso.getFechaPublicacion().toString()
                 ))
                         .collect(Collectors.toList())
         );
@@ -67,6 +69,10 @@ public class NotificacionController {
 
             if (minutosRestantes >= 0 && minutosRestantes <= 30) {
 
+                if (toma.getFechaNotificacion() == null) {
+                    toma.setFechaNotificacion(LocalDateTime.now());
+                    tomaMedicamentoRepository.save(toma);
+                }
                 notificaciones.add(
                         new NotificacionPacienteDTO(
                                 toma.getIdToma(),
@@ -78,7 +84,9 @@ public class NotificacionController {
                                 + toma.getFechaHoraProgramada().format(formatoHora),
                                 "Recordatorio de medicamento",
                                 "",
-                                toma.getFechaHoraProgramada().toLocalDate().toString()
+                                toma.getFechaHoraProgramada().toLocalDate().toString(),
+                                toma.getDosis().getTratamiento().getIdTratamiento(),
+                                toma.getFechaNotificacion().toString()
                         )
                 );
             }

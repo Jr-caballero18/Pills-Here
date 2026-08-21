@@ -66,7 +66,7 @@
 }
 
 
-.calendario-paciente-icons button:last-child {
+.calendario-paciente-icons > button:last-child {
     border: none;
     background: transparent;
     padding: 0;
@@ -78,7 +78,7 @@
 }
 
 
-.calendario-paciente-icons button:last-child img {
+.calendario-paciente-icons > button:last-child img {
     width: 56px !important;
     height: 56px !important;
     max-width: 56px !important;

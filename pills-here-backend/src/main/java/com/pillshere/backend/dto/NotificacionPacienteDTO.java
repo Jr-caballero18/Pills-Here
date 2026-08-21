@@ -9,9 +9,12 @@ public class NotificacionPacienteDTO {
     private String titulo;
     private String observaciones;
     private String fecha;
-    
+    private Integer idTratamiento;
+    private String fechaHora;
+
     public NotificacionPacienteDTO(Integer id, String tipo, String nombreMedico, String contenido,
-    String titulo, String observaciones, String fecha) {
+            String titulo, String observaciones, String fecha,Integer idTratamiento,             String fechaHora
+) {
         this.id = id;
         this.tipo = tipo;
         this.nombreMedico = nombreMedico;
@@ -19,6 +22,10 @@ public class NotificacionPacienteDTO {
         this.titulo = titulo;
         this.observaciones = observaciones;
         this.fecha = fecha;
+        this.idTratamiento = idTratamiento;
+        this.fechaHora = fechaHora;
+
+
     }
 
     public Integer getId() {
@@ -36,16 +43,25 @@ public class NotificacionPacienteDTO {
     public String getContenido() {
         return contenido;
     }
-    
-    public String getTitulo(){
-    return titulo;
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public Integer getIdTratamiento() {
+        return idTratamiento;
+    }
+
+    public String getFechaHora() {
+        return fechaHora;
     }
     
-    public String getObservaciones(){
-    return observaciones;
-    }
-    
-    public String getFecha(){
-    return fecha;
-    }
 }

@@ -72,7 +72,7 @@
   justify-content: center;
 }
 
-.tratamientos-paciente-icons button:last-child {
+.tratamientos-paciente-icons > button:last-child {
   border: none;
   background: transparent;
   padding: 0;
@@ -83,7 +83,7 @@
   justify-content: center;
 }
 
-.tratamientos-paciente-icons button:last-child img {
+.tratamientos-paciente-icons > button:last-child img {
   width: 56px !important;
   height: 56px !important;
   max-width: 56px !important;

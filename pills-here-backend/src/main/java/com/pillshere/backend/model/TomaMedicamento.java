@@ -25,6 +25,9 @@ public class TomaMedicamento {
     @Column(name = "estado", length = 20, nullable = false)
     private String estado;
 
+    @Column(name = "fecha_notificacion")
+    private LocalDateTime fechaNotificacion;
+
     public Integer getIdToma() {
         return idToma;
     }
@@ -64,4 +67,14 @@ public class TomaMedicamento {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public LocalDateTime getFechaNotificacion() {
+        return fechaNotificacion;
+    }
+
+    public void setFechaNotificacion(LocalDateTime fechaNotificacion) {
+        this.fechaNotificacion = fechaNotificacion;
+    }
+    
+    
 }

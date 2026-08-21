@@ -13,14 +13,12 @@ import iconNacimiento from "../../assets/images/icon-nacimiento.png";
 import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
 import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
+import NotificacionesPaciente from "../../components/NotificacionesPaciente/NotificacionesPaciente";
 
 function PerfilPaciente() {
   const navigate = useNavigate();
   const [paciente, setPaciente] = useState(null);
-  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
-  const [notificaciones, setNotificaciones] = useState([]);
 
-  const notificacionesRef = useRef(null);
   useEffect(() => {
     const cargarPaciente = async () => {
       try {
@@ -29,8 +27,6 @@ function PerfilPaciente() {
         console.log("Perfil paciente:", data);
         localStorage.getItem("idPaciente")
         setPaciente(data);
-        const notificacionesData = await obtenerNotificacionesPaciente(idPaciente);
-        setNotificaciones(notificacionesData);
       } catch (error) {
         console.error("Error al cargar perfil paciente:", error);
       }
@@ -39,22 +35,7 @@ function PerfilPaciente() {
     cargarPaciente();
   }, []);
 
-  useEffect(() => {
-    const cerrarAlDarClickFuera = (e) => {
-      if (
-        notificacionesRef.current &&
-        !notificacionesRef.current.contains(e.target)
-      ) {
-        setMostrarNotificaciones(false);
-      }
-    };
 
-    document.addEventListener("mousedown", cerrarAlDarClickFuera);
-
-    return () => {
-      document.removeEventListener("mousedown", cerrarAlDarClickFuera);
-    };
-  }, []);
 
   const cerrarSesion = () => {
     localStorage.clear();
@@ -68,100 +49,32 @@ function PerfilPaciente() {
   return (
     <div className="perfil-paciente-page">
       <header className="perfil-paciente-header">
-        <img src={logo} alt="Logo Pills Here" className="perfil-paciente-logo" />
 
-        <h1>Perfil de Paciente: {paciente.nombreCompleto}.</h1>
+        <img
+          src={logo}
+          alt="Logo Pills Here"
+          className="perfil-paciente-logo"
+        />
 
-        <div className="perfil-paciente-icons" ref={notificacionesRef}>
-          <button type="button" onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}>
-            <img src={iconNotificacion} alt="Notificaciones" />
-          </button>
+        <h1>
+          Perfil de Paciente: {paciente.nombreCompleto}.
+        </h1>
 
-          {mostrarNotificaciones && (
-            <div className="paciente-notificaciones-panel">
-              <div className="notificaciones-flecha"></div>
+        <div className="perfil-paciente-icons">
 
-              <div className="notificaciones-header">
-                <img src={iconNotificacion} alt="Notificaciones" />
-                <h2>Notificaciones</h2>
-              </div>
-
-              <div className="notificaciones-lista">
-                {notificaciones.length === 0 ? (
-                  <div className="notificacion-vacia">
-                    No tienes notificaciones nuevas.
-                  </div>
-                ) : (
-                  notificaciones.map((notificacion) => {
-                    const esMedicamento = notificacion.tipo === "MEDICAMENTO";
-                    const esComentario = notificacion.tipo === "COMENTARIO";
-
-                    return (
-                      <div
-                        className={`notificacion-card ${esMedicamento
-                          ? "notificacion-medicamento"
-                          : "notificacion-comentario"
-                          }`}
-                        key={`${notificacion.tipo}-${notificacion.id}`}
-                      >
-                        <div className="notificacion-icono">
-                          <img
-                            src={
-                              esMedicamento
-                                ? iconRecordatorioNotif
-                                : iconComentarioNotif
-                            }
-                            alt="Tipo de notificación"
-                          />
-                        </div>
-
-                        <div className="notificacion-contenido">
-                          <div className="notificacion-titulo">
-                            <span className="notificacion-punto"></span>
-
-                            <strong>
-                              {esMedicamento
-                                ? notificacion.titulo
-                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
-                                }.`}
-                            </strong>
-                          </div>
-
-                          <p>{notificacion.contenido}</p>
-
-                          <div className="notificacion-footer">
-                            <span>Hace 10 min</span>
-
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (esMedicamento) {
-                                  navigate("/tratamientos-paciente");
-                                }
-                              }}
-                            >
-                              Ver{" "}
-                              {esMedicamento
-                                ? "dosis"
-                                : esComentario
-                                  ? "comentario"
-                                  : "aviso"}{" "}
-                              &gt;
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          )}
+          <NotificacionesPaciente
+            className="perfil-paciente-btn-notificacion"
+          />
 
           <button type="button">
-            <img src={iconPerfil} alt="Perfil" />
+            <img
+              src={iconPerfil}
+              alt="Perfil"
+            />
           </button>
+
         </div>
+
       </header>
 
       <main className="perfil-paciente-content">

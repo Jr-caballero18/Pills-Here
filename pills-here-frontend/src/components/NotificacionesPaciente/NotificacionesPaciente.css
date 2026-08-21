@@ -1,0 +1,657 @@
+.inicio-paciente-page {
+  min-height: 100vh;
+  background-color: #f2f2f2;
+  font-family: "Roboto Serif", serif;
+  position: relative;
+}
+
+.paciente-header {
+  height: 95px;
+  background-color: #173f6c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px 0 14px;
+  box-sizing: border-box;
+}
+
+.paciente-header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.paciente-logo {
+  width: 64px !important;
+  height: 64px !important;
+  max-width: 64px !important;
+  max-height: 64px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-header-left h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.paciente-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.paciente-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.paciente-icon-btn img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
+}
+
+.paciente-profile-btn {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-left: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paciente-profile-btn img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  min-width: 56px;
+  min-height: 56px;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-main {
+  display: grid;
+  grid-template-columns: 1.45fr 0.9fr;
+  gap: 34px;
+  padding: 30px 82px 20px 82px;
+  box-sizing: border-box;
+}
+
+.paciente-accesos {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.paciente-card {
+  min-height: 100px;
+  background-color: #f5f5f5;
+  border: 1px solid #6f6f6f;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 22px;
+  box-sizing: border-box;
+}
+
+.paciente-card-icon {
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.paciente-card-icon img {
+  width: 42px !important;
+  height: 42px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.paciente-card-content h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.paciente-card-content a {
+  color: #6e89ff;
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.paciente-card-content a::before {
+  content: "> ";
+}
+
+.paciente-card-content a:hover {
+  text-decoration: underline;
+}
+
+.paciente-estadistica-panel {
+  background-color: #f5f5f5;
+  border: 1px solid #6f6f6f;
+  border-radius: 4px;
+  overflow: hidden;
+  align-self: start;
+}
+
+.estadistica-titulo {
+  height: 38px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #6f6f6f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.estadistica-titulo img {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.estadistica-titulo h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #222222;
+}
+
+.estadistica-contenido {
+  padding: 14px 16px 16px 16px;
+}
+
+.estadistica-placeholder {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.grafica-placeholder {
+  width: 235px;
+  height: 235px;
+  border-radius: 50%;
+  border: 3px solid #1f1f1f;
+  background: radial-gradient(circle at center, #ffffff 0 34%, transparent 35%),
+    conic-gradient(
+      #d8d8d8 0% 33.33%,
+      #efefef 33.33% 66.66%,
+      #cfcfcf 66.66% 100%
+    );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grafica-centro {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #707070;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #555555;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.estadistica-info {
+  border-top: 1px solid #6f6f6f;
+  border-bottom: 1px solid #6f6f6f;
+  padding: 18px 8px;
+  margin: 0 4px 14px 4px;
+}
+
+.estadistica-info p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #2b2b2b;
+  line-height: 1.35;
+}
+
+.estadistica-info p:last-child {
+  margin-bottom: 0;
+}
+
+.estadistica-footer {
+  text-align: center;
+  font-size: 16px;
+  color: #111111;
+}
+
+.btn-ayuda-paciente {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.btn-ayuda-paciente img {
+  width: 34px !important;
+  height: 34px !important;
+  max-width: 34px !important;
+  max-height: 34px !important;
+  object-fit: contain;
+  display: block;
+}
+
+
+.paciente-logo {
+  width: 64px !important;
+  height: 64px !important;
+}
+
+.paciente-icon-btn img {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.paciente-profile-btn img {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.paciente-card-icon img {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+.estadistica-titulo img {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.btn-ayuda-paciente img {
+  width: 34px !important;
+  height: 34px !important;
+}
+
+@media (max-width: 1100px) {
+  .paciente-main {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+
+  .paciente-estadistica-panel {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 700px) {
+  .paciente-header {
+    height: auto;
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .paciente-header-left h1 {
+    font-size: 22px;
+  }
+
+  .paciente-main {
+    padding: 18px;
+  }
+
+  .paciente-card {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .paciente-card-content h2 {
+    font-size: 20px;
+  }
+
+  .grafica-placeholder {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+.paciente-header-right {
+  position: relative;
+}
+
+.inicio-paciente-page .paciente-notificaciones-panel {
+  position: absolute;
+  top: 58px;
+  right: 0;
+  width: 575px !important;
+  min-height: 385px !important;
+  background-color: #ffffff;
+  border: 2px solid #111111;
+  border-radius: 3px;
+  z-index: 100;
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+}
+
+.inicio-paciente-page .notificaciones-header {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 18px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #111111;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 102;
+}
+
+.inicio-paciente-page .notificaciones-header img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.inicio-paciente-page .notificaciones-header h2 {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 700;
+  color: #111111;
+  text-decoration: none;
+}
+
+.inicio-paciente-page .notificaciones-lista {
+  width: 100%;
+  padding: 10px 12px 18px !important;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.inicio-paciente-page .notificacion-card {
+  width: 100%;
+  
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  
+  margin: 0 0 12px 0;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  min-height: 116px !important;
+  margin-bottom: 14px !important;
+  padding: 12px 18px !important;
+
+  overflow: hidden;
+}
+
+.inicio-paciente-page .notificacion-card:last-child {
+  margin-bottom: 0;
+}
+
+.inicio-paciente-page .notificacion-comentario {
+  background-color: #dff0ff;
+}
+
+.inicio-paciente-page .notificacion-medicamento {
+  background-color: #d9ffd9;
+}
+
+.inicio-paciente-page .notificacion-icono {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.inicio-paciente-page .notificacion-icono img {
+  width: 46px !important;
+  height: 46px !important;
+  max-width: 42px !important;
+  max-height: 42px !important;
+  object-fit: contain;
+  display: block;
+}
+
+.inicio-paciente-page .notificacion-contenido {
+  width: 100%;
+  min-width: 0;
+}
+
+.inicio-paciente-page .notificacion-titulo {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 7px;
+}
+
+.inicio-paciente-page .notificacion-punto {
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
+  background-color: #38a3f1;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.inicio-paciente-page .notificacion-medicamento .notificacion-punto {
+  background-color: #008f2f;
+}
+
+.inicio-paciente-page .notificacion-titulo strong {
+  display: block;
+  min-width: 0;
+  font-size: 16px !important;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #111111;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.inicio-paciente-page .notificacion-contenido p {
+  margin: 0 0 10px 25px;
+  max-width: calc(100% - 25px);
+  font-size: 12px;
+  line-height: 1.3;
+  color: #111111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+.inicio-paciente-page .notificacion-footer {
+  width: calc(100% - 25px);
+  margin-left: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  box-sizing: border-box;
+  font-size: 13px !important;
+}
+
+.inicio-paciente-page .notificacion-footer span {
+  font-size: 13px !important;
+  color: #9c9c9c;
+  white-space: nowrap;
+}
+
+.inicio-paciente-page .notificacion-footer button {
+  border: none;
+  background: transparent;
+  font-size: 13px !important;
+  color: #008cff;
+  font-family: "Roboto Serif", serif;
+  
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inicio-paciente-page .notificacion-footer button:hover {
+  text-decoration: underline;
+}
+
+.inicio-paciente-page .notificacion-vacia {
+  padding: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha {
+  position: absolute !important;
+  top: -22px !important;
+  right: 82px !important;
+  width: 39px !important;
+  height: 22px !important;
+  background: #111111 !important;
+  clip-path: polygon(0% -21999%, 66% 0%, 2% 100%) !important;
+  border: none !important;
+  z-index: 103 !important;
+}
+
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha::before,
+.inicio-paciente-page .inicio-paciente-page .notificaciones-flecha::after {
+  display: none !important;
+  content: none !important;
+}
+
+.estadistica-grafica {
+  width: 100%;
+  height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.estadistica-separador {
+  width: 85%;
+  height: 1px;
+  background-color: #444444;
+  margin: 12px auto 18px;
+}
+
+.estadistica-leyenda {
+  width: 72%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.estadistica-leyenda-item {
+  display: grid;
+  grid-template-columns: 18px 1fr 40px;
+  align-items: center;
+  column-gap: 10px;
+  font-size: 17px;
+}
+
+.estadistica-leyenda-item strong {
+  text-align: right;
+}
+
+.estadistica-color {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #333333;
+  border-radius: 50%;
+  display: block;
+}
+
+.estadistica-footer {
+  text-align: center;
+  font-size: 18px;
+  padding-bottom: 16px;
+}
+
+.estadistica-mensaje {
+  min-height: 430px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777777;
+  font-size: 17px;
+}
+
+.notificaciones-paciente-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificaciones-paciente-btn {
+    width: 50px !important;
+    height: 50px !important;
+
+    min-width: 50px !important;
+    min-height: 50px !important;
+
+    padding: 0 !important;
+    margin: 0;
+
+    border: none !important;
+    border-radius: 50% !important;
+
+    background-color: white !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+}
+
+.notificaciones-paciente-btn img {
+    width: 25px !important;
+    height: 25px !important;
+
+    object-fit: contain;
+
+    margin: 0 !important;
+    padding: 0 !important;
+}

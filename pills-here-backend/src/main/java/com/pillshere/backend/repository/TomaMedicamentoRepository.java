@@ -79,4 +79,8 @@ Long contarPorPacienteYEstadoSinCancelados(
         @Param("estado") String estado
 );
 
+
+List<TomaMedicamento> findByDosisIdDosisOrderByFechaHoraProgramadaAsc(
+        Integer idDosis
+);
 }

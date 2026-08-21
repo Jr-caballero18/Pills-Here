@@ -58,7 +58,7 @@
   object-fit: contain;
 }
 
-.perfil-paciente-icons button:last-child {
+.perfil-paciente-icons > button:last-child {
   border: none;
   background: transparent;
   padding: 0;
@@ -69,7 +69,7 @@
   justify-content: center;
 }
 
-.perfil-paciente-icons button:last-child img {
+.perfil-paciente-icons > button:last-child img {
   width: 56px !important;
   height: 56px !important;
   max-width: 56px !important;

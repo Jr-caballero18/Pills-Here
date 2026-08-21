@@ -1010,59 +1010,84 @@ public class TratamientoService {
     }
 
     private LocalDateTime calcularFechaHoraFinTratamiento(
-            Tratamiento tratamiento
-    ) {
+        Tratamiento tratamiento
+) {
 
-        if (tratamiento.getFechaInicioReal() == null) {
-            return null;
+    List<Dosis> dosisList =
+            dosisRepository.findByTratamientoIdTratamiento(
+                    tratamiento.getIdTratamiento()
+            );
+
+    LocalDateTime fechaHoraFinMaxima = null;
+
+    for (Dosis dosis : dosisList) {
+
+        Integer intervaloHoras = dosis.getIntervaloHoras();
+        Integer duracionDias = dosis.getDuracionDias();
+
+        if (intervaloHoras == null
+                || intervaloHoras <= 0
+                || duracionDias == null
+                || duracionDias <= 0) {
+            continue;
         }
 
-        List<Dosis> dosisList
-                = dosisRepository.findByTratamientoIdTratamiento(
-                        tratamiento.getIdTratamiento()
+        List<TomaMedicamento> tomasDosis =
+                tomaMedicamentoRepository
+                        .findByDosisIdDosisOrderByFechaHoraProgramadaAsc(
+                                dosis.getIdDosis()
+                        );
+
+        if (tomasDosis.isEmpty()) {
+            continue;
+        }
+
+        LocalDateTime primeraToma =
+                tomasDosis.get(0).getFechaHoraProgramada();
+
+        int duracionTotalHoras =
+                duracionDias * 24;
+
+        int totalTomas =
+                (duracionTotalHoras + intervaloHoras - 1)
+                / intervaloHoras;
+
+        LocalDateTime ultimaToma =
+                primeraToma.plusHours(
+                        (long) (totalTomas - 1)
+                                * intervaloHoras
                 );
 
-        int duracionMaximaDias = dosisList.stream()
-                .filter(dosis
-                        -> dosis.getDuracionDias() != null
-                && dosis.getDuracionDias() > 0
-                )
-                .mapToInt(Dosis::getDuracionDias)
-                .max()
-                .orElse(0);
+        if (fechaHoraFinMaxima == null
+                || ultimaToma.isAfter(fechaHoraFinMaxima)) {
 
-        if (duracionMaximaDias == 0) {
-            return null;
+            fechaHoraFinMaxima = ultimaToma;
         }
-
-        return tratamiento
-                .getFechaInicioReal()
-                .plusDays(duracionMaximaDias);
     }
 
+    return fechaHoraFinMaxima;
+}
+    
     private void recalcularFechaFinTratamiento(
-            Tratamiento tratamiento
-    ) {
+        Tratamiento tratamiento
+) {
 
-        if (tratamiento.getFechaInicioReal() == null) {
-            return;
-        }
+    LocalDateTime fechaHoraFin =
+            calcularFechaHoraFinTratamiento(tratamiento);
 
-        LocalDateTime fechaHoraFin
-                = calcularFechaHoraFinTratamiento(tratamiento);
-
-        if (fechaHoraFin == null) {
-            return;
-        }
-
-        LocalDate nuevaFechaFin
-                = fechaHoraFin.toLocalDate();
-
-        if (tratamiento.getFechaFin() == null
-                || !tratamiento.getFechaFin().equals(nuevaFechaFin)) {
-
-            tratamiento.setFechaFin(nuevaFechaFin);
-            tratamientoRepository.save(tratamiento);
-        }
+    if (fechaHoraFin == null) {
+        return;
     }
+
+    LocalDate nuevaFechaFin =
+            fechaHoraFin.toLocalDate();
+
+    if (tratamiento.getFechaFin() == null
+            || !tratamiento.getFechaFin().equals(nuevaFechaFin)) {
+
+        tratamiento.setFechaFin(nuevaFechaFin);
+
+        tratamientoRepository.save(tratamiento);
+    }
+}
 }

@@ -16,6 +16,8 @@ import { obtenerEstadisticasGeneralesPaciente } from "../../services/tratamiento
 import { obtenerDashboardPaciente } from "../../services/pacienteService";
 import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
 import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
+import NotificacionesPaciente
+  from "../../components/NotificacionesPaciente/NotificacionesPaciente";
 import {
   PieChart,
   Pie,
@@ -81,17 +83,7 @@ function InicioPaciente() {
       }
     };
 
-    const cargarNotificaciones = async () => {
-      try {
-        const idPaciente = localStorage.getItem("idPaciente");
-        if (!idPaciente) return;
 
-        const notificacionesData = await obtenerNotificacionesPaciente(idPaciente);
-        setNotificaciones(notificacionesData);
-      } catch (error) {
-        console.error("Error al cargar notificaciones:", error);
-      }
-    };
 
     const cargarEstadisticas = async () => {
       try {
@@ -125,26 +117,9 @@ function InicioPaciente() {
     };
 
     cargarDashboard();
-    cargarNotificaciones();
     cargarEstadisticas();
 
-  }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        notificacionesRef.current &&
-        !notificacionesRef.current.contains(event.target)
-      ) {
-        setMostrarNotificaciones(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   return (
@@ -156,83 +131,8 @@ function InicioPaciente() {
         </div>
 
         <div className="paciente-header-right">
-          <button
-            className="paciente-icon-btn"
-            type="button"
-            aria-label="Notificaciones"
-            onClick={() => setMostrarNotificaciones(!mostrarNotificaciones)}
 
-          >
-            <img src={iconNotificacion} alt="Notificaciones" />
-          </button>
-
-          {mostrarNotificaciones && (
-            <div className="paciente-notificaciones-panel" ref={notificacionesRef}>
-              <div className="notificaciones-flecha"></div>
-
-              <div className="notificaciones-header">
-                <img src={iconNotificacion} alt="Notificaciones" />
-                <h2>Notificaciones</h2>
-              </div>
-              <div className="notificaciones-lista">
-                {notificaciones.length === 0 ? (
-                  <div className="notificacion-vacia">
-                    No tienes notificaciones nuevas.
-                  </div>
-                ) : (
-                  notificaciones.map((notificacion) => {
-                    const esMedicamento = notificacion.tipo === "MEDICAMENTO";
-                    const esComentario = notificacion.tipo === "COMENTARIO";
-
-                    return (
-                      <div
-                        className={`notificacion-card ${esMedicamento ? "notificacion-medicamento" : "notificacion-comentario"
-                          }`}
-                        key={`${notificacion.tipo}-${notificacion.id}`}
-                      >
-                        <div className="notificacion-icono">
-                          <img
-                            src={esMedicamento ? iconRecordatorioNotif : iconComentarioNotif}
-                            alt="Tipo de notificación"
-                          />
-                        </div>
-
-                        <div className="notificacion-contenido">
-                          <div className="notificacion-titulo">
-                            <span className="notificacion-punto"></span>
-
-                            <strong>
-                              {esMedicamento
-                                ? notificacion.titulo
-                                : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario ? "comentario" : "aviso"
-                                }.`}
-                            </strong>
-                          </div>
-
-                          <p>{notificacion.contenido}</p>
-
-                          <div className="notificacion-footer">
-                            <span>Hace 10 min</span>
-
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (esMedicamento) {
-                                  navigate("/tratamientos-paciente");
-                                }
-                              }}
-                            >
-                              Ver {esMedicamento ? "dosis" : esComentario ? "comentario" : "aviso"} &gt;
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          )}
+          <NotificacionesPaciente />
 
           <button
             className="paciente-profile-btn"
@@ -240,8 +140,12 @@ function InicioPaciente() {
             aria-label="Perfil"
             onClick={() => navigate("/perfil-paciente")}
           >
-            <img src={iconPerfil} alt="Perfil" />
+            <img
+              src={iconPerfil}
+              alt="Perfil"
+            />
           </button>
+
         </div>
       </header>
 
