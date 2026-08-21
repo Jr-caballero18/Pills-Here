@@ -1,8 +1,7 @@
 import "./HistorialClinico.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { obtenerHistorialPaciente } from "../../services/pacienteService";
-import logo from "../../assets/images/logo.png";
+import { obtenerHistorialPaciente } from "../../services/tratamientoService"; import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
@@ -10,6 +9,7 @@ import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconUsuario from "../../assets/images/icon-perfilP.png";
+import iconVer from "../../assets/images/icon-ver.png";
 
 function HistorialClinico() {
     const navigate = useNavigate();
@@ -19,6 +19,7 @@ function HistorialClinico() {
     const [historial, setHistorial] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState("");
+    const [filtroEstado, setFiltroEstado] = useState("TODOS");
 
     useEffect(() => {
         const cargarHistorial = async () => {
@@ -27,6 +28,9 @@ function HistorialClinico() {
                 setError("");
 
                 const data = await obtenerHistorialPaciente(idPaciente);
+
+                console.log("RESPUESTA COMPLETA:", data);
+                console.log("HISTORIAL:", data.historial);
 
                 setPaciente(data);
                 setHistorial(data.historial || []);
@@ -42,6 +46,14 @@ function HistorialClinico() {
             cargarHistorial();
         }
     }, [idPaciente]);
+
+    const historialFiltrado = historial.filter((item) => {
+        if (filtroEstado === "TODOS") {
+            return true;
+        }
+
+        return item.estado?.toUpperCase() === filtroEstado;
+    });
 
     if (cargando) {
         return <div className="historial-loading">Cargando historial...</div>;
@@ -101,7 +113,7 @@ function HistorialClinico() {
                         </button>
 
                         <button className="btn-perfil"
-                        onClick={() => navigate("/perfil-medico")}>
+                            onClick={() => navigate("/perfil-medico")}>
                             <img src={iconPerfil} alt="Perfil" width="28" />
                         </button>
                     </div>
@@ -122,33 +134,81 @@ function HistorialClinico() {
                     </div>
                 </section>
 
-
                 <section className="historial-tabla">
+
                     <div className="tabla-head historial-head">
                         <span>Fecha</span>
                         <span>Diagnóstico</span>
                         <span>Médico</span>
                         <span>Estado</span>
+
+                        <span className="historial-filtro-contenedor">
+                            <select
+                                className="historial-filtro"
+                                value={filtroEstado}
+                                onChange={(e) => setFiltroEstado(e.target.value)}
+                            >
+                                <option value="TODOS" disabled hidden>
+                                    Filtrar
+                                </option>
+
+                                <option value="ACTIVO">Activos</option>
+                                <option value="FINALIZADO">Finalizados</option>
+                                <option value="CANCELADO">Cancelados</option>
+                            </select>
+                        </span>
                     </div>
 
-                    {historial.map((item, index) => (
+                    {historialFiltrado.map((item, index) => (
                         <div key={index} className="tabla-row historial-row">
+
                             <span>{item.fecha}</span>
+
                             <span>{item.diagnostico}</span>
+
                             <span>{item.medico}</span>
+
                             <span>
                                 <span
                                     className={`estado-badge ${item.estado?.toUpperCase() === "ACTIVO"
                                         ? "estado-activo"
-                                        : "estado-finalizado"
+                                        : item.estado?.toUpperCase() === "CANCELADO"
+                                            ? "estado-cancelado"
+                                            : "estado-finalizado"
                                         }`}
                                 >
                                     ● {item.estado}
                                 </span>
                             </span>
+
+                            <span className="historial-ver-contenedor">
+                                <button
+                                    type="button"
+                                    className="historial-btn-ver"
+                                    onClick={() =>
+                                        navigate(`/editar-tratamiento/${item.idTratamiento}`)
+                                    }
+                                    title="Ver tratamiento"
+                                >
+                                    <img
+                                        src={iconVer}
+                                        alt="Ver tratamiento"
+                                        className="historial-icon-ver"
+                                    />
+                                </button>
+                            </span>
+
                         </div>
                     ))}
+
+                    {historialFiltrado.length === 0 && (
+                        <div className="historial-sin-resultados">
+                            No hay tratamientos con este estado.
+                        </div>
+                    )}
+
                 </section>
+
             </main>
         </div>
     );

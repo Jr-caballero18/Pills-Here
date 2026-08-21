@@ -332,14 +332,7 @@ function CrearTratamiento() {
                 ))}
               </tbody>
             </table>
-
-            <div className="crear-tratamiento-btn-medicamento-wrapper">
-              <button className="crear-tratamiento-btn-medicamento" type="button">
-                Agregar
-                <br />
-                Medicamento
-              </button>
-            </div>
+            
           </div>
         </section>
 

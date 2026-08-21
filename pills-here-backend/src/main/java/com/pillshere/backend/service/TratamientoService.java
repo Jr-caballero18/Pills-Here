@@ -335,6 +335,7 @@ public class TratamientoService {
                     );
 
                     return new HistorialTratamientoDTO(
+                            tratamiento.getIdTratamiento(),
                             tratamiento.getFechaInicio(),
                             tratamiento.getDiagnostico(),
                             "Dr. " + nombreMedico,

@@ -33,7 +33,9 @@ function EditarTratamiento() {
   useEffect(() => {
     const cargarTratamiento = async () => {
       try {
+        console.log("ID TRATAMIENTO RECIBIDO:", idTratamiento);
         const data = await obtenerDetalleTratamiento(idTratamiento);
+        console.log("TRATAMIENTO RECIBIDO:", data);
 
         setTratamiento(data);
         setDiagnostico(data.diagnostico || "");
@@ -120,6 +122,8 @@ function EditarTratamiento() {
   if (!tratamiento) {
     return <p>Cargando tratamiento...</p>;
   }
+
+  const esEditable = tratamiento.estado?.toUpperCase() === "ACTIVO";
   const guardarCambios = async () => {
     try {
 
@@ -253,6 +257,7 @@ function EditarTratamiento() {
             value={recomendaciones}
             onChange={(e) => setRecomendaciones(e.target.value)}
             placeholder="Agregar recomendaciones."
+            disabled={!esEditable}
           />
         </section>
 
@@ -266,11 +271,12 @@ function EditarTratamiento() {
                   type="text"
                   value={busqueda}
                   onChange={(e) => setBusqueda(e.target.value)}
+                  disabled={!esEditable}
                 />
                 <span className="crear-tratamiento-icono-busqueda">⌕</span>
               </div>
 
-              {mostrarSugerencias && sugerencias.length > 0 && (
+              { esEditable && mostrarSugerencias && sugerencias.length > 0 && (
                 <ul className="crear-tratamiento-sugerencias">
                   {sugerencias.map((medicamento) => (
                     <li
@@ -311,6 +317,8 @@ function EditarTratamiento() {
                         value={medicamento.dosis}
                         placeholder="Agregar dosis"
                         onChange={(e) => actualizarDosis(index, e.target.value)}
+                        disabled={!esEditable}
+
                       />
                     </td>
 
@@ -322,6 +330,8 @@ function EditarTratamiento() {
                         value={medicamento.intervaloHoras || ""}
                         placeholder="Horas"
                         onChange={(e) => actualizarIntervaloHoras(index, e.target.value)}
+                        disabled={!esEditable}
+
                       />
                     </td>
 
@@ -333,6 +343,7 @@ function EditarTratamiento() {
                         value={medicamento.duracionDias || ""}
                         placeholder="Días"
                         onChange={(e) => actualizarDuracionDias(index, e.target.value)}
+                        disabled={!esEditable}
                       />
                     </td>
 
@@ -342,25 +353,20 @@ function EditarTratamiento() {
                     <td>{medicamento.via}</td>
 
                     <td className="columna-borrar">
-                      <img
-                        src={iconBorrar}
-                        alt="Eliminar"
-                        className="icono-borrar"
-                        onClick={() => eliminarMedicamento(index)}
-                      />
+                      {esEditable && (
+                        <img
+                          src={iconBorrar}
+                          alt="Eliminar"
+                          className="icono-borrar"
+                          onClick={() => eliminarMedicamento(index)}
+                        />
+                      )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <div className="crear-tratamiento-btn-medicamento-wrapper">
-              <button className="crear-tratamiento-btn-medicamento" type="button">
-                Agregar
-                <br />
-                Medicamento
-              </button>
-            </div>
           </div>
         </section>
         <div className="editar-tratamiento-guardar-wrapper">
@@ -368,6 +374,8 @@ function EditarTratamiento() {
             className="editar-tratamiento-guardar-btn"
             type="button"
             onClick={guardarCambios}
+            disabled={!esEditable}
+
           >
             Guardar
           </button>

@@ -293,7 +293,7 @@
 
 .crear-tratamiento-tabla-contenedor {
   padding: 14px 16px 16px 16px;
-  min-height: 230px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -521,5 +521,16 @@
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.editar-tratamiento-guardar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editar-tratamiento-recomendaciones-input:disabled,
+.crear-tratamiento-input-dosis:disabled,
+.crear-tratamiento-buscador input:disabled {
+  cursor: not-allowed;
 }
 

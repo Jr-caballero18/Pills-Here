@@ -377,7 +377,7 @@ function DetallePaciente() {
 
             <div className="detalle-estadisticas-header">
               <span className="detalle-estadisticas-icono">📊</span>
-              <h2>Estadística de cumplimiento</h2>
+              <h2>Estadística General</h2>
             </div>
 
             <div className="detalle-estadisticas-contenido">
