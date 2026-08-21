@@ -29,8 +29,8 @@
   border: 1px solid #888;
   border-radius: 6px;
   overflow: hidden;
-  margin-left: 66px;
-  margin-right: 66px;
+  margin-left: 50px;
+  margin-right: 40px;
 }
 
 .historial-datos p {
@@ -41,12 +41,12 @@
 
 
 .historial-head {
-  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr 155px;
   font-weight: bold;
 }
 
 .historial-row {
-  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr 155px;
 }
 
 .estado-badge {
@@ -196,4 +196,87 @@
   height: 20px;
   object-fit: contain;
   cursor: pointer;
+}
+
+.historial-filtro-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.historial-filtro {
+  width: 145px;
+  height: 34px;
+
+  padding: 0 30px 0 14px;
+
+  border: 1px solid #8b8b8b;
+  border-radius: 18px;
+
+  background-color: #ffffff;
+  color: #333333;
+
+  font-family: "Roboto Serif", serif;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+  outline: none;
+
+  transition: all 0.2s ease;
+
+  appearance: auto;
+}
+
+.historial-filtro:hover {
+  border-color: #173f6c;
+  background-color: #f5f8fc;
+}
+
+.historial-filtro:focus {
+  border-color: #173f6c;
+  box-shadow: 0 0 0 2px rgba(23, 63, 108, 0.12);
+}
+.historial-ver-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.historial-btn-ver {
+  width: 48px;
+  height: 28px;
+  border: 1px solid #173f6c;
+  border-radius: 4px;
+  background-color: #76ace0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+}
+
+.historial-btn-ver:hover {
+  background-color: #5f9bd4;
+}
+
+.estado-cancelado {
+  background-color: #f8c8c8;
+  color: #842029;
+  border-color: #dc3545;
+}
+
+.historial-sin-resultados {
+  padding: 20px;
+  text-align: center;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
+}
+
+.historial-icon-ver {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
 }

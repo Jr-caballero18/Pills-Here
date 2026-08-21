@@ -141,3 +141,16 @@ export const obtenerEstadisticasCalendarioDia = async (idPaciente, fecha) => {
 
     return response.data;
 };
+
+export const obtenerHistorialPaciente = async (idPaciente) => {
+    try {
+        const response = await axios.get(
+            `${API_URL}/tratamientos/historial/paciente/${idPaciente}`
+        );
+
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener historial del paciente:", error);
+        throw error;
+    }
+};

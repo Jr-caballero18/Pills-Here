@@ -142,11 +142,6 @@ function InicioMedico() {
         <section className="bloque-gris">
           <div className="consultado-header">
             <div className="bloque-titulo sin-margen">Consultado recientemente</div>
-
-            <div className="search-pill">
-              <input type="text" />
-              <span>⌕</span>
-            </div>
           </div>
 
           <div className="tabla-wrapper">
