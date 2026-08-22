@@ -113,18 +113,20 @@
 
 .historial-paciente-head {
   display: grid;
-  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr 155px;
   background-color: #cfcfcf;
   border-bottom: 1px solid #777;
   font-weight: bold;
   padding: 12px 18px;
+  align-items: center;
 }
 
 .historial-paciente-row {
   display: grid;
-  grid-template-columns: 1.5fr 2fr 2fr 1fr;
+  grid-template-columns: 1.5fr 2fr 2fr 1fr 155px;
   padding: 14px 18px;
   border-bottom: 1px solid #aaa;
+  align-items: center;
 }
 
 .historial-paciente-row:last-child {
@@ -374,4 +376,83 @@
 .historial-paciente-page .historial-paciente-page .notificaciones-flecha::after {
   display: none !important;
   content: none !important;
+}
+
+.historial-paciente-filtro-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.historial-paciente-filtro {
+  width: 145px;
+  height: 34px;
+  padding: 0 30px 0 14px;
+  border: 1px solid #8b8b8b;
+  border-radius: 18px;
+  background-color: #ffffff;
+  color: #333333;
+  font-family: "Roboto Serif", serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: auto;
+}
+
+.historial-paciente-filtro:hover {
+  border-color: #173f6c;
+  background-color: #f5f8fc;
+}
+
+.historial-paciente-filtro:focus {
+  border-color: #173f6c;
+  box-shadow: 0 0 0 2px rgba(23, 63, 108, 0.12);
+}
+
+.historial-paciente-ver-contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.historial-paciente-btn-ver {
+  width: 48px;
+  height: 30px;
+  border: 1px solid #173f6c;
+  border-radius: 7px;
+  background-color: #76ace0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.historial-paciente-btn-ver:hover {
+  background-color: #5f9bd4;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(23, 63, 108, 0.22);
+}
+
+.historial-paciente-icon-ver {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+.estado-cancelado {
+  background-color: #f8c8c8;
+  color: #842029;
+  border-color: #dc3545;
+}
+
+.historial-paciente-sin-resultados {
+  padding: 20px;
+  text-align: center;
+  font-family: "Roboto Serif", serif;
+  font-size: 16px;
 }

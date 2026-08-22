@@ -822,3 +822,14 @@
     cursor: not-allowed;
     opacity: 1;
 }
+
+.detalle-tratamiento-solo-lectura {
+    width: 100%;
+    margin: 45px 0 30px 0;
+    text-align: center;
+
+    font-family: "Roboto Serif", serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333333;
+}

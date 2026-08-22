@@ -74,6 +74,9 @@ function DetalleTratamientoPaciente() {
         return <p>Cargando tratamiento...</p>;
     }
 
+    const tratamientoActivo =
+        tratamiento.estado?.toUpperCase() === "ACTIVO";
+
     const generarHorarios = (intervaloHoras) => {
         const horasInicio = [5, 6, 7];
 
@@ -98,6 +101,9 @@ function DetalleTratamientoPaciente() {
     };
 
     const confirmarHorarios = async () => {
+        if (!tratamientoActivo) {
+            return;
+        }
         try {
 
             if (
@@ -164,6 +170,10 @@ function DetalleTratamientoPaciente() {
     };
 
     const marcarComoTomada = async (idDosis) => {
+
+        if (!tratamientoActivo) {
+            return;
+        }
 
         if (tomaProcesando !== null) {
             return;
@@ -294,12 +304,16 @@ function DetalleTratamientoPaciente() {
                     </div>
                 </div>
 
-                {!tratamientoIniciado ? (
-                    <section className="detalle-tratamiento-iniciar-box"
-                        onClick={() => setMedicamentoAbierto(null)}>
+                {!tratamientoIniciado && tratamientoActivo ? (
+                    <section
+                        className="detalle-tratamiento-iniciar-box"
+                        onClick={() => setMedicamentoAbierto(null)}
+                    >
                         {tratamiento.medicamentos.map((medicamento, index) => (
-
-                            <div className="medicamento-iniciar-card" key={index} onClick={(e) => e.stopPropagation()}
+                            <div
+                                className="medicamento-iniciar-card"
+                                key={index}
+                                onClick={(e) => e.stopPropagation()}
                             >
                                 <div className="medicamento-iniciar-titulo">
                                     {medicamento.nombre}
@@ -309,7 +323,8 @@ function DetalleTratamientoPaciente() {
                                     <div>
                                         <p>{medicamento.dosis}</p>
                                         <small>
-                                            Cada {medicamento.intervaloHoras} horas por {medicamento.duracionDias} dias
+                                            Cada {medicamento.intervaloHoras} horas por{" "}
+                                            {medicamento.duracionDias} dias
                                         </small>
                                     </div>
 
@@ -338,15 +353,21 @@ function DetalleTratamientoPaciente() {
                                                             });
                                                         }}
                                                     >
-                                                        <img src={iconHorarios} alt="Seleccionar horario" />
-                                                    </button>
-                                                    {horariosSeleccionados[medicamento.idDosis] === i && (
                                                         <img
-                                                            src={iconHorarioSelect}
-                                                            alt="Horario seleccionado"
-                                                            className="icon-horario-select"
+                                                            src={iconHorarios}
+                                                            alt="Seleccionar horario"
                                                         />
-                                                    )}
+                                                    </button>
+
+                                                    {horariosSeleccionados[
+                                                        medicamento.idDosis
+                                                    ] === i && (
+                                                            <img
+                                                                src={iconHorarioSelect}
+                                                                alt="Horario seleccionado"
+                                                                className="icon-horario-select"
+                                                            />
+                                                        )}
                                                 </div>
                                             )
                                         )}
@@ -354,6 +375,7 @@ function DetalleTratamientoPaciente() {
                                 )}
                             </div>
                         ))}
+
                         <div className="confirmar-horarios-wrapper">
                             <button
                                 type="button"
@@ -366,101 +388,162 @@ function DetalleTratamientoPaciente() {
                     </section>
                 ) : (
                     <>
-                        <div className="detalle-tratamiento-tabs">
-                            <button
-                                type="button"
-                                className={tabActiva === "PENDIENTES" ? "tab-activa" : ""}
-                                onClick={() => setTabActiva("PENDIENTES")}
-                            >
-                                Pendientes <span>{registrosMedicacion.filter(r => r.estado === "PENDIENTE").length}</span>
-                            </button>
+                        {!tratamientoActivo && registrosMedicacion.length === 0 && (
+                            <section className="detalle-tratamiento-solo-lectura">
+                                Este tratamiento está{" "}
+                                {tratamiento.estado?.toLowerCase()} y solo puede consultarse.
+                            </section>
+                        )}
 
-                            <button
-                                type="button"
-                                className={tabActiva === "OMITIDAS" ? "tab-activa" : ""}
-                                onClick={() => setTabActiva("OMITIDAS")}
-                            >
-                                Omitidas <span>{registrosMedicacion.filter(r => r.estado === "OMITIDA").length}</span>
-                            </button>
+                        {registrosMedicacion.length > 0 && (
+                            <>
+                                <div className="detalle-tratamiento-tabs">
+                                    <button
+                                        type="button"
+                                        className={
+                                            tabActiva === "PENDIENTES" ? "tab-activa" : ""
+                                        }
+                                        onClick={() => setTabActiva("PENDIENTES")}
+                                    >
+                                        Pendientes{" "}
+                                        <span>
+                                            {
+                                                registrosMedicacion.filter(
+                                                    (r) => r.estado === "PENDIENTE"
+                                                ).length
+                                            }
+                                        </span>
+                                    </button>
 
-                            <button
-                                type="button"
-                                className={tabActiva === "TOMADAS" ? "tab-activa" : ""}
-                                onClick={() => setTabActiva("TOMADAS")}
-                            >
-                                Tomadas <span>{registrosMedicacion.filter(r => r.estado === "TOMADA").length}</span>
-                            </button>
-                        </div>
+                                    <button
+                                        type="button"
+                                        className={
+                                            tabActiva === "OMITIDAS" ? "tab-activa" : ""
+                                        }
+                                        onClick={() => setTabActiva("OMITIDAS")}
+                                    >
+                                        Omitidas{" "}
+                                        <span>
+                                            {
+                                                registrosMedicacion.filter(
+                                                    (r) => r.estado === "OMITIDA"
+                                                ).length
+                                            }
+                                        </span>
+                                    </button>
 
-                        <section className="detalle-tratamiento-registros">
-                            {registrosMedicacion
-                                .filter((registro) => registro.estado === tabActiva.slice(0, -1))
-                                .map((registro) => (
-                                    <div className="registro-card" key={registro.idToma}>
-                                        <div className="registro-titulo">{registro.nombre}</div>
-                                        <div className="registro-cuerpo">
-                                            <div className="registro-hora">
-                                                <img
-                                                    src={
-                                                        registro.estado === "TOMADA"
-                                                            ? iconTomada
-                                                            : registro.estado === "OMITIDA"
-                                                                ? iconNoTomada
-                                                                : iconPendiente
-                                                    }
-                                                    alt={registro.estado}
-                                                />
-                                                <span>{registro.hora}</span>
+                                    <button
+                                        type="button"
+                                        className={
+                                            tabActiva === "TOMADAS" ? "tab-activa" : ""
+                                        }
+                                        onClick={() => setTabActiva("TOMADAS")}
+                                    >
+                                        Tomadas{" "}
+                                        <span>
+                                            {
+                                                registrosMedicacion.filter(
+                                                    (r) => r.estado === "TOMADA"
+                                                ).length
+                                            }
+                                        </span>
+                                    </button>
+                                </div>
+
+                                <section className="detalle-tratamiento-registros">
+                                    {registrosMedicacion
+                                        .filter(
+                                            (registro) =>
+                                                registro.estado === tabActiva.slice(0, -1)
+                                        )
+                                        .map((registro) => (
+                                            <div
+                                                className="registro-card"
+                                                key={registro.idToma}
+                                            >
+                                                <div className="registro-titulo">
+                                                    {registro.nombre}
+                                                </div>
+
+                                                <div className="registro-cuerpo">
+                                                    <div className="registro-hora">
+                                                        <img
+                                                            src={
+                                                                registro.estado === "TOMADA"
+                                                                    ? iconTomada
+                                                                    : registro.estado ===
+                                                                        "OMITIDA"
+                                                                        ? iconNoTomada
+                                                                        : iconPendiente
+                                                            }
+                                                            alt={registro.estado}
+                                                        />
+
+                                                        <span>{registro.hora}</span>
+                                                    </div>
+
+                                                    <div className="registro-dosis">
+                                                        <p>{registro.dosis}</p>
+
+                                                        <small>
+                                                            Diariamente cada{" "}
+                                                            {registro.intervaloHoras} horas
+                                                        </small>
+                                                    </div>
+
+                                                    {registro.estado === "PENDIENTE" && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() =>
+                                                                marcarComoTomada(
+                                                                    registro.idToma
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                !tratamientoActivo ||
+                                                                tomaProcesando !== null
+                                                            }
+                                                        >
+                                                            {!tratamientoActivo
+                                                                ? "No disponible"
+                                                                : tomaProcesando ===
+                                                                    registro.idToma
+                                                                    ? "Procesando..."
+                                                                    : "Marcar como tomada"}
+                                                        </button>
+                                                    )}
+
+                                                    {registro.estado === "TOMADA" && (
+                                                        <button
+                                                            type="button"
+                                                            className="tomada"
+                                                            disabled
+                                                        >
+                                                            Tomada
+                                                        </button>
+                                                    )}
+
+                                                    {registro.estado === "OMITIDA" && (
+                                                        <button
+                                                            type="button"
+                                                            className="omitida"
+                                                            disabled
+                                                        >
+                                                            Marcar como tomada
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
-
-                                            <div className="registro-dosis">
-                                                <p>{registro.dosis}</p>
-                                                <small>
-                                                    Diariamente cada {registro.intervaloHoras} horas
-                                                </small>
-                                            </div>
-
-                                            {registro.estado === "PENDIENTE" && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => marcarComoTomada(registro.idToma)}
-                                                    disabled={tomaProcesando !== null}
-                                                >
-                                                    {tomaProcesando === registro.idToma
-                                                        ? "Procesando..."
-                                                        : "Marcar como tomada"}
-                                                </button>
-                                            )}
-
-                                            {registro.estado === "TOMADA" && (
-                                                <button
-                                                    type="button"
-                                                    className="tomada"
-                                                    disabled
-                                                >
-                                                    Tomada
-                                                </button>
-                                            )}
-
-                                            {registro.estado === "OMITIDA" && (
-                                                <button
-                                                    type="button"
-                                                    className="omitida"
-                                                    disabled
-                                                >
-                                                    Marcar como tomada
-                                                </button>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                        </section>
+                                        ))}
+                                </section>
+                            </>
+                        )}
                     </>
                 )}
                 <button
                     className="detalle-tratamiento-back"
                     type="button"
-                    onClick={() => navigate("/tratamientos-paciente")}
+                    onClick={() => navigate(-1)}
                 >
                     <img src={iconRegreso} alt="Regresar" />
                 </button>

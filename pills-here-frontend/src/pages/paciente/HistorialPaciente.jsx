@@ -1,8 +1,7 @@
 import "./HistorialPaciente.css";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { obtenerHistorialPaciente } from "../../services/pacienteService";
-import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
+import { obtenerHistorialPaciente } from "../../services/tratamientoService"; import { obtenerNotificacionesPaciente } from "../../services/notificacionesService";
 
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
@@ -12,13 +11,15 @@ import iconUsuario from "../../assets/images/icon-perfilP.png";
 import iconComentarioNotif from "../../assets/images/comentario-notificacion.png";
 import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.png";
 import NotificacionesPaciente from "../../components/NotificacionesPaciente/NotificacionesPaciente";
+import iconVer from "../../assets/images/icon-ver.png";
+
 function HistorialPaciente() {
   const navigate = useNavigate();
   const idPaciente = localStorage.getItem("idPaciente");
 
   const [paciente, setPaciente] = useState(null);
   const [historial, setHistorial] = useState([]);
-
+  const [filtroEstado, setFiltroEstado] = useState("TODOS");
 
   useEffect(() => {
     const cargarHistorial = async () => {
@@ -36,6 +37,13 @@ function HistorialPaciente() {
     cargarHistorial();
   }, [idPaciente]);
 
+  const historialFiltrado = historial.filter((item) => {
+    if (filtroEstado === "TODOS") {
+      return true;
+    }
+
+    return item.estado?.toUpperCase() === filtroEstado;
+  });
 
 
   if (!paciente) {
@@ -88,30 +96,78 @@ function HistorialPaciente() {
         </section>
 
         <section className="historial-paciente-tabla">
+
           <div className="historial-paciente-head">
             <span>Fecha</span>
             <span>Diagnostico</span>
             <span>Medico</span>
             <span>Estado</span>
+
+            <span className="historial-paciente-filtro-contenedor">
+              <select
+                className="historial-paciente-filtro"
+                value={filtroEstado}
+                onChange={(e) => setFiltroEstado(e.target.value)}
+              >
+                <option value="TODOS" disabled hidden>
+                  Filtrar
+                </option>
+
+                <option value="ACTIVO">Activos</option>
+                <option value="FINALIZADO">Finalizados</option>
+                <option value="CANCELADO">Cancelados</option>
+              </select>
+            </span>
           </div>
 
-          {historial.map((item, index) => (
+          {historialFiltrado.map((item, index) => (
             <div className="historial-paciente-row" key={index}>
+
               <span>{item.fecha}</span>
+
               <span>{item.diagnostico}</span>
+
               <span>{item.medico}</span>
+
               <span>
                 <span
                   className={`estado-badge ${item.estado?.toUpperCase() === "ACTIVO"
-                    ? "estado-activo"
-                    : "estado-finalizado"
+                      ? "estado-activo"
+                      : item.estado?.toUpperCase() === "CANCELADO"
+                        ? "estado-cancelado"
+                        : "estado-finalizado"
                     }`}
                 >
                   ● {item.estado}
                 </span>
               </span>
+
+              <span className="historial-paciente-ver-contenedor">
+                <button
+                  type="button"
+                  className="historial-paciente-btn-ver"
+                  onClick={() =>
+                    navigate(`/tratamiento-paciente/${item.idTratamiento}`)
+                  }
+                  title="Ver tratamiento"
+                >
+                  <img
+                    src={iconVer}
+                    alt="Ver tratamiento"
+                    className="historial-paciente-icon-ver"
+                  />
+                </button>
+              </span>
+
             </div>
           ))}
+
+          {historialFiltrado.length === 0 && (
+            <div className="historial-paciente-sin-resultados">
+              No hay tratamientos con este estado.
+            </div>
+          )}
+
         </section>
 
         <button
