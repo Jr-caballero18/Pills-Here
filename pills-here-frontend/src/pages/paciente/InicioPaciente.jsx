@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import "./InicioPaciente.css";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import ManualPaciente from "../../components/ManualPaciente/ManualPaciente";
 import logo from "../../assets/images/logo.png";
 import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
@@ -33,13 +33,14 @@ function InicioPaciente() {
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [notificaciones, setNotificaciones] = useState([]);
   const notificacionesRef = useRef(null);
-
   const [estadisticas, setEstadisticas] = useState({
     tomadas: 0,
     pendientes: 0,
     omitidas: 0,
     porcentajeCumplimiento: 0,
   });
+  const [mostrarManual, setMostrarManual] = useState(false);
+
 
   const datosGrafica = [
     {
@@ -301,9 +302,20 @@ function InicioPaciente() {
         </aside>
       </main>
 
-      <button className="btn-ayuda-paciente" type="button" aria-label="Ayuda">
+      <button
+        className="btn-ayuda-paciente"
+        type="button"
+        aria-label="Ayuda"
+        onClick={() => setMostrarManual(true)}
+      >
         <img src={iconAyuda} alt="Ayuda" />
       </button>
+
+      {mostrarManual && (
+        <ManualPaciente
+          onCerrar={() => setMostrarManual(false)}
+        />
+      )}
     </div>
   );
 }

@@ -78,24 +78,25 @@
 }
 
 .notas-lista {
-  width: 580px;
+  width: 720px;
+  margin-left: 50px;
 }
 
 .nota-card {
-  height: 112px;
+  height: 140px;
   background-color: #d9d9d9;
   border: 1px solid #707070;
   border-radius: 4px;
   display: flex;
   align-items: center;
-  padding: 0 30px;
+  padding: 70px 30px;
   box-sizing: border-box;
   position: relative;
 }
 
 .nota-card-icon {
-  width: 58px !important;
-  height: 58px !important;
+  width: 70px !important;
+  height: 70px !important;
   object-fit: contain;
   margin-right: 24px;
 }
@@ -107,7 +108,7 @@
 }
 
 .nota-card-info p {
-  width: 360px;
+  width: 380px;
   margin: 4px 0 0;
   font-size: 13px;
   line-height: 1.1;
