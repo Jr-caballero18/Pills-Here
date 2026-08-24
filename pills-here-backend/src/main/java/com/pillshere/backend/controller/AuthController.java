@@ -3,10 +3,12 @@ package com.pillshere.backend.controller;
 import com.pillshere.backend.dto.LoginRequestDTO;
 import com.pillshere.backend.dto.LoginResponseDTO;
 import com.pillshere.backend.dto.RegisterMedicoRequestDTO;
+import com.pillshere.backend.dto.RegisterMedicoResponseDTO;
 import com.pillshere.backend.dto.RegisterPacienteRequestDTO;
 import com.pillshere.backend.dto.RegisterPacienteResponseDTO;
-import com.pillshere.backend.dto.RegisterResponseDTO;
+
 import com.pillshere.backend.service.AuthService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,24 +22,35 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
-        LoginResponseDTO response = authService.iniciarSesion(request);
+    public ResponseEntity<LoginResponseDTO> login(
+            @RequestBody LoginRequestDTO request
+    ) {
+
+        LoginResponseDTO response =
+                authService.iniciarSesion(request);
 
         if (!response.isSuccess()) {
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity
+                    .badRequest()
+                    .body(response);
         }
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register-medico")
-    public RegisterResponseDTO registerMedico(@RequestBody RegisterMedicoRequestDTO request) {
+    public RegisterMedicoResponseDTO registerMedico(
+            @RequestBody RegisterMedicoRequestDTO request
+    ) {
+
         return authService.registrarMedico(request);
     }
 
     @PostMapping("/register-paciente")
-    public RegisterPacienteResponseDTO registerPaciente(@RequestBody RegisterPacienteRequestDTO request) {
+    public RegisterPacienteResponseDTO registerPaciente(
+            @RequestBody RegisterPacienteRequestDTO request
+    ) {
+
         return authService.registrarPaciente(request);
     }
-
 }

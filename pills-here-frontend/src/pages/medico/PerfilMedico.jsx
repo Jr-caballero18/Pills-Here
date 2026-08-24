@@ -24,7 +24,7 @@ function PerfilMedico() {
   useEffect(() => {
     const cargarPerfil = async () => {
       try {
-        const idMedico = localStorage.getItem("idMedico");
+        const idMedico = sessionStorage.getItem("idMedico");
         const data = await obtenerPerfilMedico(idMedico);
         setMedico(data);
       } catch (error) {
@@ -124,7 +124,7 @@ function PerfilMedico() {
             className="perfil-medico-cerrar-btn"
             type="button"
             onClick={() => {
-              localStorage.clear();
+              sessionStorage.clear();
               navigate("/");
             }}
           >

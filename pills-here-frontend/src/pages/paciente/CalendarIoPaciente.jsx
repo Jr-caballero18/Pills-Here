@@ -63,7 +63,7 @@ const CalendarioPaciente = () => {
     const mostrarDetalleDia = async (fecha, celda) => {
         try {
             const idPaciente =
-                localStorage.getItem("idPaciente");
+                sessionStorage.getItem("idPaciente");
 
             if (!idPaciente) {
                 return;
@@ -92,14 +92,37 @@ const CalendarioPaciente = () => {
             }
 
 
-            const tratamientosConColor =
-                estadisticas.map((tratamiento) => ({
+            const eventosDia = eventos.filter(
+                (evento) => evento.start === fechaStr
+            );
+
+            const idsTratamientosVisibles = new Set(
+                eventosDia.map(
+                    (evento) => evento.extendedProps.idTratamiento
+                )
+            );
+
+            const tratamientosConColor = estadisticas
+                .filter((tratamiento) =>
+                    idsTratamientosVisibles.has(
+                        tratamiento.idTratamiento
+                    )
+                )
+                .map((tratamiento) => ({
                     ...tratamiento,
 
                     color: obtenerColorTratamiento(
                         tratamiento.idTratamiento
                     )
                 }));
+
+            if (tratamientosConColor.length === 0) {
+                setTratamientosHover([]);
+                setDetallePosicion(null);
+                return;
+            }
+
+            setTratamientosHover(tratamientosConColor);
 
             setTratamientosHover(
                 tratamientosConColor
@@ -165,7 +188,7 @@ const CalendarioPaciente = () => {
     useEffect(() => {
         const cargarTratamientos = async () => {
             try {
-                const idPaciente = localStorage.getItem("idPaciente");
+                const idPaciente = sessionStorage.getItem("idPaciente");
 
                 if (!idPaciente) {
                     console.error("No se encontró idPaciente");

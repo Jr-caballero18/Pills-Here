@@ -51,17 +51,18 @@ function Login() {
         return;
       }
 
-
-      localStorage.setItem("idUsuario", respuesta.idUsuario);
-      localStorage.setItem("rol", respuesta.rol);
-      localStorage.setItem("nombre", respuesta.nombre);
+      sessionStorage.clear();
+      
+      sessionStorage.setItem("idUsuario", respuesta.idUsuario);
+      sessionStorage.setItem("rol", respuesta.rol);
+      sessionStorage.setItem("nombre", respuesta.nombre);
 
       if (respuesta.idMedico) {
-        localStorage.setItem("idMedico", respuesta.idMedico);
+        sessionStorage.setItem("idMedico", respuesta.idMedico);
       }
 
       if (respuesta.idPaciente) {
-        localStorage.setItem("idPaciente", respuesta.idPaciente);
+        sessionStorage.setItem("idPaciente", respuesta.idPaciente);
       }
 
 

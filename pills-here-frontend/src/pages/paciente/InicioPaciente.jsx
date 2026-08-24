@@ -69,7 +69,7 @@ function InicioPaciente() {
   useEffect(() => {
     const cargarDashboard = async () => {
       try {
-        const idUsuario = localStorage.getItem("idUsuario");
+        const idUsuario = sessionStorage.getItem("idUsuario");
         if (!idUsuario) return;
 
         const data = await obtenerDashboardPaciente(idUsuario);
@@ -77,7 +77,7 @@ function InicioPaciente() {
       } catch (error) {
         console.error("Error al cargar dashboard paciente:", error);
 
-        const nombreGuardado = localStorage.getItem("nombrePaciente");
+        const nombreGuardado = sessionStorage.getItem("nombre");
         if (nombreGuardado) {
           setNombreUsuario(nombreGuardado);
         }
@@ -90,7 +90,7 @@ function InicioPaciente() {
       try {
         setCargandoEstadisticas(true);
 
-        const idPaciente = localStorage.getItem("idPaciente");
+        const idPaciente = sessionStorage.getItem("idPaciente");
 
         if (!idPaciente) {
           console.error("No se encontró idPaciente en localStorage");

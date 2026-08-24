@@ -19,7 +19,7 @@ import iconBorrar from "../../assets/images/borrar-icon.png";
 function EditarTratamiento() {
   const navigate = useNavigate();
   const { idTratamiento } = useParams();
-  const nombreMedico = localStorage.getItem("nombre");
+  const nombreMedico = sessionStorage.getItem("nombre");
 
   const [tratamiento, setTratamiento] = useState(null);
   const [diagnostico, setDiagnostico] = useState("");

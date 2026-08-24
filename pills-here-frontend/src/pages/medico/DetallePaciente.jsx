@@ -162,7 +162,7 @@ function DetallePaciente() {
     }
 
     try {
-      const idMedico = localStorage.getItem("idMedico");
+      const idMedico = sessionStorage.getItem("idMedico");
 
       await crearAviso({
         idMedico: Number(idMedico),

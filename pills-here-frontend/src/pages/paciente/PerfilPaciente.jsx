@@ -22,10 +22,10 @@ function PerfilPaciente() {
   useEffect(() => {
     const cargarPaciente = async () => {
       try {
-        const idPaciente = localStorage.getItem("idPaciente");
+        const idPaciente = sessionStorage.getItem("idPaciente");
         const data = await obtenerHistorialPaciente(idPaciente);
         console.log("Perfil paciente:", data);
-        localStorage.getItem("idPaciente")
+        sessionStorage.getItem("idPaciente")
         setPaciente(data);
       } catch (error) {
         console.error("Error al cargar perfil paciente:", error);
@@ -38,7 +38,7 @@ function PerfilPaciente() {
 
 
   const cerrarSesion = () => {
-    localStorage.clear();
+    sessionStorage.clear();
     navigate("/");
   };
 

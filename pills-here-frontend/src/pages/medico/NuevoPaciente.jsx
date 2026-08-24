@@ -21,7 +21,7 @@ function NuevoPaciente() {
     try {
       setMensajeError("");
 
-      const idUsuarioMedico = localStorage.getItem("idUsuario");
+      const idUsuarioMedico = sessionStorage.getItem("idUsuario");
 
       const respuesta = await vincularPacientePorCodigo(idUsuarioMedico, codigoPaciente);
 

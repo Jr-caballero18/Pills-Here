@@ -44,7 +44,7 @@ function PacienteForm() {
       nuevosErrores.apellidoPaterno = "El apellido paterno es obligatorio";
     }
 
-     if (!formData.apellidoMaterno.trim()) {
+    if (!formData.apellidoMaterno.trim()) {
       nuevosErrores.apellidoMaterno = "El apellido materno es obligatorio";
     }
 
@@ -75,60 +75,91 @@ function PacienteForm() {
     return nuevosErrores;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  setMensajeExito("");
+  setMensajeError("");
+  setCodigoPaciente("");
+
+  const nuevosErrores = validarFormulario();
+  setErrores(nuevosErrores);
+
+  if (Object.keys(nuevosErrores).length > 0) return;
+
+  try {
+    setCargando(true);
+
+    const respuesta = await registerPaciente(formData);
+
+    if (respuesta.exito) {
+      setMensajeExito(respuesta.mensaje);
+      setCodigoPaciente(respuesta.codigoPaciente);
+      setMensajeError("");
+
+      sessionStorage.clear();
+
+      sessionStorage.setItem(
+        "codigoPaciente",
+        respuesta.codigoPaciente
+      );
+
+      sessionStorage.setItem(
+        "nombre",
+        respuesta.nombre
+      );
+
+      sessionStorage.setItem(
+        "idUsuario",
+        String(respuesta.idUsuario)
+      );
+
+      sessionStorage.setItem(
+        "idPaciente",
+        String(respuesta.idPaciente)
+      );
+
+      sessionStorage.setItem(
+        "rol",
+        "PACIENTE"
+      );
+
+      setFormData({
+        nombre: "",
+        apellidoPaterno: "",
+        apellidoMaterno: "",
+        fechaNacimiento: "",
+        sexo: "",
+        tipoSangre: "",
+        alergias: "",
+        correo: "",
+        contrasena: "",
+      });
+
+      setTimeout(() => {
+        navigate("/inicio-paciente");
+      }, 2500);
+
+    } else {
+      setMensajeError(respuesta.mensaje);
+      setMensajeExito("");
+    }
+
+  } catch (error) {
+    console.error("Error al registrar paciente:", error);
+
+    setMensajeError(
+      error.response?.data?.mensaje ||
+      "No se pudo registrar el paciente"
+    );
 
     setMensajeExito("");
-    setMensajeError("");
     setCodigoPaciente("");
 
-    const nuevosErrores = validarFormulario();
-    setErrores(nuevosErrores);
-
-    if (Object.keys(nuevosErrores).length > 0) return;
-  
-     try {
-      setCargando(true);
-
-      const respuesta = await registerPaciente(formData);
-
-      if (respuesta.exito) {
-        setMensajeExito(respuesta.mensaje);
-        setCodigoPaciente(respuesta.codigoPaciente);
-        setMensajeError("");
-        
-        localStorage.setItem("codigoPaciente", respuesta.codigoPaciente);
-
-        setFormData({
-          nombre: "",
-          apellidoPaterno: "",
-          apellidoMaterno: "",
-          fechaNacimiento: "",
-          sexo: "",
-          tipoSangre: "",
-          alergias: "",
-          correo: "",
-          contrasena: "",
-        });
-
-        setTimeout(() => {
-          navigate("/inicio-paciente");
-        }, 2500);
-      } else {
-        setMensajeError(respuesta.mensaje);
-        setMensajeExito("");
-      }
-    } catch (error) {
-      console.error("Error al registrar paciente:", error);
-      setMensajeError("No se pudo registrar el paciente");
-      setMensajeExito("");
-      setCodigoPaciente("");
-    } finally {
-      setCargando(false);
-    }
-  
-
-  };
+  } finally {
+    setCargando(false);
+  }
+};
 
   return (
     <form className="register-form" onSubmit={handleSubmit}>
@@ -270,7 +301,7 @@ function PacienteForm() {
           )}
         </div>
       </div>
-          {mensajeError && <p className="register-error">{mensajeError}</p>}
+      {mensajeError && <p className="register-error">{mensajeError}</p>}
 
       <button className="create-account-button" type="submit">
         Crear cuenta

@@ -15,8 +15,8 @@ import NotificacionesPaciente from "../../components/NotificacionesPaciente/Noti
 function TratamientosPaciente() {
   const navigate = useNavigate();
 
-  const idPaciente = localStorage.getItem("idPaciente");
-  const nombrePaciente = localStorage.getItem("nombre");
+  const idPaciente = sessionStorage.getItem("idPaciente");
+  const nombrePaciente = sessionStorage.getItem("nombre");
 
   const [tratamientos, setTratamientos] = useState([]);
 

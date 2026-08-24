@@ -19,7 +19,7 @@ function NotificacionesPaciente({ className = "" }) {
 
   const cargarNotificaciones = async () => {
     try {
-      const idPaciente = localStorage.getItem("idPaciente");
+      const idPaciente = sessionStorage.getItem("idPaciente");
 
       if (!idPaciente) {
         return;

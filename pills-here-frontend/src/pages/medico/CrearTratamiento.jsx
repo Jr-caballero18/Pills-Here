@@ -16,7 +16,7 @@ import iconBorrar from "../../assets/images/borrar-icon.png";
 function CrearTratamiento() {
   const navigate = useNavigate();
   const { idPaciente } = useParams();
-  const nombreMedico = localStorage.getItem("nombre");
+  const nombreMedico = sessionStorage.getItem("nombre");
 
   const [paciente, setPaciente] = useState(null);
   const [diagnostico, setDiagnostico] = useState("");
@@ -112,8 +112,7 @@ function CrearTratamiento() {
 
   const guardarTratamiento = async () => {
     try {
-      const idMedico = localStorage.getItem("idMedico");
-      console.log("idMedico localStorage:", idMedico);
+      const idMedico = sessionStorage.getItem("idMedico");
       const tratamiento = {
         idPaciente: Number(idPaciente),
         idMedico: Number(idMedico),

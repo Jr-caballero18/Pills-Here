@@ -15,7 +15,7 @@ import iconVer from "../../assets/images/icon-ver.png";
 
 function HistorialPaciente() {
   const navigate = useNavigate();
-  const idPaciente = localStorage.getItem("idPaciente");
+  const idPaciente = sessionStorage.getItem("idPaciente");
 
   const [paciente, setPaciente] = useState(null);
   const [historial, setHistorial] = useState([]);

@@ -25,7 +25,7 @@ function NotasPaciente() {
     useEffect(() => {
         const cargarAvisos = async () => {
             try {
-                const idPaciente = localStorage.getItem("idPaciente");
+                const idPaciente = sessionStorage.getItem("idPaciente");
                 if (!idPaciente) return;
 
                 const data = await obtenerNotificacionesPaciente(idPaciente);

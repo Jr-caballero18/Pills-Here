@@ -22,7 +22,7 @@ function ListaPacientes() {
   useEffect(() => {
     const cargarPacientes = async () => {
       try {
-        const idUsuario = localStorage.getItem("idUsuario");
+        const idUsuario = sessionStorage.getItem("idUsuario");
         const data = await obtenerPacientesDelMedico(idUsuario);
         setPacientes(data);
       } catch (error) {
@@ -35,7 +35,7 @@ function ListaPacientes() {
 
   const irADetallePaciente = async (idPaciente) => {
     try {
-      const idUsuario = localStorage.getItem("idUsuario");
+      const idUsuario = sessionStorage.getItem("idUsuario");
       await registrarConsultaPaciente(idUsuario, idPaciente);
       navigate(`/detalle-paciente/${idPaciente}`);
     } catch (error) {

@@ -33,8 +33,8 @@ function InicioMedico() {
   useEffect(() => {
     const cargarDashboard = async () => {
       try {
-        const idUsuario = localStorage.getItem("idUsuario");
-        const idMedico = localStorage.getItem("idMedico");
+        const idUsuario = sessionStorage.getItem("idUsuario");
+        const idMedico = sessionStorage.getItem("idMedico");
 
         if (!idUsuario) return;
 

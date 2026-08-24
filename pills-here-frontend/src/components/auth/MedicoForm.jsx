@@ -95,6 +95,29 @@ function MedicoForm() {
         setMensajeExito(respuesta.mensaje);
         setMensajeError("");
 
+        // Guardar sesión del médico en esta pestaña
+        sessionStorage.clear();
+
+        sessionStorage.setItem(
+          "nombre",
+          respuesta.nombre
+        );
+
+        sessionStorage.setItem(
+          "idUsuario",
+          String(respuesta.idUsuario)
+        );
+
+        sessionStorage.setItem(
+          "idMedico",
+          String(respuesta.idMedico)
+        );
+
+        sessionStorage.setItem(
+          "rol",
+          "MEDICO"
+        );
+
         setFormData({
           nombre: "",
           apellidoPaterno: "",
@@ -111,14 +134,22 @@ function MedicoForm() {
         setTimeout(() => {
           navigate("/inicio-medico");
         }, 1500);
+
       } else {
         setMensajeError(respuesta.mensaje);
         setMensajeExito("");
       }
+
     } catch (error) {
       console.error("Error al registrar médico:", error);
-      setMensajeError("No se pudo registrar el médico");
+
+      setMensajeError(
+        error.response?.data?.mensaje ||
+        "No se pudo registrar el médico"
+      );
+
       setMensajeExito("");
+
     } finally {
       setCargando(false);
     }
@@ -208,16 +239,16 @@ function MedicoForm() {
             type="text"
             name="cedulaProfesional"
             value={formData.cedulaProfesional}
-           onChange={(e) => {
-        const value = e.target.value.replace(/\D/g, "").slice(0, 8);
-        handleChange({
-          target: {
-            name: "cedulaProfesional",
-            value,
-          },
-        });
-      }}
-      maxLength={8}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, "").slice(0, 8);
+              handleChange({
+                target: {
+                  name: "cedulaProfesional",
+                  value,
+                },
+              });
+            }}
+            maxLength={8}
           />
           {errores.cedulaProfesional && (
             <span className="field-error">{errores.cedulaProfesional}</span>

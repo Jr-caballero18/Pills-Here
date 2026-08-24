@@ -40,33 +40,54 @@ function DetalleTratamientoPaciente() {
     const [tomaProcesando, setTomaProcesando] = useState(null);
 
     useEffect(() => {
-        const cargarTratamiento = async () => {
-            try {
-                const data = await obtenerDetalleTratamiento(idTratamiento);
-                setTratamiento(data);
 
-                const tomas = await obtenerTomasTratamiento(idTratamiento);
+    let componenteActivo = true;
 
-                const estadisticasData = await obtenerEstadisticasTratamiento(idTratamiento);
-                setEstadisticas(estadisticasData);
+    const cargarTratamiento = async () => {
+        try {
 
-                if (tomas.length > 0) {
-                    setRegistrosMedicacion(tomas);
-                    setTratamientoIniciado(true);
-                } else {
-                    setRegistrosMedicacion([]);
-                    setTratamientoIniciado(false);
-                }
-            } catch (error) {
-                console.error("Error al cargar tratamiento:", error);
+            const [
+                data,
+                tomas,
+                estadisticasData
+            ] = await Promise.all([
+                obtenerDetalleTratamiento(idTratamiento),
+                obtenerTomasTratamiento(idTratamiento),
+                obtenerEstadisticasTratamiento(idTratamiento)
+            ]);
+
+            if (!componenteActivo) {
+                return;
             }
-        };
 
+            setTratamiento(data);
+            setEstadisticas(estadisticasData);
 
+            if (tomas.length > 0) {
+                setRegistrosMedicacion(tomas);
+                setTratamientoIniciado(true);
+            } else {
+                setRegistrosMedicacion([]);
+                setTratamientoIniciado(false);
+            }
+
+        } catch (error) {
+            console.error("Error al cargar tratamiento:", error);
+        }
+    };
+
+    cargarTratamiento();
+
+    const intervalo = setInterval(() => {
         cargarTratamiento();
+    }, 10000);
 
+    return () => {
+        componenteActivo = false;
+        clearInterval(intervalo);
+    };
 
-    }, [idTratamiento]);
+}, [idTratamiento]);
 
 
 
@@ -169,37 +190,42 @@ function DetalleTratamientoPaciente() {
         return `${String(hora).padStart(2, "0")}:${String(minutos).padStart(2, "0")}:00`;
     };
 
-    const marcarComoTomada = async (idDosis) => {
+   const marcarComoTomada = async (idDosis) => {
 
-        if (!tratamientoActivo) {
-            return;
-        }
+    if (!tratamientoActivo) {
+        return;
+    }
 
-        if (tomaProcesando !== null) {
-            return;
-        }
+    if (tomaProcesando !== null) {
+        return;
+    }
 
-        try {
-            setTomaProcesando(idDosis);
+    try {
+        setTomaProcesando(idDosis);
 
-            await marcarDosisComoTomada(idDosis);
+        await marcarDosisComoTomada(idDosis);
 
-            const [tomasActualizadas, estadisticasActualizadas] =
-                await Promise.all([
-                    obtenerTomasTratamiento(idTratamiento),
-                    obtenerEstadisticasTratamiento(idTratamiento)
-                ]);
+        const [
+            tomasActualizadas,
+            estadisticasActualizadas,
+            tratamientoActualizado
+        ] = await Promise.all([
+            obtenerTomasTratamiento(idTratamiento),
+            obtenerEstadisticasTratamiento(idTratamiento),
+            obtenerDetalleTratamiento(idTratamiento)
+        ]);
 
-            setRegistrosMedicacion(tomasActualizadas);
-            setEstadisticas(estadisticasActualizadas);
+        setRegistrosMedicacion(tomasActualizadas);
+        setEstadisticas(estadisticasActualizadas);
+        setTratamiento(tratamientoActualizado);
 
-        } catch (error) {
-            console.error("Error al marcar dosis como tomada:", error);
-            alert("Error al marcar dosis como tomada");
-        } finally {
-            setTomaProcesando(null);
-        }
-    };
+    } catch (error) {
+        console.error("Error al marcar dosis como tomada:", error);
+        alert("Error al marcar dosis como tomada");
+    } finally {
+        setTomaProcesando(null);
+    }
+};
 
 
     return (
