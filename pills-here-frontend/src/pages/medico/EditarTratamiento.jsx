@@ -11,10 +11,10 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconBorrar from "../../assets/images/borrar-icon.png";
+import Swal from "sweetalert2";
 
 function EditarTratamiento() {
   const navigate = useNavigate();
@@ -141,11 +141,23 @@ function EditarTratamiento() {
 
       await actualizarTratamiento(idTratamiento, tratamientoActualizado);
 
-      alert("Tratamiento actualizado correctamente");
+      await Swal.fire({
+        icon: "success",
+        title: "Tratamiento actualizado",
+        text: "Los cambios se guardaron correctamente.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
       navigate(`/detalle-paciente/${tratamiento.paciente.idPaciente}`);
     } catch (error) {
       console.error("Error al actualizar tratamiento:", error);
-      alert("Error al actualizar tratamiento");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo actualizar el tratamiento.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
     }
   };
 
@@ -205,9 +217,7 @@ function EditarTratamiento() {
           <h1>Tratamiento: {tratamiento.paciente.nombreCompleto}</h1>
 
           <div className="crear-tratamiento-header-icons">
-            <button className="crear-tratamiento-btn-notificacion" type="button">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
+
 
             <button className="crear-tratamiento-btn-perfil" type="button"
               onClick={() => navigate("/perfil-medico")}>
@@ -276,7 +286,7 @@ function EditarTratamiento() {
                 <span className="crear-tratamiento-icono-busqueda">⌕</span>
               </div>
 
-              { esEditable && mostrarSugerencias && sugerencias.length > 0 && (
+              {esEditable && mostrarSugerencias && sugerencias.length > 0 && (
                 <ul className="crear-tratamiento-sugerencias">
                   {sugerencias.map((medicamento) => (
                     <li

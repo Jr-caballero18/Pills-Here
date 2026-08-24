@@ -14,8 +14,47 @@ function NotificacionesPaciente({ className = "" }) {
 
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
   const [notificaciones, setNotificaciones] = useState([]);
+  const [notificacionesNoVistas, setNotificacionesNoVistas] = useState(0);
 
   const notificacionesRef = useRef(null);
+
+  const obtenerClaveNotificacion = (notificacion) => {
+    return `${notificacion.tipo}-${notificacion.id}`;
+  };
+
+  const obtenerNotificacionesVistas = (idPaciente) => {
+    const guardadas = localStorage.getItem(
+      `notificacionesVistas_${idPaciente}`
+    );
+
+    return guardadas ? JSON.parse(guardadas) : [];
+  };
+
+  const marcarNotificacionesComoVistas = () => {
+    const idPaciente = localStorage.getItem("idPaciente");
+
+    if (!idPaciente || notificaciones.length === 0) {
+      setNotificacionesNoVistas(0);
+      return;
+    }
+
+    const vistasAnteriores =
+      obtenerNotificacionesVistas(idPaciente);
+
+    const nuevasVistas = [
+      ...new Set([
+        ...vistasAnteriores,
+        ...notificaciones.map(obtenerClaveNotificacion),
+      ]),
+    ];
+
+    localStorage.setItem(
+      `notificacionesVistas_${idPaciente}`,
+      JSON.stringify(nuevasVistas)
+    );
+
+    setNotificacionesNoVistas(0);
+  };
 
   const cargarNotificaciones = async () => {
     try {
@@ -28,7 +67,21 @@ function NotificacionesPaciente({ className = "" }) {
       const notificacionesData =
         await obtenerNotificacionesPaciente(idPaciente);
 
-      const ordenadas = [...notificacionesData].sort((a, b) => {
+      const eliminadas = JSON.parse(
+        localStorage.getItem(
+          `notificacionesEliminadas_${idPaciente}`
+        ) || "[]"
+      );
+
+      const notificacionesVisibles =
+        notificacionesData.filter(
+          (notificacion) =>
+            !eliminadas.includes(
+              `${notificacion.tipo}-${notificacion.id}`
+            )
+        );
+
+      const ordenadas = [...notificacionesVisibles].sort((a, b) => {
         const fechaA = a.fechaHora
           ? new Date(a.fechaHora).getTime()
           : 0;
@@ -41,6 +94,19 @@ function NotificacionesPaciente({ className = "" }) {
       });
 
       setNotificaciones(ordenadas);
+
+      const vistas =
+        obtenerNotificacionesVistas(idPaciente);
+
+      const cantidadNoVistas = ordenadas.filter(
+        (notificacion) =>
+          !vistas.includes(
+            obtenerClaveNotificacion(notificacion)
+          )
+      ).length;
+
+      setNotificacionesNoVistas(cantidadNoVistas);
+
     } catch (error) {
       console.error(
         "Error al cargar notificaciones:",
@@ -61,6 +127,15 @@ function NotificacionesPaciente({ className = "" }) {
       clearInterval(intervaloNotificaciones);
     };
   }, []);
+
+  useEffect(() => {
+    if (
+      mostrarNotificaciones &&
+      notificaciones.length > 0
+    ) {
+      marcarNotificacionesComoVistas();
+    }
+  }, [notificaciones, mostrarNotificaciones]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -84,6 +159,40 @@ function NotificacionesPaciente({ className = "" }) {
       );
     };
   }, []);
+
+
+  const eliminarNotificacion = (notificacion) => {
+    const idPaciente = localStorage.getItem("idPaciente");
+
+    if (!idPaciente) return;
+
+    const clave = `${notificacion.tipo}-${notificacion.id}`;
+
+    const guardadas = JSON.parse(
+      localStorage.getItem(
+        `notificacionesEliminadas_${idPaciente}`
+      ) || "[]"
+    );
+
+    const actualizadas = [
+      ...new Set([
+        ...guardadas,
+        clave
+      ])
+    ];
+
+    localStorage.setItem(
+      `notificacionesEliminadas_${idPaciente}`,
+      JSON.stringify(actualizadas)
+    );
+
+    setNotificaciones((prev) =>
+      prev.filter(
+        (item) =>
+          `${item.tipo}-${item.id}` !== clave
+      )
+    );
+  };
 
   const obtenerTiempoNotificacion = (notificacion) => {
     if (!notificacion.fechaHora) {
@@ -147,16 +256,28 @@ function NotificacionesPaciente({ className = "" }) {
         className={`paciente-icon-btn ${className}`}
         type="button"
         aria-label="Notificaciones"
-        onClick={() =>
-          setMostrarNotificaciones(
-            !mostrarNotificaciones
-          )
-        }
+        onClick={() => {
+          const nuevoEstado = !mostrarNotificaciones;
+
+          setMostrarNotificaciones(nuevoEstado);
+
+          if (nuevoEstado) {
+            marcarNotificacionesComoVistas();
+          }
+        }}
       >
         <img
           src={iconNotificacion}
           alt="Notificaciones"
         />
+
+        {notificacionesNoVistas > 0 && (
+          <span className="notificaciones-contador">
+            {notificacionesNoVistas > 99
+              ? "99+"
+              : notificacionesNoVistas}
+          </span>
+        )}
       </button>
 
       {mostrarNotificaciones && (
@@ -187,13 +308,25 @@ function NotificacionesPaciente({ className = "" }) {
 
                 return (
                   <div
-                    className={`notificacion-card ${
-                      esMedicamento
-                        ? "notificacion-medicamento"
-                        : "notificacion-comentario"
-                    }`}
+                    className={`notificacion-card ${esMedicamento
+                      ? "notificacion-medicamento"
+                      : "notificacion-comentario"
+                      }`}
                     key={`${notificacion.tipo}-${notificacion.id}`}
                   >
+
+                    <button
+                      type="button"
+                      className="notificacion-eliminar"
+                      aria-label="Eliminar notificación"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        eliminarNotificacion(notificacion);
+                      }}
+                    >
+                      ×
+                    </button>
+
                     <div className="notificacion-icono">
                       <img
                         src={
@@ -212,11 +345,10 @@ function NotificacionesPaciente({ className = "" }) {
                         <strong>
                           {esMedicamento
                             ? notificacion.titulo
-                            : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${
-                                esComentario
-                                  ? "comentario"
-                                  : "aviso"
-                              }.`
+                            : `Dr. ${notificacion.nombreMedico} ha dejado un nuevo ${esComentario
+                              ? "comentario"
+                              : "aviso"
+                            }.`
                           }
                         </strong>
                       </div>
@@ -235,6 +367,7 @@ function NotificacionesPaciente({ className = "" }) {
                         <button
                           type="button"
                           onClick={() => {
+
                             if (
                               esMedicamento &&
                               notificacion.idTratamiento
@@ -242,17 +375,26 @@ function NotificacionesPaciente({ className = "" }) {
                               navigate(
                                 `/tratamiento-paciente/${notificacion.idTratamiento}`
                               );
-
-                              setMostrarNotificaciones(false);
+                            } else {
+                              navigate(
+                                "/notas-paciente",
+                                {
+                                  state: {
+                                    idAviso: notificacion.id
+                                  }
+                                }
+                              );
                             }
+
+                            setMostrarNotificaciones(false);
                           }}
                         >
                           Ver{" "}
                           {esMedicamento
                             ? "dosis"
                             : esComentario
-                            ? "comentario"
-                            : "aviso"}{" "}
+                              ? "comentario"
+                              : "aviso"}{" "}
                           &gt;
                         </button>
                       </div>

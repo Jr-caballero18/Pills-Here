@@ -6,7 +6,6 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconVer from "../../assets/images/icon-ver.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
@@ -17,7 +16,11 @@ import {
 
 function ListaPacientes() {
   const [pacientes, setPacientes] = useState([]);
+
+  const [busqueda, setBusqueda] = useState("");
+
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const cargarPacientes = async () => {
@@ -42,6 +45,25 @@ function ListaPacientes() {
       console.error("Error al registrar consulta:", error);
     }
   };
+
+  const pacientesFiltrados = pacientes
+    .filter((paciente) =>
+      paciente.nombre.toLowerCase().includes(busqueda.toLowerCase())
+    )
+    .sort((a, b) => {
+      const aCoincide = a.nombre
+        .toLowerCase()
+        .startsWith(busqueda.toLowerCase());
+
+      const bCoincide = b.nombre
+        .toLowerCase()
+        .startsWith(busqueda.toLowerCase());
+
+      if (aCoincide && !bCoincide) return -1;
+      if (!aCoincide && bCoincide) return 1;
+
+      return a.nombre.localeCompare(b.nombre);
+    });
 
   return (
     <div className="lista-pacientes-page">
@@ -79,12 +101,9 @@ function ListaPacientes() {
           <h1>Pacientes Actuales</h1>
 
           <div className="lista-header-icons">
-            <button className="lista-btn-notificacion" type="button" aria-label="Notificaciones">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
 
             <button className="lista-btn-perfil" type="button" aria-label="Perfil"
-            onClick={() => navigate("/perfil-medico")}>
+              onClick={() => navigate("/perfil-medico")}>
               <img src={iconPerfil} alt="Perfil" />
             </button>
           </div>
@@ -95,7 +114,12 @@ function ListaPacientes() {
             <h2>Lista de pacientes</h2>
 
             <div className="lista-search-box">
-              <input type="text" />
+              <input
+                type="text"
+                placeholder="Buscar paciente..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+              />
               <span>⌕</span>
             </div>
           </div>
@@ -107,7 +131,7 @@ function ListaPacientes() {
               <span>Historial</span>
             </div>
 
-            {pacientes.map((paciente) => (
+            {pacientesFiltrados.map((paciente) => (
               <div key={paciente.idPaciente} className="lista-tabla-row">
                 <button
                   className="lista-nombre-btn"

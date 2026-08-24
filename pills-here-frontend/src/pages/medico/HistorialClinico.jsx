@@ -5,7 +5,6 @@ import { obtenerHistorialPaciente } from "../../services/tratamientoService"; im
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconUsuario from "../../assets/images/icon-perfilP.png";
@@ -108,9 +107,6 @@ function HistorialClinico() {
                     <h1>Historial Clínico de: {paciente.nombreCompleto}</h1>
 
                     <div className="acciones-superiores">
-                        <button className="btn-notificacion">
-                            <img src={iconNotificacion} alt="Notificaciones" />
-                        </button>
 
                         <button className="btn-perfil"
                             onClick={() => navigate("/perfil-medico")}>

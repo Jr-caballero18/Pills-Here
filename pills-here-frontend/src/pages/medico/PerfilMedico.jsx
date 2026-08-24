@@ -6,7 +6,6 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientesMenu from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 
@@ -75,9 +74,6 @@ function PerfilMedico() {
           <h1>Perfil de Médico: Dr. {medico.nombreCompleto}.</h1>
 
           <div className="acciones-superiores">
-            <button className="btn-notificacion" type="button" aria-label="Notificaciones">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
 
             <button className="btn-perfil" type="button" aria-label="Perfil"
               onClick={() => navigate("/perfil-medico")}>

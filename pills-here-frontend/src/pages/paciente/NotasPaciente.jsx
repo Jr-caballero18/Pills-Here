@@ -1,5 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+    useNavigate,
+    useLocation
+} from "react-router-dom";
 import "./NotasPaciente.css";
 
 import logo from "../../assets/images/logo.png";
@@ -17,6 +20,7 @@ import iconRecordatorioNotif from "../../assets/images/recordatorionotificacion.
 
 function NotasPaciente() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [avisos, setAvisos] = useState([]);
     const [avisoSeleccionado, setAvisoSeleccionado] = useState(null);
@@ -30,18 +34,36 @@ function NotasPaciente() {
 
                 const data = await obtenerNotificacionesPaciente(idPaciente);
 
-                setAvisos(
-                    data.filter(
-                        (item) => item.tipo !== "MEDICAMENTO"
-                    )
+                const avisosFiltrados = data.filter(
+                    (item) => item.tipo !== "MEDICAMENTO"
                 );
+
+                setAvisos(avisosFiltrados);
+
+                const idAviso =
+                    location.state?.idAviso;
+
+                if (idAviso) {
+                    const avisoEncontrado =
+                        avisosFiltrados.find(
+                            (aviso) =>
+                                String(aviso.id) ===
+                                String(idAviso)
+                        );
+
+                    if (avisoEncontrado) {
+                        setAvisoSeleccionado(
+                            avisoEncontrado
+                        );
+                    }
+                }
             } catch (error) {
                 console.error("Error al cargar avisos:", error);
             }
         };
 
         cargarAvisos();
-    }, []);
+    }, [location.state]);
 
 
 
