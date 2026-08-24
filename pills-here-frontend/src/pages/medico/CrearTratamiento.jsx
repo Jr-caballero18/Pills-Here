@@ -8,10 +8,10 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import iconBorrar from "../../assets/images/borrar-icon.png";
+import Swal from "sweetalert2";
 
 function CrearTratamiento() {
   const navigate = useNavigate();
@@ -128,11 +128,24 @@ function CrearTratamiento() {
       };
       console.log("Tratamiento enviado:", tratamiento);
       await crearTratamiento(tratamiento);
-      alert("Tratamiento creado correctamente");
+      await Swal.fire({
+        icon: "success",
+        title: "Tratamiento creado",
+        text: "El tratamiento se creó correctamente.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
+
       navigate(`/detalle-paciente/${idPaciente}`);
     } catch (error) {
       console.error("Error al crear tratamiento:", error);
-      alert("Error al crear tratamiento");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo crear el tratamiento.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
     }
   };
 
@@ -196,9 +209,7 @@ function CrearTratamiento() {
           <h1>Crear tratamiento de: {paciente.nombreCompleto}</h1>
 
           <div className="crear-tratamiento-header-icons">
-            <button className="crear-tratamiento-btn-notificacion" type="button">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
+
 
             <button className="crear-tratamiento-btn-perfil" type="button"
               onClick={() => navigate("/perfil-medico")}>
@@ -332,7 +343,7 @@ function CrearTratamiento() {
                 ))}
               </tbody>
             </table>
-            
+
           </div>
         </section>
 

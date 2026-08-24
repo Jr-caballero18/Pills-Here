@@ -11,7 +11,6 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientes from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPerfil from "../../assets/images/icon-perfilP.png";
 import iconRegreso from "../../assets/images/flecha-regreso.png";
 import { crearAviso } from "../../services/avisoService";
@@ -24,6 +23,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import Swal from "sweetalert2";
 
 function DetallePaciente() {
   const navigate = useNavigate();
@@ -114,16 +114,30 @@ function DetallePaciente() {
   }
 
   const cancelarTratamientoPaciente = async (idTratamiento) => {
-    const confirmar = window.confirm("¿Seguro que deseas cancelar este tratamiento?");
+    const resultado = await Swal.fire({
+      icon: "warning",
+      title: "¿Cancelar tratamiento?",
+      text: "Esta acción cancelará el tratamiento seleccionado.",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cancelar",
+      cancelButtonText: "No",
+      confirmButtonColor: "#c0392b",
+      cancelButtonColor: "#173f6c",
+    });
 
-    if (!confirmar) return;
+    if (!resultado.isConfirmed) return;
 
     try {
 
       await cancelarTratamiento(idTratamiento);
 
-      alert("Tratamiento cancelado correctamente");
-
+      Swal.fire({
+        icon: "success",
+        title: "Tratamiento cancelado",
+        text: "El tratamiento fue cancelado correctamente.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
       setTratamientos((prev) =>
         prev.filter((tratamiento) => tratamiento.idTratamiento !== idTratamiento)
       );
@@ -157,7 +171,13 @@ function DetallePaciente() {
 
   const guardarAviso = async () => {
     if (!tituloAviso.trim() || !contenidoAviso.trim()) {
-      alert("Escribe el título y el aviso");
+      Swal.fire({
+        icon: "warning",
+        title: "Datos incompletos",
+        text: "Escribe el título y el contenido del aviso.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
       return;
     }
 
@@ -172,7 +192,13 @@ function DetallePaciente() {
         observaciones: observacionesAviso,
       });
 
-      alert("Aviso enviado correctamente");
+      Swal.fire({
+        icon: "success",
+        title: "Aviso enviado",
+        text: "El aviso se envió correctamente al paciente.",
+        confirmButtonText: "Aceptar",
+        confirmButtonColor: "#173f6c",
+      });
       setTituloAviso("");
       setContenidoAviso("");
       setObservacionesAviso("");
@@ -218,9 +244,6 @@ function DetallePaciente() {
           <h1>Paciente: {paciente.nombreCompleto}</h1>
 
           <div className="detalle-header-icons">
-            <button className="detalle-btn-notificacion" type="button" aria-label="Notificaciones">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
 
             <button className="detalle-btn-perfil" type="button" aria-label="Perfil"
               onClick={() => navigate("/perfil-medico")}>

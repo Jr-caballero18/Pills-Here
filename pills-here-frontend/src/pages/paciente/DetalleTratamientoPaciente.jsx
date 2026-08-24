@@ -25,6 +25,7 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+import Swal from "sweetalert2";
 
 function DetalleTratamientoPaciente() {
     const navigate = useNavigate();
@@ -104,7 +105,13 @@ function DetalleTratamientoPaciente() {
                 Object.keys(horariosSeleccionados).length !==
                 tratamiento.medicamentos.length
             ) {
-                alert("Selecciona un horario para todos los medicamentos");
+                Swal.fire({
+                    icon: "warning",
+                    title: "Horarios incompletos",
+                    text: "Selecciona un horario para todos los medicamentos.",
+                    confirmButtonText: "Aceptar",
+                    confirmButtonColor: "#173f6c",
+                });
                 return;
             }
 
@@ -140,7 +147,13 @@ function DetalleTratamientoPaciente() {
 
         } catch (error) {
             console.error(error);
-            alert("Error al iniciar tratamiento");
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No se pudo iniciar el tratamiento.",
+                confirmButtonText: "Aceptar",
+                confirmButtonColor: "#173f6c",
+            });
         }
     };
 

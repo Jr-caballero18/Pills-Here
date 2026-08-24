@@ -5,7 +5,6 @@ import logo from "../../assets/images/logo.png";
 import iconHome from "../../assets/images/icon-home.png";
 import iconPacientesMenu from "../../assets/images/icon-pacientess.png";
 import iconAgregarPaciente from "../../assets/images/icon-agregarP.png";
-import iconNotificacion from "../../assets/images/icon-notificacion.png";
 import iconPacientesCard from "../../assets/images/icon-pacientes.png";
 import iconTratamientosActivos from "../../assets/images/icon-tratamientos.png";
 import iconTratamientosCompletados from "../../assets/images/icon-check.png";
@@ -90,9 +89,6 @@ function InicioMedico() {
           <h1>Bienvenido Dr. {nombreUsuario}</h1>
 
           <div className="acciones-superiores">
-            <button className="btn-notificacion" type="button" aria-label="Notificaciones">
-              <img src={iconNotificacion} alt="Notificaciones" />
-            </button>
 
             <button className="btn-perfil" type="button" aria-label="Perfil"
               onClick={() => navigate("/perfil-medico")}>
